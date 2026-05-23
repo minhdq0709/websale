@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Đơn hàng của tôi - Pure Vitality Market</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c9c6c0",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005313",
+                        "secondary": "#006e1c",
+                        "inverse-primary": "#a1d494",
+                        "outline-variant": "#c2c9bb",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-container": "#c5c2bc",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#23501e",
+                        "on-surface": "#191c1d",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#1c1c18",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#3a3935",
+                        "secondary-container": "#91f78e",
+                        "surface-dim": "#d9dadb",
+                        "background": "#f8f9fa",
+                        "primary-fixed-dim": "#a1d494",
+                        "surface-bright": "#f8f9fa",
+                        "on-primary-container": "#9dd090",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1d",
+                        "on-surface-variant": "#42493e",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-fixed-dim": "#78dc77",
+                        "primary-container": "#2d5a27",
+                        "surface-tint": "#3b6934",
+                        "tertiary-container": "#51504b",
+                        "surface-container-low": "#f3f4f5",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#474742",
+                        "surface": "#f8f9fa",
+                        "primary-fixed": "#bcf0ae",
+                        "primary": "#154212",
+                        "on-secondary-fixed": "#002204",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary-container": "#00731e",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed": "#94f990",
+                        "surface-container": "#edeeef",
+                        "outline": "#72796e",
+                        "on-primary-fixed": "#002201",
+                        "tertiary-fixed": "#e5e2db"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "48px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["30px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #ffffff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .tab-active { color: #154212; border-bottom: 2px solid #154212; font-weight: 700; padding-bottom: 4px; }
+        .order-card { transition: all 0.3s ease; box-shadow: 0px 4px 20px rgba(45, 90, 39, 0.05); }
+        .order-card:hover { transform: translateY(-2px); box-shadow: 0px 8px 30px rgba(45, 90, 39, 0.08); }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest dark:bg-on-surface shadow-sm dark:shadow-none">
+<div class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed-dim tracking-tight">Pure Vitality Market</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant dark:text-outline-variant pb-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-outline-variant pb-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Vegetables</a>
+<a class="text-on-surface-variant dark:text-outline-variant pb-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Fruits</a>
+<a class="text-on-surface-variant dark:text-outline-variant pb-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Special Offers</a>
+</nav>
+<div class="flex items-center gap-6">
+<button class="flex items-center text-primary hover:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+<button class="flex items-center text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary dark:border-primary-fixed-dim pb-1 active:scale-95 duration-150">
+<span class="material-symbols-outlined mr-2" data-icon="person">person</span>
+<span class="hidden md:inline font-label-md text-label-md">Tài khoản</span>
+</button>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-desktop py-12 min-h-screen">
+<div class="flex flex-col md:flex-row gap-12">
+<!-- Sidebar Navigation (Internal) -->
+<aside class="w-full md:w-64 flex-shrink-0">
+<h1 class="font-headline-sm text-headline-sm text-primary mb-8">Tài khoản của tôi</h1>
+<ul class="space-y-4">
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined">person</span> Thông tin cá nhân</a></li>
+<li><a class="flex items-center gap-3 text-primary font-bold transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">list_alt</span> Đơn hàng của tôi</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined">favorite</span> Sản phẩm yêu thích</a></li>
+<li><a class="flex items-center gap-3 text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined">location_on</span> Sổ địa chỉ</a></li>
+</ul>
+</aside>
+<!-- Main Orders Content -->
+<section class="flex-grow">
+<div class="mb-10">
+<h2 class="font-headline-md text-headline-md text-primary mb-6">Đơn hàng của tôi</h2>
+<!-- Tabs Navigation -->
+<div class="flex border-b border-outline-variant gap-8 overflow-x-auto whitespace-nowrap scrollbar-hide">
+<button class="tab-active py-2 px-1 font-label-md text-label-md transition-all" id="tab-pending" onclick="switchTab('pending')">Chờ thanh toán (2)</button>
+<button class="text-on-surface-variant py-2 px-1 font-label-md text-label-md transition-all hover:text-primary" id="tab-paid" onclick="switchTab('paid')">Đã thanh toán</button>
+<button class="text-on-surface-variant py-2 px-1 font-label-md text-label-md transition-all hover:text-primary" id="tab-history" onclick="switchTab('history')">Lịch sử mua hàng</button>
+</div>
+</div>
+<!-- Orders List -->
+<div class="space-y-6" id="orders-container">
+<!-- Order Item 1 -->
+<div class="order-card bg-surface-container-lowest rounded-xl p-6 border border-surface-container-high flex flex-col md:flex-row gap-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A high-quality close-up photograph of a variety of fresh organic vegetables including green broccoli, red bell peppers, and vibrant carrots. The lighting is bright and airy, reflecting a fresh morning market aesthetic with soft shadows and high color saturation. The overall mood is healthy, clean, and appetizing, perfectly aligned with the Pure Vitality brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSlVVejZWUkYXCoZVoBDPsXnjpNEGYTKEHng4uen5dMsQEo9BP6kHI6i4hC4MS8IOcqfl5eMuOzxTkrPOpBW8g37FkCKBT5TXFKyili-LgucKZaX3HeqAEIMGnZbUXgIwFE-Are-Cd7-Tpn_fxyU1bUM25tJ_YUMKW2SYmhd3unVPIG8t7kulXVTMBq8Yz9H6hmorCBvdbP4AMAjZZIihq5MCO_eIaIkcNw4MQ7Gd3hazrChwXvs5SQO6_VwvOHuw307xg3YixMUqp"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-2">
+<div>
+<span class="text-label-sm font-label-sm text-on-surface-variant block mb-1">Mã đơn hàng: PV-284901</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Combo Rau Xanh Đà Lạt &amp; Trái Cây Nhiệt Đới</h3>
+</div>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-label-sm font-label-sm">Chờ thanh toán</span>
+</div>
+<div class="flex flex-wrap gap-x-8 gap-y-2 mt-4 text-body-sm font-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">calendar_today</span> 14/05/2024</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">local_shipping</span> Giao hàng tiêu chuẩn</span>
+<span class="flex items-center gap-1 text-secondary font-semibold"><span class="material-symbols-outlined text-sm">payments</span> Tổng tiền: 545.000₫</span>
+</div>
+</div>
+<div class="flex md:flex-col justify-end gap-3 mt-4 md:mt-0">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:scale-105 transition-transform">Thanh toán ngay</button>
+<button class="border border-outline text-on-surface-variant px-6 py-2 rounded-full font-label-md text-label-md hover:bg-surface-container-low transition-colors">Chi tiết</button>
+</div>
+</div>
+<!-- Order Item 2 -->
+<div class="order-card bg-surface-container-lowest rounded-xl p-6 border border-surface-container-high flex flex-col md:flex-row gap-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="An artistic composition of exotic tropical fruits including dragon fruit, mango, and passion fruit arranged on a minimalist white surface. The photography uses soft natural light to emphasize the vibrant colors and natural textures of the fruits. The style is clean, modern, and high-end, evoking a sense of premium quality and pure vitality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxkFHkm9NsJIUNEmR2qwd5pYU3lkU3xn8m_sYh0yI_m4AtTLF23wlI_301naQE6wENmPPHNSA1_mUcKMlPT1uk96nB-hJc8RF-UBUNIRAwgOJEFzW6NMbbKmNEh30UgNuWjVIHOj3WkEcTO08gIAu6RVH8YhneH9kjM6HanhhLaQxIPHaoodzS87Gg5Th3Y2YtX_sd3_AxiwJ5gUi6h3Q9QjjrQYTZ9LgMGqObM4Bjz2zHTCA3XTz79PMlTBhVZEVWIjhp8FgUjsk7"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-2">
+<div>
+<span class="text-label-sm font-label-sm text-on-surface-variant block mb-1">Mã đơn hàng: PV-284905</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Giỏ Trái Cây Sạch Hữu Cơ Loại A</h3>
+</div>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-label-sm font-label-sm">Chờ thanh toán</span>
+</div>
+<div class="flex flex-wrap gap-x-8 gap-y-2 mt-4 text-body-sm font-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">calendar_today</span> 15/05/2024</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">local_shipping</span> Giao hàng hỏa tốc</span>
+<span class="flex items-center gap-1 text-secondary font-semibold"><span class="material-symbols-outlined text-sm">payments</span> Tổng tiền: 890.000₫</span>
+</div>
+</div>
+<div class="flex md:flex-col justify-end gap-3 mt-4 md:mt-0">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:scale-105 transition-transform">Thanh toán ngay</button>
+<button class="border border-outline text-on-surface-variant px-6 py-2 rounded-full font-label-md text-label-md hover:bg-surface-container-low transition-colors">Chi tiết</button>
+</div>
+</div>
+</div>
+<!-- Empty State (Hidden initially) -->
+<div class="hidden flex-col items-center justify-center py-20 text-center" id="empty-state">
+<span class="material-symbols-outlined text-6xl text-outline-variant mb-4">shopping_bag</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface-variant">Không có đơn hàng nào</h3>
+<p class="text-body-md text-on-surface-variant mt-2 max-w-xs">Bạn chưa có đơn hàng nào trong mục này. Tiếp tục mua sắm để tìm những thực phẩm tươi ngon nhất.</p>
+<button class="mt-8 bg-primary text-on-primary px-8 py-3 rounded-full font-label-md text-label-md hover:scale-105 transition-transform">Mua sắm ngay</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full px-margin-desktop py-16 flex flex-col items-center gap-unit max-w-container-max mx-auto bg-surface-container-low dark:bg-inverse-surface">
+<div class="text-headline-sm font-headline-sm font-bold text-primary dark:text-primary-fixed-dim mb-4">Pure Vitality Market</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 w-full mb-12">
+<a class="text-on-surface-variant dark:text-outline-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed-dim underline transition-all text-center" href="#">About Us</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed-dim underline transition-all text-center" href="#">Sustainability</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed-dim underline transition-all text-center" href="#">Shipping Policy</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed-dim underline transition-all text-center" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed-dim underline transition-all text-center" href="#">Contact Us</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed-dim underline transition-all text-center" href="#">FAQs</a>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant text-center">© 2024 Pure Vitality Market. All rights reserved. Locally sourced in Vietnam.</p>
+</footer>
+<script>
+        function switchTab(tabId) {
+            const tabs = ['pending', 'paid', 'history'];
+            const container = document.getElementById('orders-container');
+            const emptyState = document.getElementById('empty-state');
+
+            // Update UI Active Tab
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabId) {
+                    btn.classList.add('tab-active');
+                    btn.classList.remove('text-on-surface-variant');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('text-on-surface-variant');
+                }
+            });
+
+            // Simulate content loading
+            if (tabId === 'pending') {
+                container.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                container.innerHTML = `
+                    <div class="order-card bg-surface-container-lowest rounded-xl p-6 border border-surface-container-high flex flex-col md:flex-row gap-6">
+                        <div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                            <img src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&q=80&w=300" 
+                                 data-alt="A high-quality close-up photograph of a variety of fresh organic vegetables including green broccoli, red bell peppers, and vibrant carrots. The lighting is bright and airy, reflecting a fresh morning market aesthetic with soft shadows and high color saturation."
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="text-label-sm font-label-sm text-on-surface-variant block mb-1">Mã đơn hàng: PV-284901</span>
+                                    <h3 class="font-headline-sm text-headline-sm text-primary">Combo Rau Xanh Đà Lạt & Trái Cây Nhiệt Đới</h3>
+                                </div>
+                                <span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-label-sm font-label-sm">Chờ thanh toán</span>
+                            </div>
+                            <div class="flex flex-wrap gap-x-8 gap-y-2 mt-4 text-body-sm font-body-sm text-on-surface-variant">
+                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">calendar_today</span> 14/05/2024</span>
+                                <span class="flex items-center gap-1 text-secondary font-semibold"><span class="material-symbols-outlined text-sm">payments</span> Tổng tiền: 545.000₫</span>
+                            </div>
+                        </div>
+                        <div class="flex md:flex-col justify-end gap-3 mt-4 md:mt-0">
+                            <button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:scale-105 transition-transform">Thanh toán ngay</button>
+                        </div>
+                    </div>
+                `;
+            } else if (tabId === 'paid') {
+                container.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                container.innerHTML = `
+                    <div class="order-card bg-surface-container-lowest rounded-xl p-6 border border-surface-container-high flex flex-col md:flex-row gap-6">
+                        <div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=300" 
+                                 data-alt="A beautifully captured overhead shot of fresh sourdough bread, organic eggs, and artisanal cheese on a clean wooden surface. The lighting is soft and natural, emphasizing the organic textures and craftsmanship of the products. The scene is styled for a premium healthy lifestyle market brand."
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="text-label-sm font-label-sm text-on-surface-variant block mb-1">Mã đơn hàng: PV-284800</span>
+                                    <h3 class="font-headline-sm text-headline-sm text-primary">Bộ Sản Phẩm Bữa Sáng Dinh Dưỡng</h3>
+                                </div>
+                                <span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-sm font-label-sm">Đã thanh toán - Đang chuẩn bị</span>
+                            </div>
+                            <div class="flex flex-wrap gap-x-8 gap-y-2 mt-4 text-body-sm font-body-sm text-on-surface-variant">
+                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">calendar_today</span> 12/05/2024</span>
+                                <span class="flex items-center gap-1 text-secondary font-semibold"><span class="material-symbols-outlined text-sm">payments</span> Tổng tiền: 320.000₫</span>
+                            </div>
+                        </div>
+                        <div class="flex md:flex-col justify-end gap-3 mt-4 md:mt-0">
+                            <button class="border border-outline text-on-surface-variant px-6 py-2 rounded-full font-label-md text-label-md">Theo dõi đơn hàng</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            }
+        }
+    </script>
+</body></html>

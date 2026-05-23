@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pure Vitality Admin Dashboard</title>
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Design System Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#78dc77",
+                    "on-tertiary-fixed": "#1c1c18",
+                    "on-secondary-fixed-variant": "#005313",
+                    "on-primary-container": "#9dd090",
+                    "on-background": "#191c1d",
+                    "on-primary-fixed-variant": "#23501e",
+                    "surface-container-low": "#f3f4f5",
+                    "on-tertiary-container": "#c5c2bc",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#a1d494",
+                    "secondary-container": "#91f78e",
+                    "surface-container-high": "#e7e8e9",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-surface-variant": "#42493e",
+                    "secondary-fixed": "#94f990",
+                    "background": "#f8f9fa",
+                    "on-surface": "#191c1d",
+                    "secondary": "#006e1c",
+                    "tertiary": "#3a3935",
+                    "primary-fixed": "#bcf0ae",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#51504b",
+                    "inverse-primary": "#a1d494",
+                    "outline": "#72796e",
+                    "tertiary-fixed": "#e5e2db",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#c9c6c0",
+                    "inverse-surface": "#2e3132",
+                    "primary-container": "#2d5a27",
+                    "primary": "#154212",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#002201",
+                    "surface-dim": "#d9dadb",
+                    "surface-container": "#edeeef",
+                    "on-tertiary-fixed-variant": "#474742",
+                    "outline-variant": "#c2c9bb",
+                    "surface": "#f8f9fa",
+                    "surface-variant": "#e1e3e4",
+                    "on-secondary-fixed": "#002204",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f8f9fa",
+                    "surface-tint": "#3b6934",
+                    "on-secondary-container": "#00731e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "margin-desktop": "48px",
+                    "unit": "8px",
+                    "gutter": "24px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "label-md": ["Be Vietnam Pro"],
+                    "body-sm": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "headline-sm": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "headline-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["30px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "headline-sm": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}],
+                    "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0px 4px 20px rgba(45, 90, 39, 0.05);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Shared SideNavBar -->
+<aside class="bg-surface-container-lowest dark:bg-surface-dim h-screen w-64 fixed left-0 top-0 shadow-sm dark:shadow-none flex flex-col p-4 gap-2 z-50">
+<div class="mb-8 px-2">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">Vitality Admin</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Market Manager</p>
+</div>
+<nav class="flex flex-col gap-1 flex-grow">
+<!-- Active Tab: Dashboard -->
+<a class="bg-secondary-container dark:bg-primary-container text-on-secondary-container dark:text-on-primary-container rounded-lg font-bold p-3 flex items-center gap-3 transition-transform scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container-low rounded-lg p-3 flex items-center gap-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="potted_plant">potted_plant</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container-low rounded-lg p-3 flex items-center gap-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="bar_chart">bar_chart</span>
+<span class="font-label-md text-label-md">Sales Analysis</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container-low rounded-lg p-3 flex items-center gap-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="conveyor_belt">conveyor_belt</span>
+<span class="font-label-md text-label-md">Suppliers</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container-low rounded-lg p-3 flex items-center gap-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant flex flex-col gap-1">
+<button class="bg-primary text-on-primary rounded-xl py-2 px-4 mb-4 font-label-md text-label-md hover:opacity-90 transition-all">
+                Export Report
+            </button>
+<a class="text-on-surface-variant hover:bg-surface-container-low rounded-lg p-3 flex items-center gap-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low rounded-lg p-3 flex items-center gap-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="ml-64 flex flex-col min-h-screen">
+<!-- Shared TopAppBar -->
+<header class="bg-surface dark:bg-background sticky top-0 z-40 flex justify-between items-center w-full px-margin-desktop py-4">
+<div class="flex items-center gap-8">
+<h2 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">Pure Vitality Admin</h2>
+<nav class="hidden md:flex gap-6">
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 font-label-md text-label-md" href="#">Overview</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary transition-all font-label-md text-label-md" href="#">Regional</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary transition-all font-label-md text-label-md" href="#">Real-time</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative focus-within:ring-2 focus-within:ring-primary rounded-full transition-all">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-body-sm w-64 focus:ring-0" placeholder="Search data..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<main class="p-margin-desktop flex flex-col gap-gutter">
+<!-- Key Metrics Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="glass-card p-6 rounded-xl flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md text-label-md">Total Sales</span>
+<div class="bg-secondary-container text-on-secondary-container p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+<p class="font-headline-md text-headline-md text-primary">$24,580.00</p>
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_upward">arrow_upward</span>
+<span>12.5% from yesterday</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card p-6 rounded-xl flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md text-label-md">Active Orders</span>
+<div class="bg-primary-fixed text-on-primary-fixed p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+</div>
+</div>
+<p class="font-headline-md text-headline-md text-primary">142</p>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span>8 shipments in transit</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card p-6 rounded-xl flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md text-label-md">Daily Profit</span>
+<div class="bg-tertiary-fixed text-on-tertiary-fixed p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+</div>
+<p class="font-headline-md text-headline-md text-primary">$8,210.50</p>
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_upward">arrow_upward</span>
+<span>5.2% yield growth</span>
+</div>
+</div>
+<!-- Card 4: Quick Action / Promotional -->
+<div class="bg-primary text-on-primary p-6 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="z-10">
+<p class="font-label-md text-label-md opacity-80">Inventory Health</p>
+<p class="font-headline-sm text-headline-sm mt-1">98.2% Freshness</p>
+</div>
+<button class="bg-white text-primary rounded-lg py-2 px-4 w-fit font-label-md text-label-md mt-4 transition-transform hover:scale-105 z-10">
+                        Audit Stock
+                    </button>
+<!-- Background aesthetic pattern -->
+<div class="absolute -bottom-4 -right-4 w-24 h-24 bg-primary-container rounded-full opacity-20 blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+</div>
+</section>
+<!-- Main Charts Bento Grid -->
+<section class="bento-grid">
+<!-- Large Chart: Sales Volume -->
+<div class="col-span-12 lg:col-span-8 glass-card p-8 rounded-xl h-[400px] flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary">Sales Volume</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Intraday performance for fresh produce categories</p>
+</div>
+<select class="bg-surface-container-low border-none rounded-lg text-label-sm font-label-sm focus:ring-primary py-1 px-3">
+<option>Last 24 Hours</option>
+<option>Last 7 Days</option>
+</select>
+</div>
+<div class="flex-grow">
+<canvas id="salesChart"></canvas>
+</div>
+</div>
+<!-- Smaller Chart: Purchase Orders -->
+<div class="col-span-12 lg:col-span-4 glass-card p-8 rounded-xl h-[400px] flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">Inventory Mix</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Orders by category distribution</p>
+<div class="flex-grow flex items-center justify-center">
+<canvas id="orderMixChart"></canvas>
+</div>
+</div>
+<!-- Financial Summary: Income vs Expenses -->
+<div class="col-span-12 glass-card p-8 rounded-xl flex flex-col md:flex-row gap-8 items-center">
+<div class="md:w-1/3">
+<h3 class="font-headline-sm text-headline-sm text-primary">Financial Summary</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Comparison of revenue intake versus operational overhead for the current billing cycle.</p>
+<div class="mt-6 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="w-1 h-10 bg-primary rounded-full"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Gross Income</p>
+<p class="font-headline-sm text-headline-sm text-primary">$45,200</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-1 h-10 bg-error rounded-full"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Operating Expenses</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">$12,450</p>
+</div>
+</div>
+</div>
+</div>
+<div class="md:w-2/3 h-[250px] w-full">
+<canvas id="financialComparisonChart"></canvas>
+</div>
+</div>
+</section>
+<!-- Featured Product List (Minimalist Style) -->
+<section class="flex flex-col gap-4 mb-8">
+<div class="flex justify-between items-end">
+<h3 class="font-headline-sm text-headline-sm text-primary">Trending Inventory</h3>
+<a class="text-primary font-label-md text-label-md hover:underline" href="#">View All Inventory</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Product Item 1 -->
+<div class="bg-white rounded-xl overflow-hidden group hover:shadow-lg transition-all duration-300">
+<div class="aspect-square relative overflow-hidden">
+<img alt="Fresh Bok Choy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A macro photography shot of vibrant green Bok Choy arranged artistically on a light wooden table. The lighting is soft morning sunlight, emphasizing the crisp texture of the leaves. The background is a clean, minimalist white kitchen setting, maintaining a fresh and organic market aesthetic with a primary green and white palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArM8ctaBhD-te2QA4MsSkZ5y3FVrsX213yvV0VoJMxdAKrIbK904GO0GgBiPDiX0Sq1VfcAdkTWM273NC-5foiuf7flZd_5n2Zo2L2nniODx-ZyUNTlvUrhKiBG_paXh8FmlqZaH7WVoOcGhzjR-isn5b1cq9AhP_8hMu8fjKXXjZckRZJjvGnff3Zm96V12QsS2niymU1kszA7FRGkRJES4l0zxaN78t2Vo6Ta7Wf2TbQqWPBkZIw6hm1kbiWLdFn7d-bGeTjP60P"/>
+<div class="absolute top-3 right-3 bg-secondary-container text-on-secondary-container px-2 py-1 rounded-md text-[10px] font-bold">HIGH STOCK</div>
+</div>
+<div class="p-4">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Leafy Greens</p>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface">Organic Bok Choy</h4>
+<div class="flex justify-between items-center mt-2">
+<p class="text-secondary font-bold">$2.50 / kg</p>
+<p class="text-on-surface-variant text-body-sm">120 kg left</p>
+</div>
+</div>
+</div>
+<!-- Product Item 2 -->
+<div class="bg-white rounded-xl overflow-hidden group hover:shadow-lg transition-all duration-300">
+<div class="aspect-square relative overflow-hidden">
+<img alt="Vine Tomatoes" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close-up of bright red vine-ripened tomatoes still attached to their green stems. They are resting in a rustic woven basket. The setting is bright and airy with high-key lighting, evoking a sense of healthy, sustainable farming. The colors are dominated by the deep red of the fruit and the natural tones of the basket." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg2sLWFh-22vM6pqkbwLOE8-x6hOV9ibt-Bxgr4d5RlG8W-_pWHVysOV6W-oYtW5UoJCxu70eiDX7mmyj9gmwTo0HiLh61UW-4oJXh0hv38bB-S8dlQ_xbMwvTA_iauBnUGZAS0Qhmp_9z09je1IgjX9oFz3BdW4h_7F4E3pvIMTeQhyB4AVsrgx8uCJSm0C8cMXu2zrAsHGKRRWYaYxsdal6DN3fa34CMUPlOdJYqa3NAxjtWed3gfgrwh2uDHQhd-j9aL7nHNXmd"/>
+<div class="absolute top-3 right-3 bg-error-container text-on-error-container px-2 py-1 rounded-md text-[10px] font-bold">LOW STOCK</div>
+</div>
+<div class="p-4">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Vegetables</p>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface">Red Vine Tomatoes</h4>
+<div class="flex justify-between items-center mt-2">
+<p class="text-secondary font-bold">$4.20 / kg</p>
+<p class="text-on-surface-variant text-body-sm">15 kg left</p>
+</div>
+</div>
+</div>
+<!-- Product Item 3 -->
+<div class="bg-white rounded-xl overflow-hidden group hover:shadow-lg transition-all duration-300">
+<div class="aspect-square relative overflow-hidden">
+<img alt="Navel Oranges" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A vibrant arrangement of fresh navel oranges, some sliced open to reveal juicy segments. The oranges are positioned on a clean, light grey stone surface with soft shadows cast by side-lighting. The overall mood is energizing and pure, with a focus on the natural citrus colors against a minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9wxgXX_PaaJys1t2ZLEmPv_Fzr57n6iakbrRqEJj-DIOzcWV-BrIdBbtiz7TdWzNBDifTbhAVoEgY9F0JcsyJ7ro_VbpQcOwMVWnKGjhGpzrTJiLizOhaRp379HqC9XkOEK5qEGKGaAnOxo1JtdfS0GlfMq0Ggoi-y0vZX80QK_QMKyGrqE9e986J6Xutx2n37NyPAPBn4mlG_Hby1PJCoxr7T9A23R0CtkiYx3qUvw0_lmoWXi4JvMsfeSfvqFBI6asfsmAQ0lnq"/>
+</div>
+<div class="p-4">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Citrus</p>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface">Navel Oranges</h4>
+<div class="flex justify-between items-center mt-2">
+<p class="text-secondary font-bold">$3.10 / kg</p>
+<p class="text-on-surface-variant text-body-sm">85 kg left</p>
+</div>
+</div>
+</div>
+<!-- Product Item 4 -->
+<div class="bg-white rounded-xl overflow-hidden group hover:shadow-lg transition-all duration-300">
+<div class="aspect-square relative overflow-hidden">
+<img alt="Dragon Fruit" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A whole dragon fruit and a half-cut dragon fruit showcasing its white flesh and black seeds. The fruit is presented on a minimalist ceramic plate. The aesthetic is modern and sophisticated, using a palette of magenta, white, and soft neutral backgrounds with clean lighting to highlight the fruit's unique texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSp78aVRowTPzktunemXlmf1etT9Zo-X7pHfaV1cKZHRtMcCyHWivW1VRuQzJk1iQ22LZi7WFp3OXkcIk-7M2s1jBmISiACWLUkGWt2SXLe0ut1r8p41GEllaWNY53FbvYcs8aJclvvAqJOtt4rNkNwL7K2eUM9w2qoKTM5ImEL_iTvoXHZla8AuL9I1n6x5t3ib2vOVGjd9HY7pVWR4iVzYLWzAQq8TLe21BeAKn7AJwMbrEexx9iBp_kW130naeKijW849UY6cn2"/>
+</div>
+<div class="p-4">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Tropical</p>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface">Red Dragon Fruit</h4>
+<div class="flex justify-between items-center mt-2">
+<p class="text-secondary font-bold">$5.50 / kg</p>
+<p class="text-on-surface-variant text-body-sm">42 kg left</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<script>
+        // Charts Implementation
+        const ctxSales = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctxSales, {
+            type: 'line',
+            data: {
+                labels: ['6am', '9am', '12pm', '3pm', '6pm', '9pm'],
+                datasets: [{
+                    label: 'Sales ($)',
+                    data: [1200, 3800, 7200, 5400, 8900, 4200],
+                    borderColor: '#2d5a27',
+                    backgroundColor: 'rgba(45, 90, 39, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#2d5a27',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { border: { display: false }, grid: { color: '#e1e3e4' } },
+                    x: { border: { display: false }, grid: { display: false } }
+                }
+            }
+        });
+
+        const ctxMix = document.getElementById('orderMixChart').getContext('2d');
+        const orderMixChart = new Chart(ctxMix, {
+            type: 'doughnut',
+            data: {
+                labels: ['Vegetables', 'Fruits', 'Dry Goods', 'Dairy'],
+                datasets: [{
+                    data: [45, 30, 15, 10],
+                    backgroundColor: ['#2d5a27', '#78dc77', '#3a3935', '#a1d494'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, font: { family: 'Be Vietnam Pro', size: 12 } } }
+                },
+                cutout: '70%'
+            }
+        });
+
+        const ctxFinance = document.getElementById('financialComparisonChart').getContext('2d');
+        const financialChart = new Chart(ctxFinance, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: [12000, 15000, 11000, 18000, 22000, 28000, 25000],
+                        backgroundColor: '#2d5a27',
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'Expenses',
+                        data: [4000, 4500, 3800, 5200, 4800, 6000, 5500],
+                        backgroundColor: '#c2c9bb',
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { stacked: false, border: { display: false } },
+                    x: { stacked: false, border: { display: false }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Hover effect for side nav
+        document.querySelectorAll('aside nav a').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                if (!item.classList.contains('bg-secondary-container')) {
+                    item.style.transform = 'translateX(4px)';
+                }
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateX(0px)';
+            });
+        });
+    </script>
+</body></html>

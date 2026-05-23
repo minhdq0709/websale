@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-shadow {
+            box-shadow: 0px 4px 20px rgba(45, 90, 39, 0.05);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c9c6c0",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005313",
+                        "secondary": "#006e1c",
+                        "inverse-primary": "#a1d494",
+                        "outline-variant": "#c2c9bb",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-container": "#c5c2bc",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#23501e",
+                        "on-surface": "#191c1d",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#1c1c18",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#3a3935",
+                        "secondary-container": "#91f78e",
+                        "surface-dim": "#d9dadb",
+                        "background": "#f8f9fa",
+                        "primary-fixed-dim": "#a1d494",
+                        "surface-bright": "#f8f9fa",
+                        "on-primary-container": "#9dd090",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1d",
+                        "on-surface-variant": "#42493e",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-fixed-dim": "#78dc77",
+                        "primary-container": "#2d5a27",
+                        "surface-tint": "#3b6934",
+                        "tertiary-container": "#51504b",
+                        "surface-container-low": "#f3f4f5",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#474742",
+                        "surface": "#f8f9fa",
+                        "primary-fixed": "#bcf0ae",
+                        "primary": "#154212",
+                        "on-secondary-fixed": "#002204",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary-container": "#00731e",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed": "#94f990",
+                        "surface-container": "#edeeef",
+                        "outline": "#72796e",
+                        "on-primary-fixed": "#002201",
+                        "tertiary-fixed": "#e5e2db"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "48px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "body-sm": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["30px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest shadow-sm">
+<div class="text-headline-md font-headline-md font-bold text-primary tracking-tight">Pure Vitality Market</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-md font-label-md pb-1" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-md font-label-md pb-1" href="#">Vegetables</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-md font-label-md pb-1" href="#">Fruits</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-md font-label-md pb-1" href="#">Special Offers</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all p-2">shopping_cart</button>
+<button class="flex items-center gap-2 p-1 pl-3 bg-secondary-container text-on-secondary-container rounded-full border border-outline-variant">
+<span class="text-label-md font-label-md font-bold">Hồ sơ</span>
+<span class="material-symbols-outlined text-headline-sm" style="font-variation-settings: 'FILL' 1;">person</span>
+</button>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-start">
+<!-- Sidebar Navigation -->
+<aside class="md:col-span-3 space-y-4">
+<div class="p-6 bg-surface-container-low rounded-xl custom-shadow flex flex-col items-center text-center">
+<div class="relative w-24 h-24 mb-4">
+<img alt="User Avatar" class="w-full h-full rounded-full object-cover border-4 border-white shadow-md" data-alt="A professional headshot of a smiling Vietnamese man in his early 30s, clean-shaven and wearing a soft linen shirt. The background is a brightly lit, minimalist organic food shop with blurred greens and earthy tones. The lighting is soft and natural, emphasizing a pure and healthy lifestyle aesthetic consistent with the Pure Vitality Market brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWERW8l7Rx_mCYYVO8cHCLO4sqtBQCqNZXWyYRXSsx5f1ZX1UwL2uVu3Kcksa2WAY7omr1oAjkKE9rLvC5ZWuczRODnmenSBLwPVyiovtImGrGOjnTAUpxZCXYNGTv6Ockck2bF6u52m3ofj1sByNrC-w7_bGi_dA1dAMfLH9vV3FETRbR4tWYTFg7BprlFXNwbHzrZzM5By3CuyAxhz70xkyRtTEM9T41hyDEL8g26gVjdXHus1fUw3rMo-VX6KVCSVAJ3ed57jtu"/>
+<button class="absolute bottom-0 right-0 bg-primary text-on-primary p-1.5 rounded-full shadow-lg hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Nguyễn Minh Quân</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Thành viên Thân thiết</p>
+</div>
+<div class="bg-surface-container-low rounded-xl custom-shadow overflow-hidden">
+<nav class="flex flex-col">
+<button class="flex items-center gap-3 px-6 py-4 text-primary font-bold border-r-4 border-primary bg-surface-container transition-all text-label-md nav-link" id="nav-personal-info" onclick="showSection('personal-info')">
+<span class="material-symbols-outlined">person</span>
+                            Thông tin cá nhân
+                        </button>
+<button class="flex items-center gap-3 px-6 py-4 text-on-surface-variant hover:bg-surface-container transition-all text-label-md nav-link" id="nav-addresses" onclick="showSection('addresses')">
+<span class="material-symbols-outlined">location_on</span>
+                            Địa chỉ nhận hàng
+                        </button>
+<button class="flex items-center gap-3 px-6 py-4 text-on-surface-variant hover:bg-surface-container transition-all text-label-md nav-link" id="nav-orders" onclick="showSection('orders')">
+<span class="material-symbols-outlined">shopping_bag</span>
+                            Lịch sử đơn hàng
+                        </button>
+<button class="flex items-center gap-3 px-6 py-4 text-error hover:bg-error-container transition-all text-label-md">
+<span class="material-symbols-outlined">logout</span>
+                            Đăng xuất
+                        </button>
+</nav>
+</div>
+</aside>
+<!-- Content Area -->
+<section class="md:col-span-9 space-y-gutter">
+<!-- Personal Info Section -->
+<div class="section-content bg-surface-container-lowest rounded-xl custom-shadow p-8 space-y-8 animate-in fade-in duration-500" id="personal-info">
+<div class="flex justify-between items-center border-b border-outline-variant pb-4">
+<h3 class="text-headline-sm font-headline-sm text-primary">Thông tin cá nhân</h3>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-[18px]">edit</span> Chỉnh sửa
+                        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Họ và tên</label>
+<p class="text-body-md font-body-md text-on-surface p-3 bg-surface-container-low rounded-lg">Nguyễn Minh Quân</p>
+</div>
+<div class="space-y-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Số điện thoại</label>
+<p class="text-body-md font-body-md text-on-surface p-3 bg-surface-container-low rounded-lg">090 123 4567</p>
+</div>
+<div class="space-y-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Email</label>
+<p class="text-body-md font-body-md text-on-surface p-3 bg-surface-container-low rounded-lg">minhquan.dev@gmail.com</p>
+</div>
+<div class="space-y-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Ngày sinh</label>
+<p class="text-body-md font-body-md text-on-surface p-3 bg-surface-container-low rounded-lg">15/06/1992</p>
+</div>
+</div>
+</div>
+<!-- Address Section -->
+<div class="section-content hidden bg-surface-container-lowest rounded-xl custom-shadow p-8 space-y-6 animate-in fade-in duration-500" id="addresses">
+<div class="flex justify-between items-center border-b border-outline-variant pb-4">
+<h3 class="text-headline-sm font-headline-sm text-primary">Địa chỉ nhận hàng</h3>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-full text-label-md font-label-md flex items-center gap-2 hover:opacity-90 transition-opacity shadow-md">
+<span class="material-symbols-outlined text-[18px]">add</span> Thêm địa chỉ mới
+                        </button>
+</div>
+<div class="space-y-4">
+<!-- Default Address -->
+<div class="border border-primary-fixed-dim bg-primary-fixed-dim/5 p-5 rounded-xl flex justify-between items-start">
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<span class="text-body-md font-bold text-on-surface">Nhà riêng</span>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Mặc định</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Số 123, Đường Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">SĐT: 090 123 4567</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+</div>
+<!-- Secondary Address -->
+<div class="border border-outline-variant p-5 rounded-xl flex justify-between items-start hover:border-primary transition-colors group">
+<div class="space-y-2">
+<span class="text-body-md font-bold text-on-surface">Văn phòng</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Tòa nhà Landmark 81, 720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">SĐT: 090 123 4567</p>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-primary text-label-sm font-bold">Đặt mặc định</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Order History Section -->
+<div class="section-content hidden bg-surface-container-lowest rounded-xl custom-shadow p-8 space-y-6 animate-in fade-in duration-500" id="orders">
+<div class="flex justify-between items-center border-b border-outline-variant pb-4">
+<h3 class="text-headline-sm font-headline-sm text-primary">Lịch sử đơn hàng</h3>
+<div class="flex gap-2">
+<button class="px-4 py-1.5 bg-secondary-container text-on-secondary-container rounded-full text-label-sm font-bold">Tất cả</button>
+<button class="px-4 py-1.5 hover:bg-surface-container text-on-surface-variant rounded-full text-label-sm font-bold transition-all">Đang giao</button>
+<button class="px-4 py-1.5 hover:bg-surface-container text-on-surface-variant rounded-full text-label-sm font-bold transition-all">Hoàn thành</button>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Order Item 1 -->
+<div class="border border-outline-variant rounded-xl overflow-hidden hover:border-secondary transition-all">
+<div class="bg-surface-container-low px-6 py-3 flex justify-between items-center">
+<span class="text-label-md font-bold text-on-surface">Đơn hàng #PV-88921</span>
+<span class="text-label-sm font-body-sm text-on-surface-variant">22 Tháng 10, 2023</span>
+</div>
+<div class="p-6 flex flex-col md:flex-row gap-6 items-center">
+<div class="flex -space-x-4">
+<img alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-white shadow-sm" data-alt="Close-up of fresh organic green vegetables like bok choy and kale, vibrant green colors, studio lighting on a clean white background, minimalist health style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeTNWKfi94rrNHWOSDDiAUp1bZ0z9-ey5heWtSCBQdg3EntHTdJrnHhqrmltw2EnzEIaoUEXmJ457OEQpjCISdJeunRFinvwy7SHLkooqsKP5fX6-GmcoGbunk2zPvNDFmQDlHfxigKoyEix_6MwgGnDMJ0c9ZFVaiGWgJegWLpBjZoRABOC74UGIs4LYqipwXc-9aOvboIkVlMZ4DkRxbyGlKBHzxZmBZK79dJMVX76YfhOlpjIvpZls8Fy41fHNBKZzvh8E64zNw"/>
+<img alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-white shadow-sm" data-alt="Close-up of ripe organic strawberries, deep red color with tiny seeds visible, fresh dew drops, natural morning light, vibrant and appetizing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNNIbEGbSFBKZvmw9WRUlABr9lIWgoK1CehIsiaVkS4xVM-6hOaJebOu6d48kxdq89ZnvfZtGSL772GYKdVJI7T0vRnLykJj2G6zwO6rIZ7dpGVG3Gii2MoHSsTi3wUN-bSTO-rcrfTMyJoWMTHXOIOQVVTDkJYPl6zocOSY-aw1UJi7iuzhceimHf2VlkZauOwSBpsbg_JzU2S3xZ0v1bf1ZAJuPtRFHd6E3rwXBBtyQH-Ko_f7tYkGb9JQ_93OEgsVL5NDjBctru"/>
+<div class="w-16 h-16 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary-container text-label-md font-bold border-2 border-white shadow-sm">+2</div>
+</div>
+<div class="flex-1 text-center md:text-left">
+<p class="text-body-md font-bold text-on-surface">Rau củ hữu cơ &amp; Trái cây mùa vụ</p>
+<p class="text-body-sm text-on-surface-variant">4 sản phẩm • Thanh toán khi nhận hàng</p>
+</div>
+<div class="text-right">
+<p class="text-headline-sm font-bold text-secondary">540.000đ</p>
+<span class="text-secondary font-bold text-label-sm flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Đã giao thành công
+                                    </span>
+</div>
+<button class="border border-primary text-primary px-6 py-2 rounded-full font-bold text-label-md hover:bg-primary hover:text-on-primary transition-all">Chi tiết</button>
+</div>
+</div>
+<!-- Order Item 2 -->
+<div class="border border-outline-variant rounded-xl overflow-hidden hover:border-secondary transition-all opacity-80">
+<div class="bg-surface-container-low px-6 py-3 flex justify-between items-center">
+<span class="text-label-md font-bold text-on-surface">Đơn hàng #PV-88745</span>
+<span class="text-label-sm font-body-sm text-on-surface-variant">05 Tháng 10, 2023</span>
+</div>
+<div class="p-6 flex flex-col md:flex-row gap-6 items-center">
+<div class="flex -space-x-4">
+<img alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-white shadow-sm" data-alt="A assortment of fresh organic carrots with green tops attached, vibrant orange color against a neutral earthy background, soft studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7F4xOvd4CQb_GE68ARDPnfIKKWULZ3ddvX1a70HqDqCHt9iH3DGGb11PuF9I5pNx8kXlHodqBuOdlVWJNQcyVjYUoTHycxSetxCO_OM9gCv2bCJwowV1Vc_CtmmKtEE5FX_514sV-wj6jtpTy66cFxgK9ccuTxFXLUdxR6HGURYYf3o2ssX4zxJPKhOKDpxO2NdKQavH3KM_fl-V3nVNG9170QNLGyyRAZxt8JpFzT4lvNmXGcJ8P56bFfMjKo7HmNumkyhP2m80e"/>
+</div>
+<div class="flex-1 text-center md:text-left">
+<p class="text-body-md font-bold text-on-surface">Combo Nấu Súp Rau Củ</p>
+<p class="text-body-sm text-on-surface-variant">1 sản phẩm • Ví điện tử MoMo</p>
+</div>
+<div class="text-right">
+<p class="text-headline-sm font-bold text-secondary">125.000đ</p>
+<span class="text-secondary font-bold text-label-sm flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Đã giao thành công
+                                    </span>
+</div>
+<button class="border border-primary text-primary px-6 py-2 rounded-full font-bold text-label-md hover:bg-primary hover:text-on-primary transition-all">Chi tiết</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full px-margin-desktop py-16 flex flex-col items-center gap-unit max-w-container-max mx-auto bg-surface-container-low mt-12">
+<div class="text-headline-sm font-headline-sm font-bold text-primary mb-6">Pure Vitality Market</div>
+<div class="flex flex-wrap justify-center gap-8 mb-8">
+<a class="text-on-surface-variant hover:text-secondary underline transition-all text-label-sm font-label-sm" href="#">About Us</a>
+<a class="text-on-surface-variant hover:text-secondary underline transition-all text-label-sm font-label-sm" href="#">Sustainability</a>
+<a class="text-on-surface-variant hover:text-secondary underline transition-all text-label-sm font-label-sm" href="#">Shipping Policy</a>
+<a class="text-on-surface-variant hover:text-secondary underline transition-all text-label-sm font-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-secondary underline transition-all text-label-sm font-label-sm" href="#">Contact Us</a>
+<a class="text-on-surface-variant hover:text-secondary underline transition-all text-label-sm font-label-sm" href="#">FAQs</a>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant text-center opacity-70">
+            © 2024 Pure Vitality Market. All rights reserved. Locally sourced in Vietnam.
+        </p>
+</footer>
+<script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show target section
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Reset all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-primary', 'font-bold', 'border-r-4', 'border-primary', 'bg-surface-container');
+                link.classList.add('text-on-surface-variant');
+            });
+
+            // Set active nav link
+            const activeLink = document.getElementById('nav-' + sectionId);
+            activeLink.classList.add('text-primary', 'font-bold', 'border-r-4', 'border-primary', 'bg-surface-container');
+            activeLink.classList.remove('text-on-surface-variant');
+        }
+
+        // Add micro-interaction to cards
+        document.querySelectorAll('.custom-shadow').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

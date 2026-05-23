@@ -1,0 +1,28 @@
+{
+  "name": "mila-backend",
+  "version": "1.0.0",
+  "description": "Pure Vitality Market - Web ban rau (Node.js + MySQL)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "express-rate-limit": "^7.3.1",
+    "ajv": "^8.16.0",
+    "ajv-formats": "^3.0.1",
+    "dotenv": "^16.4.5",
+    "cookie-parser": "^1.4.6",
+    "winston": "^3.13.0",
+    "isomorphic-dompurify": "^2.15.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  }
+}

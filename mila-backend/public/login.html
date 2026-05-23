@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Đăng Nhập / Đăng Ký | Pure Vitality Market</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#e1e3e4",
+            "on-tertiary-container": "#c5c2bc",
+            "on-secondary-fixed": "#002204",
+            "on-tertiary-fixed-variant": "#474742",
+            "primary-fixed-dim": "#a1d494",
+            "outline-variant": "#c2c9bb",
+            "inverse-on-surface": "#f0f1f2",
+            "on-error": "#ffffff",
+            "tertiary-fixed-dim": "#c9c6c0",
+            "outline": "#72796e",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#51504b",
+            "surface-container-highest": "#e1e3e4",
+            "primary-container": "#2d5a27",
+            "on-primary-container": "#9dd090",
+            "on-surface-variant": "#42493e",
+            "on-secondary": "#ffffff",
+            "inverse-surface": "#2e3132",
+            "secondary-container": "#91f78e",
+            "on-tertiary-fixed": "#1c1c18",
+            "on-primary-fixed-variant": "#23501e",
+            "on-primary-fixed": "#002201",
+            "surface-container-high": "#e7e8e9",
+            "tertiary": "#3a3935",
+            "secondary-fixed-dim": "#78dc77",
+            "tertiary-fixed": "#e5e2db",
+            "surface": "#f8f9fa",
+            "background": "#f8f9fa",
+            "primary": "#154212",
+            "surface-container-lowest": "#ffffff",
+            "surface-container": "#edeeef",
+            "primary-fixed": "#bcf0ae",
+            "on-surface": "#191c1d",
+            "on-secondary-fixed-variant": "#005313",
+            "secondary": "#006e1c",
+            "error": "#ba1a1a",
+            "surface-bright": "#f8f9fa",
+            "surface-container-low": "#f3f4f5",
+            "on-secondary-container": "#00731e",
+            "inverse-primary": "#a1d494",
+            "surface-tint": "#3b6934",
+            "surface-dim": "#d9dadb",
+            "on-background": "#191c1d",
+            "secondary-fixed": "#94f990",
+            "error-container": "#ffdad6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "container-max": "1280px",
+            "gutter": "24px",
+            "unit": "8px",
+            "margin-mobile": "16px",
+            "margin-desktop": "48px"
+          },
+          "fontFamily": {
+            "label-sm": ["Be Vietnam Pro"],
+            "headline-lg": ["Be Vietnam Pro"],
+            "body-sm": ["Be Vietnam Pro"],
+            "headline-md": ["Be Vietnam Pro"],
+            "body-md": ["Be Vietnam Pro"],
+            "label-md": ["Be Vietnam Pro"],
+            "body-lg": ["Be Vietnam Pro"],
+            "headline-sm": ["Be Vietnam Pro"],
+            "headline-lg-mobile": ["Be Vietnam Pro"]
+          },
+          "fontSize": {
+            "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}],
+            "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+            "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "headline-sm": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}],
+            "headline-lg-mobile": ["30px", {"lineHeight": "1.2", "fontWeight": "700"}]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Be Vietnam Pro', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .active-tab { color: #154212; border-bottom: 2px solid #154212; }
+    .form-transition { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex items-center justify-center">
+
+  <main class="w-full max-w-[1440px] min-h-[921px] grid grid-cols-1 md:grid-cols-2 bg-surface-container-lowest md:rounded-xl overflow-hidden md:shadow-xl md:m-margin-desktop">
+    <!-- Image Section -->
+    <section class="hidden md:block relative overflow-hidden">
+      <img alt="Fresh Organic Vegetables" class="absolute inset-0 w-full h-full object-cover" src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80"/>
+      <div class="absolute inset-0 bg-primary/10 backdrop-blur-[2px]"></div>
+      <div class="absolute bottom-16 left-12 right-12 text-on-primary">
+        <h1 class="font-headline-lg text-headline-lg mb-4 text-white drop-shadow-md cursor-pointer" onclick="window.location.href='/index.html'">Pure Vitality Market</h1>
+        <p class="font-body-lg text-body-lg text-white/90 max-w-md drop-shadow-sm">Mang tinh hoa thiên nhiên từ nông trại đến bàn ăn của gia đình bạn. Sống khỏe, sống trọn vẹn.</p>
+      </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="flex flex-col justify-center items-center p-8 md:p-16 lg:p-24 bg-surface-container-lowest">
+      <div class="w-full max-w-md">
+        <div class="mb-12 text-center md:text-left">
+          <span class="text-primary font-bold text-headline-md font-headline-md tracking-tight block mb-2 cursor-pointer" onclick="window.location.href='/index.html'">Pure Vitality Market</span>
+          <h2 class="text-on-surface-variant font-body-md text-body-md">Chào mừng bạn đến với cộng đồng sống sạch.</h2>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-8 border-b border-outline-variant mb-8">
+          <button class="pb-3 text-label-md font-label-md transition-all active-tab" id="tab-login" onclick="switchTab('login')">Đăng nhập</button>
+          <button class="pb-3 text-label-md font-label-md text-on-surface-variant hover:text-primary transition-all" id="tab-signup" onclick="switchTab('signup')">Đăng ký</button>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-transition" id="form-login">
+          <form class="space-y-6" id="login-form">
+            <div class="space-y-1.5">
+              <label class="block text-label-sm font-label-sm text-on-surface-variant">Email hoặc Số điện thoại</label>
+              <input id="login-username" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="user@example.com hoặc 0901234567" type="text" required/>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-label-sm font-label-sm text-on-surface-variant">Mật khẩu</label>
+              <div class="relative">
+                <input id="login-password" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="••••••••" type="password" required/>
+                <button id="login-toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-outline" type="button">
+                  <span class="material-symbols-outlined text-[20px]">visibility</span>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+                <span class="text-label-sm font-label-sm text-on-surface-variant">Ghi nhớ đăng nhập</span>
+              </label>
+              <a class="text-label-sm font-label-sm text-primary hover:underline" href="#">Quên mật khẩu?</a>
+            </div>
+            <button type="submit" class="w-full py-4 bg-primary text-on-primary font-label-md text-label-md rounded-xl hover:bg-primary-container hover:scale-[1.01] transition-all duration-200 shadow-md">
+              Đăng nhập
+            </button>
+          </form>
+        </div>
+
+        <!-- Signup Form -->
+        <div class="form-transition hidden opacity-0 translate-y-4" id="form-signup">
+          <form class="space-y-4" id="register-form">
+            <div class="space-y-1.5">
+              <label class="block text-label-sm font-label-sm text-on-surface-variant">Họ và Tên</label>
+              <input id="register-name" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="Nguyễn Văn A" type="text" required/>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-1.5">
+                <label class="block text-label-sm font-label-sm text-on-surface-variant">Email</label>
+                <input id="register-email" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="email@example.com" type="email" required/>
+              </div>
+              <div class="space-y-1.5">
+                <label class="block text-label-sm font-label-sm text-on-surface-variant">Số điện thoại</label>
+                <input id="register-phone" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="0901234567" type="tel" required/>
+              </div>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-label-sm font-label-sm text-on-surface-variant">Mật khẩu</label>
+              <input id="register-password" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="Tối thiểu 6 ký tự" type="password" minlength="6" required/>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-label-sm font-label-sm text-on-surface-variant">Xác nhận mật khẩu</label>
+              <input id="register-confirm-password" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="••••••••" type="password" minlength="6" required/>
+            </div>
+            <button type="submit" class="w-full py-4 mt-4 bg-primary text-on-primary font-label-md text-label-md rounded-xl hover:bg-primary-container hover:scale-[1.01] transition-all duration-200 shadow-md">
+              Đăng ký ngay
+            </button>
+          </form>
+        </div>
+
+        <!-- Social Login -->
+        <div class="mt-10">
+          <div class="relative flex items-center justify-center mb-8">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-outline-variant"></div></div>
+            <span class="relative px-4 bg-surface-container-lowest text-label-sm font-label-sm text-outline">Hoặc tiếp tục với</span>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <button onclick="window.toast.info('Tính năng đăng nhập qua Google đang được hoàn thiện.')" class="flex items-center justify-center gap-3 py-3 px-4 border border-outline-variant rounded-xl hover:bg-surface-container-low transition-colors font-label-md text-label-md">
+              <svg class="w-5 h-5" viewbox="0 0 24 24">
+                <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.96 3.4-2.16 4.56-1.12 1.12-2.72 1.92-5.68 1.92-5.44 0-9.84-4.4-9.84-9.84s4.4-9.84 9.84-9.84c2.96 0 5.12 1.12 6.72 2.64l2.32-2.32C19.28 1.04 16.24 0 12.48 0 5.6 0 0 5.6 0 12.48s5.6 12.48 12.48 12.48c3.68 0 6.48-1.2 8.64-3.44 2.24-2.24 2.88-5.36 2.88-7.84 0-.56-.08-1.12-.16-1.68h-11.36z" fill="#EA4335"></path>
+              </svg>
+              Google
+            </button>
+            <button onclick="window.toast.info('Tính năng đăng nhập qua Facebook đang được hoàn thiện.')" class="flex items-center justify-center gap-3 py-3 px-4 border border-outline-variant rounded-xl hover:bg-surface-container-low transition-colors font-label-md text-label-md">
+              <svg class="w-5 h-5" fill="#1877F2" viewbox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
+              </svg>
+              Facebook
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-12 text-center">
+          <p class="text-body-sm font-body-sm text-outline">
+            © 2026 Pure Vitality Market. Nông sản tươi sạch tại Việt Nam.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/login.js"></script>
+  <script>
+    function switchTab(tab) {
+      const loginForm = document.getElementById('form-login');
+      const signupForm = document.getElementById('form-signup');
+      const tabLogin = document.getElementById('tab-login');
+      const tabSignup = document.getElementById('tab-signup');
+
+      if (tab === 'login') {
+        signupForm.classList.add('hidden', 'opacity-0', 'translate-y-4');
+        loginForm.classList.remove('hidden');
+        setTimeout(() => {
+          loginForm.classList.remove('opacity-0', 'translate-y-4');
+        }, 10);
+        
+        tabLogin.classList.add('active-tab');
+        tabLogin.classList.remove('text-on-surface-variant');
+        tabSignup.classList.remove('active-tab');
+        tabSignup.classList.add('text-on-surface-variant');
+      } else {
+        loginForm.classList.add('hidden', 'opacity-0', 'translate-y-4');
+        signupForm.classList.remove('hidden');
+        setTimeout(() => {
+          signupForm.classList.remove('opacity-0', 'translate-y-4');
+        }, 10);
+
+        tabSignup.classList.add('active-tab');
+        tabSignup.classList.remove('text-on-surface-variant');
+        tabLogin.classList.remove('active-tab');
+        tabLogin.classList.add('text-on-surface-variant');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,758 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:12px}
+.root{padding:1rem 0}
+.tabs{display:flex;gap:2px;margin-bottom:1rem;background:var(--color-background-secondary);border-radius:8px;padding:3px;flex-wrap:wrap}
+.tab{padding:6px 11px;font-size:10px;border:none;background:none;cursor:pointer;color:var(--color-text-secondary);border-radius:5px;transition:all.15s;white-space:nowrap;font-weight:500}
+.tab.active{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:600;box-shadow:0 0.5px 2px rgba(0,0,0,.1)}
+.panel{display:none}.panel.active{display:block}
+.note{font-size:10px;color:var(--color-text-tertiary);margin-bottom:12px;padding:7px 10px;background:var(--color-background-secondary);border-radius:6px;border-left:2px solid #7ec850;line-height:1.5}
+.sec-title{font-size:11px;font-weight:600;color:var(--color-text-primary);margin:14px 0 8px;padding-left:8px;border-left:3px solid #2d5a27}
+
+/* FLOW DIAGRAM */
+.flow{display:flex;flex-direction:column;gap:0}
+.flow-row{display:flex;align-items:center;gap:0}
+.flow-box{padding:8px 12px;border-radius:6px;font-size:10px;font-weight:600;text-align:center;border:0.5px solid;flex-shrink:0}
+.fb-client{background:#e8f4fd;border-color:#3498db;color:#1a4a8c}
+.fb-gate{background:#fef3cd;border-color:#f39c12;color:#7a5c00}
+.fb-mw{background:#f0e8fd;border-color:#9b59b6;color:#5a1a8c}
+.fb-ctrl{background:#d4edbc;border-color:#2d5a27;color:#1a5c12}
+.fb-db{background:#fde8e8;border-color:#e74c3c;color:#8c1a1a}
+.fb-cache{background:#ffecd4;border-color:#e67e22;color:#7a3d00}
+.flow-arrow{flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--color-text-tertiary);min-width:20px}
+.flow-down{display:flex;justify-content:center;margin:4px 0;color:var(--color-text-tertiary);font-size:12px}
+.flow-label{font-size:8px;color:var(--color-text-tertiary);text-align:center;margin:2px 0}
+
+/* MIDDLEWARE CHAIN */
+.mw-chain{display:flex;flex-direction:column;gap:6px}
+.mw-step{display:flex;align-items:flex-start;gap:10px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:10px;position:relative}
+.mw-step::before{content:'';position:absolute;left:26px;bottom:-6px;width:0.5px;height:6px;background:var(--color-border-secondary)}
+.mw-step:last-child::before{display:none}
+.mw-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#fff}
+.mw-body{flex:1}
+.mw-title{font-size:11px;font-weight:600;color:var(--color-text-primary);margin-bottom:3px}
+.mw-desc{font-size:10px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:4px}
+.mw-code{font-family:monospace;font-size:9px;color:var(--color-text-secondary);background:var(--color-background-primary);padding:4px 7px;border-radius:4px;border:0.5px solid var(--color-border-tertiary);white-space:pre;overflow-x:auto;line-height:1.6;display:block}
+.mw-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.mw-tag{padding:2px 7px;border-radius:4px;font-size:8px;font-weight:600}
+.tag-pass{background:#d4edbc;color:#1a5c12}
+.tag-fail{background:#fde8e8;color:#8c1a1a}
+.tag-log{background:#fef3cd;color:#7a5c00}
+.tag-limit{background:#e8f4fd;color:#1a4a8c}
+
+/* RBAC TABLE */
+.rbac-grid{display:grid;grid-template-columns:160px repeat(4,1fr);gap:0;border:0.5px solid var(--color-border-tertiary);border-radius:8px;overflow:hidden;font-size:10px}
+.rbac-cell{padding:7px 8px;border-bottom:0.5px solid var(--color-border-tertiary);border-right:0.5px solid var(--color-border-tertiary);display:flex;align-items:center}
+.rbac-cell:nth-child(5n){border-right:none}
+.rbac-head{background:var(--color-background-secondary);font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:var(--color-text-tertiary);justify-content:center}
+.rbac-row-head{font-weight:600;color:var(--color-text-primary);font-size:10px}
+.rbac-cell:nth-last-child(-n+5){border-bottom:none}
+.yes{color:#2d5a27;font-weight:700;justify-content:center}
+.no{color:#ccc;justify-content:center}
+.partial{color:#f39c12;font-weight:700;justify-content:center}
+.role-badge{padding:2px 8px;border-radius:10px;font-size:8px;font-weight:700;margin:0 auto}
+.rb-guest{background:#f0f0f0;color:#666}
+.rb-customer{background:#d4edbc;color:#1a5c12}
+.rb-staff{background:#dce8f7;color:#1a4a8c}
+.rb-admin{background:#fde8e8;color:#8c1a1a}
+
+/* TOKEN FLOW */
+.token-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:12px;margin-bottom:8px}
+.token-title{font-size:11px;font-weight:600;color:var(--color-text-primary);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.token-body{font-size:10px;color:var(--color-text-secondary);line-height:1.6}
+.token-schema{font-family:monospace;font-size:9px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:5px;padding:8px;margin-top:6px;white-space:pre;line-height:1.6;overflow-x:auto}
+.security-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.sec-item{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:6px;padding:10px}
+.sec-item-title{font-size:10px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.sec-item-body{font-size:9px;color:var(--color-text-secondary);line-height:1.6}
+.sec-icon{font-size:14px}
+
+/* RESPONSIVE */
+.device-tabs{display:flex;gap:4px;margin-bottom:12px}
+.dtab{padding:5px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:5px;font-size:10px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);font-weight:500;transition:all.15s}
+.dtab.active{background:#2d5a27;color:#fff;border-color:#2d5a27}
+.device-panel{display:none}.device-panel.active{display:block}
+.bp-table{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:12px}
+.bp-table th{padding:6px 8px;text-align:left;background:var(--color-background-secondary);font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:var(--color-text-tertiary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.bp-table td{padding:7px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);vertical-align:top}
+.bp-table tr:last-child td{border:none}
+.bp-name{font-weight:600;color:var(--color-text-primary);font-size:10px}
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.comp-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:10px}
+.comp-title{font-size:10px;font-weight:600;color:var(--color-text-primary);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.comp-list{list-style:none}
+.comp-list li{font-size:9px;color:var(--color-text-secondary);padding:2px 0;display:flex;align-items:flex-start;gap:4px;line-height:1.4}
+.comp-list li::before{content:'·';color:#7ec850;font-weight:700;flex-shrink:0}
+
+/* DEVICE MOCKUPS */
+.devices-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.device-frame{border:2px solid var(--color-border-secondary);border-radius:10px;overflow:hidden;flex-shrink:0}
+.device-frame.desktop{width:340px;border-radius:8px}
+.device-frame.tablet{width:220px;border-radius:12px}
+.device-frame.mobile{width:130px;border-radius:16px}
+.device-screen{background:#f0f4ec;overflow:hidden}
+
+/* Mini screen components */
+.m-hdr{background:#0f1a0f;padding:7px 10px;display:flex;align-items:center;gap:8px}
+.m-hdr .logo{font-size:11px;font-weight:800;color:#fff}.m-hdr .logo em{color:#7ec850;font-style:normal}
+.m-search{flex:1;background:rgba(255,255,255,.1);border-radius:4px;padding:3px 7px;font-size:8px;color:rgba(255,255,255,.4)}
+.m-cart{background:#7ec850;color:#0f1a0f;padding:2px 7px;border-radius:10px;font-size:8px;font-weight:700}
+
+/* Desktop mini */
+.d-nav{background:#1a2f1a;display:flex;gap:0;padding:0 10px}
+.d-nav-item{padding:5px 10px;font-size:8px;color:rgba(255,255,255,.55);border-bottom:2px solid transparent}
+.d-nav-item.a{color:#7ec850;border-bottom-color:#7ec850}
+.d-hero{background:linear-gradient(135deg,#0f1a0f,#1a3a1a);padding:16px 12px;display:grid;grid-template-columns:1fr 80px;gap:8px;align-items:center}
+.d-hero-h{font-size:11px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:4px}
+.d-hero-sub{font-size:7px;color:rgba(255,255,255,.6);margin-bottom:8px}
+.d-cta{background:#7ec850;color:#0f1a0f;padding:4px 10px;border-radius:10px;font-size:8px;font-weight:700;display:inline-block}
+.d-hero-img{background:rgba(126,200,80,.1);border:0.5px solid rgba(126,200,80,.2);border-radius:8px;height:60px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.d-trust{background:#fff;border-top:0.5px solid #e0e8d8;padding:5px 12px;display:flex;gap:12px;justify-content:center}
+.d-trust-item{font-size:7px;color:#2d5a27;font-weight:500;display:flex;align-items:center;gap:3px}
+.d-grid{padding:8px 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.d-pc{background:#fff;border-radius:6px;border:0.5px solid #dde8d0;overflow:hidden}
+.d-pc-img{background:#f5f9f0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:14px}
+.d-pc-body{padding:4px 5px}
+.d-pc-name{font-size:7px;font-weight:600;color:#1a1a1a;margin-bottom:2px;line-height:1.3}
+.d-pc-price{font-size:8px;font-weight:800;color:#2d5a27;margin-bottom:3px}
+.d-pc-btn{width:100%;background:#2d5a27;color:#fff;border:none;border-radius:3px;padding:3px;font-size:6px;font-weight:700;cursor:pointer}
+.d-section-head{padding:6px 10px 2px;display:flex;justify-content:space-between;align-items:center}
+.d-section-title{font-size:9px;font-weight:700;color:#1a1a1a}
+.d-see-all{font-size:7px;color:#2d5a27;font-weight:600}
+
+/* Tablet mini */
+.t-nav{background:#1a2f1a;display:flex;padding:0 8px;overflow:hidden}
+.t-nav-item{padding:4px 8px;font-size:7px;color:rgba(255,255,255,.55);border-bottom:1.5px solid transparent;white-space:nowrap}
+.t-nav-item.a{color:#7ec850;border-bottom-color:#7ec850}
+.t-hero{background:linear-gradient(135deg,#0f1a0f,#1a3a1a);padding:12px 10px;position:relative}
+.t-hero-h{font-size:10px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:3px}
+.t-hero-sub{font-size:7px;color:rgba(255,255,255,.6);margin-bottom:7px}
+.t-cta{background:#7ec850;color:#0f1a0f;padding:3px 8px;border-radius:8px;font-size:7px;font-weight:700;display:inline-block}
+.t-grid{padding:7px 8px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+
+/* Mobile mini */
+.mob-hdr{background:#0f1a0f;padding:6px 8px;display:flex;align-items:center;justify-content:space-between}
+.mob-logo{font-size:11px;font-weight:800;color:#fff}.mob-logo em{color:#7ec850;font-style:normal}
+.mob-icons{display:flex;gap:5px;font-size:13px;color:#fff}
+.mob-search{background:#1a2f1a;padding:5px 8px}
+.mob-search-input{width:100%;background:rgba(255,255,255,.1);border:0.5px solid rgba(255,255,255,.12);border-radius:5px;padding:4px 8px;font-size:7px;color:rgba(255,255,255,.4)}
+.mob-grid{padding:6px 7px;display:grid;grid-template-columns:repeat(2,1fr);gap:5px}
+.m-pc{background:#fff;border-radius:6px;border:0.5px solid #dde8d0;overflow:hidden}
+.m-pc-img{background:#f5f9f0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:18px}
+.m-pc-body{padding:4px 5px}
+.m-pc-name{font-size:7px;font-weight:600;color:#1a1a1a;margin-bottom:2px;line-height:1.2}
+.m-pc-price{font-size:8px;font-weight:800;color:#2d5a27;margin-bottom:3px}
+.m-pc-btn{width:100%;background:#2d5a27;color:#fff;border:none;border-radius:3px;padding:2px;font-size:6px;font-weight:700}
+.mob-bottom-nav{background:#fff;border-top:0.5px solid #e0e8d8;display:flex;padding:4px 0 2px}
+.mbn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:6px;color:#888;cursor:pointer}
+.mbn-item.a{color:#2d5a27}
+.mbn-icon{font-size:14px;line-height:1}
+.mob-cat-pills{display:flex;gap:4px;padding:5px 7px;overflow:hidden}
+.mcp{padding:3px 8px;border-radius:10px;font-size:7px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.mcp.active{background:#2d5a27;color:#fff}
+.mcp.normal{background:#f0f4ec;color:#2d5a27;border:0.5px solid #dde8d0}
+
+/* API SECURITY */
+.api-sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.api-sec-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:11px}
+.asc-title{font-size:11px;font-weight:600;color:var(--color-text-primary);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.asc-body{font-size:10px;color:var(--color-text-secondary);line-height:1.6}
+.asc-code{font-family:monospace;font-size:9px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:5px;padding:7px;margin-top:6px;white-space:pre;line-height:1.6;overflow-x:auto;display:block}
+.rate-table{width:100%;font-size:9px;border-collapse:collapse}
+.rate-table td,.rate-table th{padding:4px 7px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.rate-table th{background:var(--color-background-primary);font-weight:600;color:var(--color-text-tertiary);font-size:8px}
+.rate-table tr:last-child td{border:none}
+.ep{font-family:monospace;font-size:9px}
+.lim{font-weight:600;color:#e74c3c}
+</style>
+
+<div class="root">
+<div class="tabs">
+  <button class="tab active" onclick="sw('flow',this)">🔄 Request Flow</button>
+  <button class="tab" onclick="sw('mw',this)">⛓ Middleware</button>
+  <button class="tab" onclick="sw('rbac',this)">🛡 RBAC</button>
+  <button class="tab" onclick="sw('token',this)">🔑 JWT & Token</button>
+  <button class="tab" onclick="sw('security',this)">🔒 Bảo mật API</button>
+  <button class="tab" onclick="sw('responsive',this)">📱 Responsive</button>
+</div>
+
+<!-- REQUEST FLOW -->
+<div id="tab-flow" class="panel active">
+  <div class="note">Mỗi request đi qua 5 lớp bảo vệ trước khi chạm vào DB. Tất cả traffic phải qua HTTPS.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div class="sec-title">Public request (không cần login)</div>
+      <div class="mw-chain">
+        <div class="mw-step"><div class="mw-num" style="background:#3498db">C</div><div class="mw-body"><div class="mw-title">Client (Browser / App)</div><div class="mw-desc">Gửi HTTPS request kèm header</div><div class="mw-code">GET /api/v1/products?category=rau-cu
+Origin: https://mila.vn
+Accept: application/json</div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#e67e22">N</div><div class="mw-body"><div class="mw-title">Nginx / CDN (Rate Limit toàn cục)</div><div class="mw-desc">Chặn DDoS, giới hạn 200 req/min/IP trước khi vào Node</div><div class="mw-tags"><span class="mw-tag tag-fail">429 Too Many</span><span class="mw-tag tag-log">Access log</span></div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#9b59b6">1</div><div class="mw-body"><div class="mw-title">Helmet + CORS</div><div class="mw-desc">Bật CSP, HSTS, X-Frame-Options. Chỉ cho phép origin mila.vn gọi API</div><div class="mw-code">helmet(), cors({origin:'https://mila.vn',
+  credentials:true})</div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#9b59b6">2</div><div class="mw-body"><div class="mw-title">Express Rate Limit (per-endpoint)</div><div class="mw-desc">Tầng 2 giới hạn riêng từng nhóm endpoint</div><div class="mw-tags"><span class="mw-tag tag-pass">Pass → Controller</span></div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#9b59b6">3</div><div class="mw-body"><div class="mw-title">AJV Validation</div><div class="mw-desc">Validate body/params/query. Reject ngay nếu sai schema</div><div class="mw-tags"><span class="mw-tag tag-fail">400 Bad Request</span><span class="mw-tag tag-pass">Pass → Cache</span></div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#e67e22">C</div><div class="mw-body"><div class="mw-title">Redis Cache (TTL 5 phút)</div><div class="mw-desc">Kiểm tra cache — nếu hit thì trả về ngay, không cần query DB</div><div class="mw-tags"><span class="mw-tag tag-pass">Cache HIT → 200</span><span class="mw-tag tag-limit">Miss → DB</span></div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#2d5a27">D</div><div class="mw-body"><div class="mw-title">Controller → MySQL</div><div class="mw-desc">Chỉ SELECT — không có write trên public endpoint</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="sec-title">Protected request (cần JWT)</div>
+      <div class="mw-chain">
+        <div class="mw-step"><div class="mw-num" style="background:#3498db">C</div><div class="mw-body"><div class="mw-title">Client gửi kèm Access Token</div><div class="mw-code">POST /api/v1/orders
+Authorization: Bearer eyJhbGciO...
+Content-Type: application/json</div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#e67e22">N</div><div class="mw-body"><div class="mw-title">Nginx + Rate Limit toàn cục</div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#9b59b6">1</div><div class="mw-body"><div class="mw-title">Helmet + CORS</div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#e74c3c">🔐</div><div class="mw-body"><div class="mw-title">JWT Verify Middleware</div><div class="mw-desc">Kiểm tra token hợp lệ, chưa hết hạn, chưa bị revoke (blacklist Redis)</div><div class="mw-code">jwt.verify(token, JWT_SECRET)
+→ decode {sub, phone, role, iat, exp}
+→ check Redis blacklist (logout?)</div><div class="mw-tags"><span class="mw-tag tag-fail">401 Unauthorized</span><span class="mw-tag tag-fail">403 Forbidden</span><span class="mw-tag tag-pass">req.user = decoded</span></div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#e74c3c">🛡</div><div class="mw-body"><div class="mw-title">RBAC Role Check</div><div class="mw-desc">Kiểm tra role của user có đủ quyền với endpoint này không</div><div class="mw-code">requireRole('admin') // hoặc
+requireAny('admin','staff')</div><div class="mw-tags"><span class="mw-tag tag-fail">403 Forbidden</span><span class="mw-tag tag-pass">Pass → Validation</span></div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#9b59b6">4</div><div class="mw-body"><div class="mw-title">AJV Validation + Sanitize</div><div class="mw-desc">Validate schema + DOMPurify strip HTML injection</div></div></div>
+        <div class="mw-step"><div class="mw-num" style="background:#2d5a27">D</div><div class="mw-body"><div class="mw-title">Controller → MySQL (Transaction)</div><div class="mw-desc">Ghi DB trong transaction, rollback nếu lỗi</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MIDDLEWARE -->
+<div id="tab-mw" class="panel">
+  <div class="note">Code thực tế cho từng middleware — copy vào project là dùng được.</div>
+  <div class="mw-chain">
+    <div class="mw-step"><div class="mw-num" style="background:#9b59b6">1</div><div class="mw-body">
+      <div class="mw-title">auth.middleware.js — Xác thực JWT</div>
+      <div class="mw-code">const jwt = require('jsonwebtoken');
+const redis = require('../config/redis');
+
+module.exports = async (req, res, next) => {
+  const header = req.headers.authorization;
+  if (!header?.startsWith('Bearer '))
+    return res.status(401).json({ code:'NO_TOKEN', message:'Chưa đăng nhập.' });
+
+  const token = header.split(' ')[1];
+
+  // Kiểm tra blacklist (token bị revoke khi logout)
+  const isBlacklisted = await redis.get(`bl:${token}`);
+  if (isBlacklisted)
+    return res.status(401).json({ code:'TOKEN_REVOKED', message:'Token đã bị thu hồi.' });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: decoded.sub, phone: decoded.phone, role: decoded.role };
+    next();
+  } catch (err) {
+    const code = err.name === 'TokenExpiredError' ? 'TOKEN_EXPIRED' : 'INVALID_TOKEN';
+    res.status(401).json({ code, message: 'Token không hợp lệ hoặc hết hạn.' });
+  }
+};</div>
+      <div class="mw-tags"><span class="mw-tag tag-pass">req.user được gán</span><span class="mw-tag tag-fail">401 nếu sai/hết hạn/bị revoke</span></div>
+    </div></div>
+
+    <div class="mw-step"><div class="mw-num" style="background:#e74c3c">2</div><div class="mw-body">
+      <div class="mw-title">role.middleware.js — Kiểm tra quyền RBAC</div>
+      <div class="mw-code">// Dùng sau auth.middleware
+// requireRole('admin') — chỉ admin
+// requireAny('admin','staff') — admin hoặc staff
+
+exports.requireRole = (...roles) => (req, res, next) => {
+  if (!roles.includes(req.user?.role))
+    return res.status(403).json({
+      code: 'FORBIDDEN',
+      message: `Yêu cầu role: ${roles.join(' hoặc ')}.`
+    });
+  next();
+};
+
+exports.requireOwner = (paramKey = 'userId') => (req, res, next) => {
+  const isAdmin = req.user.role === 'admin';
+  const isOwner = req.user.id === parseInt(req.params[paramKey]);
+  if (!isAdmin && !isOwner)
+    return res.status(403).json({ code: 'NOT_OWNER', message: 'Không có quyền.' });
+  next();
+};</div>
+      <div class="mw-tags"><span class="mw-tag tag-fail">403 nếu sai role</span><span class="mw-tag tag-pass">next() nếu đúng</span></div>
+    </div></div>
+
+    <div class="mw-step"><div class="mw-num" style="background:#e67e22">3</div><div class="mw-body">
+      <div class="mw-title">rateLimiter.middleware.js — Giới hạn request</div>
+      <div class="mw-code">const rateLimit = require('express-rate-limit');
+const RedisStore = require('rate-limit-redis');
+
+const makeLimit = (max, windowMs, msg) => rateLimit({
+  windowMs, max,
+  store: new RedisStore({ client: redis }), // dùng Redis — không mất khi restart
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => req.ip + ':' + req.path,
+  message: { code: 'RATE_LIMIT', message: msg },
+});
+
+exports.authLimiter    = makeLimit(10, 15*60*1000, 'Quá nhiều lần thử. Thử lại sau 15 phút.');
+exports.otpLimiter     = makeLimit(5,  15*60*1000, 'Gửi OTP quá nhiều. Thử lại sau 15 phút.');
+exports.orderLimiter   = makeLimit(20, 60*1000,    'Đặt hàng quá nhanh. Vui lòng thử lại.');
+exports.searchLimiter  = makeLimit(60, 60*1000,    'Tìm kiếm quá nhanh.');
+exports.globalLimiter  = makeLimit(100, 15*60*1000,'Quá nhiều request.');</div>
+      <div class="mw-tags"><span class="mw-tag tag-fail">429 Too Many Requests</span><span class="mw-tag tag-log">Log IP vi phạm</span></div>
+    </div></div>
+
+    <div class="mw-step"><div class="mw-num" style="background:#3498db">4</div><div class="mw-body">
+      <div class="mw-title">validate.middleware.js — AJV Validation + Sanitize</div>
+      <div class="mw-code">const Ajv = require('ajv');
+const addFormats = require('ajv-formats');
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+
+const ajv = new Ajv({ allErrors: true, coerceTypes: true });
+addFormats(ajv);
+const purify = createDOMPurify(new JSDOM('').window);
+
+function sanitize(obj) {
+  if (typeof obj === 'string') return purify.sanitize(obj.trim());
+  if (typeof obj === 'object' && obj)
+    return Object.fromEntries(Object.entries(obj).map(([k,v]) => [k, sanitize(v)]));
+  return obj;
+}
+
+module.exports = (schema) => {
+  const validate = ajv.compile(schema);
+  return (req, res, next) => {
+    req.body = sanitize(req.body);  // strip HTML/script injection
+    if (!validate({ body: req.body, params: req.params, query: req.query }))
+      return res.status(400).json({ code:'VALIDATION_ERROR', errors: validate.errors });
+    next();
+  };
+};</div>
+      <div class="mw-tags"><span class="mw-tag tag-fail">400 nếu sai schema</span><span class="mw-tag tag-pass">Body đã được sanitize</span></div>
+    </div></div>
+
+    <div class="mw-step"><div class="mw-num" style="background:#2d5a27">5</div><div class="mw-body">
+      <div class="mw-title">logger.middleware.js — Audit log mọi request</div>
+      <div class="mw-code">const winston = require('winston');
+// Ghi log: IP, user_id, method, path, status, duration, user-agent
+module.exports = (req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    winston.info({ ip: req.ip, uid: req.user?.id ?? null,
+      method: req.method, path: req.path,
+      status: res.statusCode, ms: Date.now() - start,
+      ua: req.headers['user-agent']?.slice(0,80) });
+    // Cảnh báo nếu 4xx/5xx liên tiếp cùng 1 IP
+  });
+  next();
+};</div>
+      <div class="mw-tags"><span class="mw-tag tag-log">Lưu log mọi request</span><span class="mw-tag tag-log">Alert khi có tấn công</span></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- RBAC -->
+<div id="tab-rbac" class="panel">
+  <div class="note">4 role: guest (chưa đăng nhập) · customer · staff (nhân viên) · admin. Mỗi endpoint được gắn role tối thiểu.</div>
+  <div class="sec-title">Ma trận quyền theo role</div>
+  <div class="rbac-grid" style="margin-bottom:14px">
+    <div class="rbac-cell rbac-head">Hành động / Tài nguyên</div>
+    <div class="rbac-cell rbac-head"><span class="role-badge rb-guest">Guest</span></div>
+    <div class="rbac-cell rbac-head"><span class="role-badge rb-customer">Customer</span></div>
+    <div class="rbac-cell rbac-head"><span class="role-badge rb-staff">Staff</span></div>
+    <div class="rbac-cell rbac-head"><span class="role-badge rb-admin">Admin</span></div>
+
+    <div class="rbac-cell rbac-row-head">Xem danh sách sản phẩm</div>
+    <div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Xem chi tiết sản phẩm</div>
+    <div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Thêm vào giỏ / Đặt hàng</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Xem đơn hàng của mình</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Hủy đơn hàng của mình</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell partial">±</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Xem tất cả đơn hàng</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Cập nhật trạng thái đơn</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Thêm / sửa sản phẩm</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Nhập hàng / quản lý kho</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Xem dashboard & báo cáo</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell partial">±</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Xuất báo cáo Excel</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Quản lý user / phân quyền</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div>
+
+    <div class="rbac-cell rbac-row-head">Xóa dữ liệu vĩnh viễn</div>
+    <div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell no">✗</div><div class="rbac-cell yes">✓</div>
+  </div>
+  <div style="font-size:9px;color:var(--color-text-tertiary);margin-bottom:12px">✓ Toàn quyền · ± Có điều kiện (VD: customer chỉ hủy đơn &lt;2h, staff chỉ xem báo cáo ngày) · ✗ Không có quyền</div>
+
+  <div class="sec-title">Cách gắn role vào route</div>
+  <div class="mw-code" style="font-family:monospace;font-size:9px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:6px;padding:10px;white-space:pre;line-height:1.6;overflow-x:auto">const { requireRole, requireOwner } = require('../middleware/role.middleware');
+const auth = require('../middleware/auth.middleware');
+
+// Public — không cần login
+router.get('/products', ctrl.list);
+
+// Customer trở lên — cần login, mọi role đều đi qua
+router.post('/orders', auth, validate(schema), ctrl.create);
+
+// Chỉ xem đơn hàng của chính mình (customer) HOẶC admin/staff
+router.get('/orders/:id', auth, requireOwner('userId'), ctrl.getOne);
+
+// Chỉ staff hoặc admin
+router.put('/orders/:id/status', auth, requireRole('admin','staff'), ctrl.updateStatus);
+
+// Chỉ admin
+router.get('/admin/reports', auth, requireRole('admin'), ctrl.report);
+router.delete('/users/:id', auth, requireRole('admin'), ctrl.deleteUser);</div>
+</div>
+
+<!-- TOKEN -->
+<div id="tab-token" class="panel">
+  <div class="note">Dùng 2 token: Access Token ngắn hạn (15 phút) + Refresh Token dài hạn (7 ngày, lưu httpOnly cookie). Rotation mỗi lần refresh.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="token-card">
+      <div class="token-title">⚡ Access Token (JWT)</div>
+      <div class="token-body">Lưu ở <strong>sessionStorage</strong> FE. Gửi trong header Authorization. Hết hạn sau <strong>15 phút</strong>.</div>
+      <div class="token-schema">// Header
+{ "alg": "HS256", "typ": "JWT" }
+
+// Payload
+{
+  "sub": 42,           // user_id
+  "phone": "0912...",
+  "role": "customer",  // guest|customer|staff|admin
+  "iat": 1747382400,   // issued at
+  "exp": 1747383300    // +15 phút
+}
+
+// Ký bằng JWT_SECRET (64+ ký tự random)</div>
+    </div>
+    <div class="token-card">
+      <div class="token-title">🔄 Refresh Token</div>
+      <div class="token-body">Lưu ở <strong>httpOnly cookie</strong> (JS không đọc được). Hết hạn <strong>7 ngày</strong>. Rotation: mỗi lần dùng là tạo cái mới và revoke cái cũ.</div>
+      <div class="token-schema">// DB table: refresh_tokens
+{
+  id, user_id,
+  token_hash,   // SHA-256(random 64 bytes)
+  device_info,  // User-Agent
+  ip_address,
+  created_at,
+  expires_at,
+  revoked_at    // null nếu còn hiệu lực
+}
+
+// Cookie options
+{ httpOnly: true, secure: true,
+  sameSite: 'Lax', maxAge: 7*24*3600*1000 }</div>
+    </div>
+  </div>
+  <div class="sec-title">Luồng Token Lifecycle</div>
+  <div class="token-schema" style="margin-bottom:10px">Login:
+  POST /auth/login → { accessToken } + Set-Cookie: refreshToken=...
+
+Silent Refresh (FE tự động khi access token hết hạn):
+  POST /auth/refresh (gửi cookie tự động) → { accessToken mới }
+  → Server revoke refresh token cũ, tạo refresh token mới (rotation)
+
+Logout:
+  POST /auth/logout → revoke refresh token ở DB
+  → Thêm access token vào Redis blacklist (TTL = còn lại của token)
+  → Clear cookie
+
+Phát hiện tấn công:
+  Nếu refresh token đã bị revoke mà vẫn được dùng lại
+  → Revoke TẤT CẢ session của user đó (full logout)
+  → Gửi cảnh báo email cho user</div>
+
+  <div class="sec-title">OTP Token (cho đăng ký & thanh toán QR)</div>
+  <div class="token-schema">// DB table: otp_codes
+{
+  phone, email,
+  otp_hash,     // SHA-256(6-digit OTP) — không lưu OTP thô
+  purpose,      // 'register' | 'payment' | 'forgot_password'
+  attempts,     // max 3 lần sai → lock
+  expires_at    // +5 phút
+}
+
+// verifyToken sau khi OTP đúng (JWT 10 phút, 1 lần dùng)
+{ phone, purpose, verified: true, exp: now+600 }
+// Truyền vào /auth/register hoặc /orders/create</div>
+</div>
+
+<!-- SECURITY -->
+<div id="tab-security" class="panel">
+  <div class="note">Toàn bộ biện pháp bảo mật theo OWASP Top 10 — từ transport layer đến application layer.</div>
+  <div class="api-sec-grid">
+    <div class="api-sec-card">
+      <div class="asc-title">🔒 HTTPS & Transport</div>
+      <div class="asc-body">Mọi traffic HTTPS. Nginx redirect HTTP → HTTPS. HSTS header (max-age 1 năm). Certificate tự động qua Let's Encrypt + Certbot.</div>
+      <div class="asc-code">// Nginx config
+add_header Strict-Transport-Security
+  "max-age=31536000; includeSubDomains" always;
+add_header X-Content-Type-Options "nosniff";
+add_header X-Frame-Options "DENY";
+add_header Referrer-Policy "strict-origin";</div>
+    </div>
+    <div class="api-sec-card">
+      <div class="asc-title">⚡ Rate Limiting (per endpoint)</div>
+      <div class="asc-body">Mỗi nhóm endpoint có limit riêng, lưu Redis (không reset khi restart server).</div>
+      <table class="rate-table">
+        <tr><th>Endpoint</th><th>Limit</th><th>Window</th></tr>
+        <tr><td class="ep">POST /auth/login</td><td class="lim">10</td><td>15 phút</td></tr>
+        <tr><td class="ep">POST /otp/send</td><td class="lim">5</td><td>15 phút</td></tr>
+        <tr><td class="ep">POST /otp/verify</td><td class="lim">10</td><td>15 phút</td></tr>
+        <tr><td class="ep">POST /auth/register</td><td class="lim">5</td><td>1 giờ</td></tr>
+        <tr><td class="ep">POST /orders</td><td class="lim">20</td><td>1 phút</td></tr>
+        <tr><td class="ep">GET /products/search</td><td class="lim">60</td><td>1 phút</td></tr>
+        <tr><td class="ep">Tất cả còn lại</td><td class="lim">100</td><td>15 phút</td></tr>
+      </table>
+    </div>
+    <div class="api-sec-card">
+      <div class="asc-title">💉 SQL Injection Prevention</div>
+      <div class="asc-body">Dùng Prepared Statements (mysql2). KHÔNG BAO GIỜ nối chuỗi vào query. Validate input trước bằng AJV.</div>
+      <div class="asc-code">// ✅ Đúng — Prepared Statement
+db.query(
+  'SELECT * FROM products WHERE id = ?',
+  [req.params.id]  // ← tham số hóa
+);
+
+// ❌ Sai — SQL Injection
+db.query('SELECT * FROM products WHERE id = '
+  + req.params.id); // nguy hiểm!</div>
+    </div>
+    <div class="api-sec-card">
+      <div class="asc-title">🧹 XSS Prevention</div>
+      <div class="asc-body">Sanitize tất cả input qua DOMPurify trước khi lưu DB. Content-Security-Policy header chặn inline script. Output encode khi render HTML.</div>
+      <div class="asc-code">// Middleware sanitize mọi string input
+req.body = sanitize(req.body);
+// purify.sanitize(str) strips all &lt;script&gt;
+// và event handlers (onerror, onclick...)
+
+// CSP Header (Nginx)
+Content-Security-Policy:
+  default-src 'self';
+  script-src 'self' cdn.jsdelivr.net;
+  img-src 'self' images.unsplash.com;</div>
+    </div>
+    <div class="api-sec-card">
+      <div class="asc-title">🔐 Password Security</div>
+      <div class="asc-body">bcrypt với 12 rounds. Không lưu plaintext. Không trả password về bất kỳ API nào. Độ phức tạp tối thiểu 6 ký tự.</div>
+      <div class="asc-code">const bcrypt = require('bcrypt');
+
+// Hash khi tạo tài khoản
+const hash = await bcrypt.hash(password, 12);
+
+// Verify khi login (constant-time compare)
+const ok = await bcrypt.compare(input, hash);
+
+// Không bao giờ select password ra ngoài
+SELECT id, phone, email, role FROM users
+// ← không có cột 'password'</div>
+    </div>
+    <div class="api-sec-card">
+      <div class="asc-title">🛡 CSRF Protection</div>
+      <div class="asc-body">SameSite=Lax trên cookie. Double-Submit pattern cho form mutation. Origin header check ở middleware.</div>
+      <div class="asc-code">// Middleware kiểm tra Origin
+if (req.method !== 'GET') {
+  const origin = req.headers.origin;
+  const allowed = process.env.CLIENT_URL;
+  if (origin !== allowed)
+    return res.status(403).json({
+      code: 'CSRF_BLOCKED' });
+}
+
+// Cookie SameSite=Lax tự chặn
+// cross-site form submission</div>
+    </div>
+    <div class="api-sec-card">
+      <div class="asc-title">📝 Audit Logging</div>
+      <div class="asc-body">Ghi log mọi action quan trọng: login, logout, đặt hàng, thay đổi quyền, nhập hàng. Lưu 90 ngày.</div>
+      <div class="asc-code">// DB table: audit_logs
+{
+  user_id, action,       // 'ORDER_CREATE'
+  resource_type,         // 'order'
+  resource_id,           // order_id
+  ip_address, user_agent,
+  payload,               // JSON diff
+  created_at
+}
+
+// Alert khi: 5xx liên tiếp, login fail 5+,
+// delete record, thay đổi role user</div>
+    </div>
+    <div class="api-sec-card">
+      <div class="asc-title">🔑 Secrets & Env</div>
+      <div class="asc-body">Không commit .env. Dùng .env.example. Secrets luân phiên mỗi 90 ngày. JWT_SECRET tối thiểu 64 ký tự.</div>
+      <div class="asc-code"># .env — KHÔNG commit lên git
+JWT_SECRET=&lt;64+ random chars&gt;
+JWT_REFRESH_SECRET=&lt;64+ random chars&gt;
+DB_PASSWORD=&lt;strong password&gt;
+MAIL_PASS=&lt;app password&gt;
+REDIS_URL=redis://:password@host:6379
+
+# Generate secret:
+node -e "console.log(
+  require('crypto').randomBytes(64)
+  .toString('hex'))"</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESPONSIVE -->
+<div id="tab-responsive" class="panel">
+  <div class="note">3 breakpoint chính: Mobile (&lt;640px) · Tablet (640–1024px) · Desktop (&gt;1024px). Thiết kế Mobile-First — CSS viết từ nhỏ lên lớn.</div>
+  <div class="device-tabs">
+    <button class="dtab active" onclick="sd('all',this)">📐 So sánh cả 3</button>
+    <button class="dtab" onclick="sd('bp',this)">📏 Breakpoints</button>
+    <button class="dtab" onclick="sd('comp',this)">🧩 Components thích nghi</button>
+  </div>
+
+  <div id="dp-all" class="device-panel active">
+    <div class="devices-row">
+      <!-- DESKTOP -->
+      <div>
+        <div style="font-size:10px;font-weight:600;color:var(--color-text-secondary);margin-bottom:5px;text-align:center">🖥 Desktop (&gt;1024px)</div>
+        <div class="device-frame desktop">
+          <div class="device-screen">
+            <div class="m-hdr"><div class="logo">Mi<em>La</em></div><div class="m-search" style="max-width:200px">🔍 Tìm sản phẩm...</div><div style="display:flex;gap:6px;align-items:center"><span style="font-size:9px;color:#fff;opacity:.7">👤 Đăng nhập</span><div class="m-cart">🛒 2</div></div></div>
+            <div class="d-nav"><div class="d-nav-item">Tất cả</div><div class="d-nav-item a">🥦 Rau củ</div><div class="d-nav-item">🥩 Thịt</div><div class="d-nav-item">🦐 Hải sản</div><div class="d-nav-item">🍎 Trái cây</div><div class="d-nav-item" style="margin-left:auto;color:#e74c3c">🔥 Deal sốc</div></div>
+            <div class="d-hero"><div><div class="d-hero-h">Tươi ngon từ<br>nông trại 🌱</div><div class="d-hero-sub">Giao trong ngày · Đổi trả 72h</div><div class="d-cta">Mua ngay →</div></div><div class="d-hero-img">🥬🍅🥕</div></div>
+            <div style="background:#fff;border-top:0.5px solid #e0e8d8;padding:5px 12px;display:flex;gap:16px;justify-content:center"><div style="font-size:7px;color:#2d5a27;font-weight:500;display:flex;align-items:center;gap:3px">✓ VietGAP</div><div style="font-size:7px;color:#2d5a27;font-weight:500">🚚 Giao hôm nay</div><div style="font-size:7px;color:#2d5a27;font-weight:500">↩ Đổi trả 72h</div><div style="font-size:7px;color:#2d5a27;font-weight:500">🔒 An toàn</div></div>
+            <div class="d-section-head"><div class="d-section-title">🔥 Deal hôm nay</div><div class="d-see-all">Xem tất cả →</div></div>
+            <div class="d-grid"><div class="d-pc"><div class="d-pc-img">🥬</div><div class="d-pc-body"><div class="d-pc-name">Rau muống VietGAP</div><div class="d-pc-price">9.500đ</div><div class="d-pc-btn">+ Giỏ hàng</div></div></div><div class="d-pc"><div class="d-pc-img">🍅</div><div class="d-pc-body"><div class="d-pc-name">Cà chua Đồng Dưa</div><div class="d-pc-price">33.000đ</div><div class="d-pc-btn">+ Giỏ hàng</div></div></div><div class="d-pc"><div class="d-pc-img">🥕</div><div class="d-pc-body"><div class="d-pc-name">Cà rốt hữu cơ</div><div class="d-pc-price">25.000đ</div><div class="d-pc-btn">+ Giỏ hàng</div></div></div><div class="d-pc"><div class="d-pc-img">🥩</div><div class="d-pc-body"><div class="d-pc-name">Thịt ba chỉ sạch</div><div class="d-pc-price">79.000đ</div><div class="d-pc-btn">+ Giỏ hàng</div></div></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- TABLET -->
+      <div>
+        <div style="font-size:10px;font-weight:600;color:var(--color-text-secondary);margin-bottom:5px;text-align:center">📱 Tablet (640–1024px)</div>
+        <div class="device-frame tablet">
+          <div class="device-screen">
+            <div class="m-hdr"><div class="logo">Mi<em>La</em></div><div class="m-search">🔍 Tìm...</div><div class="m-cart">🛒 2</div></div>
+            <div class="t-nav"><div class="t-nav-item a">Tất cả</div><div class="t-nav-item">🥦 Rau</div><div class="t-nav-item">🥩 Thịt</div><div class="t-nav-item">🍎 Quả</div><div class="t-nav-item" style="color:#e74c3c">🔥 Deal</div></div>
+            <div class="t-hero"><div class="t-hero-h">Tươi ngon 🌱<br>từ nông trại</div><div class="t-hero-sub">Giao trong ngày · Đổi trả 72h</div><div class="t-cta">Mua ngay →</div></div>
+            <div class="d-section-head" style="padding:7px 8px 3px"><div class="d-section-title">🔥 Deal hôm nay</div><div class="d-see-all">Xem tất cả</div></div>
+            <div class="t-grid"><div class="d-pc"><div class="d-pc-img">🥬</div><div class="d-pc-body"><div class="d-pc-name">Rau muống VietGAP</div><div class="d-pc-price">9.500đ</div><div class="d-pc-btn">+ Giỏ</div></div></div><div class="d-pc"><div class="d-pc-img">🍅</div><div class="d-pc-body"><div class="d-pc-name">Cà chua Đồng Dưa</div><div class="d-pc-price">33.000đ</div><div class="d-pc-btn">+ Giỏ</div></div></div><div class="d-pc"><div class="d-pc-img">🥕</div><div class="d-pc-body"><div class="d-pc-name">Cà rốt hữu cơ</div><div class="d-pc-price">25.000đ</div><div class="d-pc-btn">+ Giỏ</div></div></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- MOBILE -->
+      <div>
+        <div style="font-size:10px;font-weight:600;color:var(--color-text-secondary);margin-bottom:5px;text-align:center">📱 Mobile (&lt;640px)</div>
+        <div class="device-frame mobile">
+          <div style="background:#1f1f1f;height:6px;border-radius:3px;margin:4px auto;width:40px"></div>
+          <div class="device-screen">
+            <div class="mob-hdr"><div class="mob-logo">Mi<em>La</em></div><div class="mob-icons">🔔 🛒</div></div>
+            <div class="mob-search"><div class="mob-search-input">🔍 Tìm rau, thịt, trái cây...</div></div>
+            <div class="mob-cat-pills"><div class="mcp active">Tất cả</div><div class="mcp normal">🥦 Rau</div><div class="mcp normal">🥩 Thịt</div><div class="mcp normal">🍎 Quả</div></div>
+            <div style="background:linear-gradient(135deg,#0f1a0f,#1a3a1a);padding:10px 8px;margin:0 5px;border-radius:8px;margin-bottom:6px"><div style="font-size:9px;font-weight:800;color:#fff;margin-bottom:2px">Tươi ngon 🌱</div><div style="font-size:7px;color:rgba(255,255,255,.6);margin-bottom:6px">Giao trong ngày</div><div style="background:#7ec850;color:#0f1a0f;padding:3px 8px;border-radius:8px;font-size:7px;font-weight:700;display:inline-block">Mua ngay →</div></div>
+            <div style="padding:0 5px 4px;font-size:8px;font-weight:700;color:#1a1a1a">🔥 Deal hôm nay</div>
+            <div class="mob-grid"><div class="m-pc"><div class="m-pc-img">🥬</div><div class="m-pc-body"><div class="m-pc-name">Rau muống VietGAP</div><div class="m-pc-price">9.500đ</div><div class="m-pc-btn">+ Thêm giỏ</div></div></div><div class="m-pc"><div class="m-pc-img">🍅</div><div class="m-pc-body"><div class="m-pc-name">Cà chua Đồng Dưa</div><div class="m-pc-price">33.000đ</div><div class="m-pc-btn">+ Thêm giỏ</div></div></div></div>
+            <div class="mob-bottom-nav"><div class="mbn-item a"><div class="mbn-icon">🏠</div>Trang chủ</div><div class="mbn-item"><div class="mbn-icon">📋</div>Danh mục</div><div class="mbn-item"><div class="mbn-icon">🔍</div>Tìm kiếm</div><div class="mbn-item"><div class="mbn-icon">🛒</div>Giỏ hàng</div><div class="mbn-item"><div class="mbn-icon">👤</div>Tôi</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dp-bp" class="device-panel">
+    <table class="bp-table">
+      <thead><tr><th>Breakpoint</th><th>CSS</th><th>Layout thay đổi</th><th>Đặc điểm riêng</th></tr></thead>
+      <tbody>
+        <tr><td><div class="bp-name">📱 Mobile</div><div style="font-size:9px;color:var(--color-text-tertiary)">&lt; 640px</div></td><td><code style="font-size:9px">default</code></td><td style="font-size:10px;color:var(--color-text-secondary)">Grid 2 cột SP · Header chỉ logo + icons · Search bar riêng dòng · Sidebar ẩn → bottom sheet khi filter</td><td style="font-size:10px;color:var(--color-text-secondary)">Bottom Navigation bar · Touch-optimized buttons (min 44px) · Swipe gesture cho cart drawer</td></tr>
+        <tr><td><div class="bp-name">📱 Tablet nhỏ</div><div style="font-size:9px;color:var(--color-text-tertiary)">640px–768px</div></td><td><code style="font-size:9px">sm:</code></td><td style="font-size:10px;color:var(--color-text-secondary)">Grid 3 cột SP · Header có search trong 1 dòng · Nav tab bar thay thế bottom nav</td><td style="font-size:10px;color:var(--color-text-secondary)">Sidebar filter xuất hiện dưới dạng horizontal chip bar</td></tr>
+        <tr><td><div class="bp-name">📺 Tablet lớn</div><div style="font-size:9px;color:var(--color-text-tertiary)">768px–1024px</div></td><td><code style="font-size:9px">md:</code></td><td style="font-size:10px;color:var(--color-text-secondary)">Grid 3–4 cột SP · Layout 2 cột (sidebar 200px + content) · Full nav bar</td><td style="font-size:10px;color:var(--color-text-secondary)">Checkout layout 1 cột dọc · Product detail 2 cột</td></tr>
+        <tr><td><div class="bp-name">🖥 Desktop</div><div style="font-size:9px;color:var(--color-text-tertiary)">1024px–1280px</div></td><td><code style="font-size:9px">lg:</code></td><td style="font-size:10px;color:var(--color-text-secondary)">Grid 4–5 cột SP · Sidebar 240px · Hero 2 cột · Checkout 2 cột</td><td style="font-size:10px;color:var(--color-text-secondary)">Hover states · Mega dropdown danh mục · Sticky cart sidebar</td></tr>
+        <tr><td><div class="bp-name">🖥 Wide</div><div style="font-size:9px;color:var(--color-text-tertiary)">&gt; 1280px</div></td><td><code style="font-size:9px">xl:</code></td><td style="font-size:10px;color:var(--color-text-secondary)">max-width: 1400px container · Grid 5–6 cột · Hero có side banners</td><td style="font-size:10px;color:var(--color-text-secondary)">Floating quick-view card khi hover sản phẩm</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="dp-comp" class="device-panel">
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-title">🗂 Header</div>
+        <ul class="comp-list">
+          <li>Mobile: Logo + Bell + Cart icon, search bar tách dòng dưới</li>
+          <li>Tablet: Logo + search + cart pill trong 1 dòng</li>
+          <li>Desktop: Full header + nav bar + category dropdown</li>
+          <li>Sticky trên mọi thiết bị</li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title">🃏 Product Card</div>
+        <ul class="comp-list">
+          <li>Mobile: 2 cột, ảnh nhỏ hơn, chữ compact</li>
+          <li>Tablet: 3 cột, cân đối</li>
+          <li>Desktop: 4–5 cột, hover: quick add + xem nhanh</li>
+          <li>Lazy load ảnh mọi thiết bị</li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title">🔍 Bộ lọc Sidebar</div>
+        <ul class="comp-list">
+          <li>Mobile: Nút "Lọc" → Bottom sheet modal</li>
+          <li>Tablet nhỏ: Horizontal chip bar trên cùng</li>
+          <li>Tablet lớn+: Sidebar cố định bên trái 220px</li>
+          <li>Active filter hiển thị tag có thể xóa</li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title">🛒 Giỏ hàng</div>
+        <ul class="comp-list">
+          <li>Mobile: Full-screen drawer từ dưới lên (bottom sheet)</li>
+          <li>Tablet: Side drawer 380px từ phải</li>
+          <li>Desktop: Side drawer 420px + hover preview mini cart</li>
+          <li>Persist localStorage mọi thiết bị</li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title">💳 Checkout</div>
+        <ul class="comp-list">
+          <li>Mobile: 1 cột dọc, step indicator ở top, sticky order summary + button cuối</li>
+          <li>Tablet: 1 cột với summary collapse</li>
+          <li>Desktop: 2 cột (form trái, summary phải sticky)</li>
+          <li>Autofill địa chỉ từ profile</li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title">📱 Bottom Nav (Mobile only)</div>
+        <ul class="comp-list">
+          <li>5 tab: Home · Danh mục · Tìm kiếm · Giỏ hàng · Tôi</li>
+          <li>Hiển thị badge số lượng giỏ hàng</li>
+          <li>Active state với icon fill + màu xanh</li>
+          <li>Ẩn khi scroll xuống, hiện khi scroll lên</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function sw(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+function sd(name, el) {
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.device-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('dp-'+name).classList.add('active');
+}
+</script>
