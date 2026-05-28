@@ -82,16 +82,16 @@ async function loadCart() {
         <!-- Image -->
         <div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-low cursor-pointer" onclick="window.location.href='/product-detail.html?id=${item.product_id}'">
           <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-               src="${imageUrl}" 
-               alt="${item.name}"
+               src="${window.escapeHTML(imageUrl)}" 
+               alt="${window.escapeHTML(item.name)}"
                onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80'"
           />
         </div>
 
         <!-- Info -->
         <div class="flex-grow text-center sm:text-left">
-          <h3 class="font-headline-sm text-headline-sm text-primary cursor-pointer hover:text-secondary truncate max-w-xs" onclick="window.location.href='/product-detail.html?id=${item.product_id}'">${item.name}</h3>
-          <p class="text-outline text-body-sm mb-2">Đơn vị: ${item.unit || 'Kg'} | Giá: ${formatVND(unitPrice)}</p>
+          <h3 class="font-headline-sm text-headline-sm text-primary cursor-pointer hover:text-secondary truncate max-w-xs" onclick="window.location.href='/product-detail.html?id=${item.product_id}'">${window.escapeHTML(item.name)}</h3>
+          <p class="text-outline text-body-sm mb-2">Đơn vị: ${window.escapeHTML(item.unit || 'Kg')} | Giá: ${formatVND(unitPrice)}</p>
           <div class="text-body-sm font-bold text-secondary">
             Thành tiền: <span class="text-body-md">${formatVND(itemSubtotal)}</span>
           </div>

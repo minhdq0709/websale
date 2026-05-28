@@ -170,3 +170,17 @@ const api = {
 // Export to window object for global access
 window.api = api;
 window.toast = toast;
+
+// Security utility: Escape HTML to prevent XSS
+window.escapeHTML = function (str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[&<>'"]/g, 
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+  );
+};

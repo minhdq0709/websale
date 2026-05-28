@@ -6,6 +6,7 @@ const path = require('path');
 
 const { loggerMiddleware, logger } = require('./middleware/logger.middleware');
 const { apiLimiter } = require('./middleware/rateLimiter.middleware');
+const sanitizeMiddleware = require('./middleware/sanitize.middleware');
 const apiRouter = require('./routes');
 
 const app = express();
@@ -19,7 +20,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://cdn.tailwindcss.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https://images.unsplash.com", "*"],
@@ -43,7 +44,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// 5. Ghi log tự động mọi request tới hệ thống
+// 5. Làm sạch dữ liệu đầu vào chống XSS toàn cầu
+app.use(sanitizeMiddleware);
+
+// 6. Ghi log tự động mọi request tới hệ thống
 app.use(loggerMiddleware);
 
 // ==========================================

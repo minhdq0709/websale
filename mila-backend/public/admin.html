@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Bảng Quản Trị Admin | Pure Vitality Market</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      scroll-behavior: smooth;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .custom-shadow {
+      box-shadow: 0px 4px 20px rgba(45, 90, 39, 0.05);
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#c9c6c0",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#005313",
+            "secondary": "#006e1c",
+            "inverse-primary": "#a1d494",
+            "outline-variant": "#c2c9bb",
+            "inverse-on-surface": "#f0f1f2",
+            "on-tertiary-container": "#c5c2bc",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-primary-fixed-variant": "#23501e",
+            "on-surface": "#191c1d",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed": "#1c1c18",
+            "on-secondary": "#ffffff",
+            "tertiary": "#3a3935",
+            "secondary-container": "#91f78e",
+            "surface-dim": "#d9dadb",
+            "background": "#f8f9fa",
+            "primary-fixed-dim": "#a1d494",
+            "surface-bright": "#f8f9fa",
+            "on-primary-container": "#9dd090",
+            "on-error": "#ffffff",
+            "on-background": "#191c1d",
+            "on-surface-variant": "#42493e",
+            "surface-container-high": "#e7e8e9",
+            "secondary-fixed-dim": "#78dc77",
+            "primary-container": "#2d5a27",
+            "surface-tint": "#3b6934",
+            "tertiary-container": "#51504b",
+            "surface-container-low": "#f3f4f5",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed-variant": "#474742",
+            "surface": "#f8f9fa",
+            "primary-fixed": "#bcf0ae",
+            "primary": "#154212",
+            "on-secondary-fixed": "#002204",
+            "surface-variant": "#e1e3e4",
+            "on-secondary-container": "#00731e",
+            "inverse-surface": "#2e3132",
+            "secondary-fixed": "#94f990",
+            "surface-container": "#edeeef",
+            "outline": "#72796e",
+            "on-primary-fixed": "#002201",
+            "tertiary-fixed": "#e5e2db"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "16px",
+            "gutter": "24px",
+            "unit": "8px",
+            "margin-desktop": "48px",
+            "container-max": "1280px"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col justify-between">
+  
+  <!-- Page Header -->
+  <header class="sticky top-0 z-40 flex justify-between items-center w-full px-margin-desktop py-4 bg-surface-container-lowest shadow-sm border-b border-outline-variant">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-[32px] text-primary">admin_panel_settings</span>
+      <div class="text-headline-sm font-bold text-primary cursor-pointer" onclick="window.location.href='/index.html'">Pure Vitality - Admin Panel</div>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="text-right hidden sm:block">
+        <p id="admin-user-name" class="font-bold text-body-sm text-on-surface">Đang tải...</p>
+        <p id="admin-user-role" class="text-xs text-secondary font-bold uppercase tracking-wider">Đang tải...</p>
+      </div>
+      <button class="bg-surface-container-high hover:bg-surface-container text-primary border border-outline-variant px-4 py-2 rounded-xl text-label-sm font-bold flex items-center gap-2 transition-all shadow-sm" onclick="window.location.href='/index.html'">
+        <span class="material-symbols-outlined text-[18px]">home</span>
+        Về Trang Chủ
+      </button>
+    </div>
+  </header>
+
+  <!-- Admin Main Container -->
+  <main class="flex-grow w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+      
+      <!-- Sidebar Navigation Menu -->
+      <aside class="lg:col-span-3 space-y-4">
+        <div class="bg-surface-container-low rounded-xl custom-shadow overflow-hidden p-3 border border-outline-variant">
+          <p class="text-xs font-bold text-outline-variant uppercase px-4 py-2">Quản lý hệ thống</p>
+          <nav class="flex flex-col gap-1">
+            <button id="tab-btn-overview" class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold bg-surface-container transition-all text-label-md text-left admin-tab-btn" onclick="switchTab('overview')">
+              <span class="material-symbols-outlined text-[20px]">dashboard</span>
+              <span>Tổng quan thống kê</span>
+            </button>
+            <button id="tab-btn-products" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all text-label-md text-left admin-tab-btn" onclick="switchTab('products')">
+              <span class="material-symbols-outlined text-[20px]">store</span>
+              <span>Quản lý sản phẩm</span>
+            </button>
+            <button id="tab-btn-categories" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all text-label-md text-left admin-tab-btn" onclick="switchTab('categories')">
+              <span class="material-symbols-outlined text-[20px]">category</span>
+              <span>Quản lý danh mục</span>
+            </button>
+            <button id="tab-btn-orders" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all text-label-md text-left admin-tab-btn" onclick="switchTab('orders')">
+              <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+              <span>Quản lý đơn hàng</span>
+            </button>
+            <button id="tab-btn-users" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all text-label-md text-left admin-tab-btn hidden" onclick="switchTab('users')">
+              <span class="material-symbols-outlined text-[20px]">manage_accounts</span>
+              <span>Quản lý thành viên</span>
+            </button>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Main Panels Content Area -->
+      <section class="lg:col-span-9 space-y-gutter">
+
+        <!-- 1. OVERVIEW TAB PANEL -->
+        <div id="panel-overview" class="admin-panel bg-surface-container-lowest rounded-xl custom-shadow p-6 sm:p-8 space-y-8 border border-outline-variant">
+          <div class="border-b border-outline-variant pb-4">
+            <h3 class="text-headline-md font-bold text-primary">Tổng Quan Báo Cáo Doanh Thu</h3>
+            <p class="text-body-sm text-on-surface-variant">Dữ liệu thống kê doanh số và lượng khách hàng hoạt động</p>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="bg-primary/5 rounded-2xl p-6 border border-primary/20 flex items-center gap-4">
+              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-[28px]">monetization_on</span>
+              </div>
+              <div>
+                <p class="text-xs text-on-surface-variant font-bold">Doanh thu (Đã giao)</p>
+                <h4 id="stat-revenue" class="text-headline-sm font-bold text-primary">0 ₫</h4>
+              </div>
+            </div>
+            <div class="bg-secondary/5 rounded-2xl p-6 border border-secondary/20 flex items-center gap-4">
+              <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center text-secondary">
+                <span class="material-symbols-outlined text-[28px]">group</span>
+              </div>
+              <div>
+                <p class="text-xs text-on-surface-variant font-bold">Số lượng khách hàng</p>
+                <h4 id="stat-customers" class="text-headline-sm font-bold text-secondary">0</h4>
+              </div>
+            </div>
+            <div class="bg-tertiary-container/10 rounded-2xl p-6 border border-tertiary-container/30 flex items-center gap-4">
+              <div class="w-12 h-12 bg-tertiary-container/20 rounded-full flex items-center justify-center text-tertiary-container">
+                <span class="material-symbols-outlined text-[28px]">shopping_bag</span>
+              </div>
+              <div>
+                <p class="text-xs text-on-surface-variant font-bold">Tổng đơn hàng</p>
+                <h4 id="stat-orders" class="text-headline-sm font-bold text-on-tertiary-container">0</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sales Breakdown Lists -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-surface-container-low rounded-xl p-6 border border-outline-variant">
+              <h4 class="font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined">analytics</span>
+                Trạng thái đơn hàng
+              </h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-body-sm">
+                  <thead>
+                    <tr class="border-b border-outline-variant text-on-surface-variant font-bold">
+                      <th class="py-2">Trạng thái</th>
+                      <th class="py-2 text-center">Số lượng</th>
+                      <th class="py-2 text-right">Tổng tiền</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stat-status-rows">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-low rounded-xl p-6 border border-outline-variant">
+              <h4 class="font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined">calendar_month</span>
+                Doanh thu 6 tháng gần nhất
+              </h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-body-sm">
+                  <thead>
+                    <tr class="border-b border-outline-variant text-on-surface-variant font-bold">
+                      <th class="py-2">Tháng</th>
+                      <th class="py-2 text-center">Số đơn</th>
+                      <th class="py-2 text-right">Doanh thu</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stat-monthly-rows">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. PRODUCTS TAB PANEL -->
+        <div id="panel-products" class="admin-panel hidden bg-surface-container-lowest rounded-xl custom-shadow p-6 sm:p-8 space-y-6 border border-outline-variant">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-outline-variant pb-4 gap-4">
+            <div>
+              <h3 class="text-headline-md font-bold text-primary">Quản Lý Sản Phẩm</h3>
+              <p class="text-body-sm text-on-surface-variant">Thêm, sửa đổi hoặc xóa các mặt hàng kinh doanh</p>
+            </div>
+            <button class="bg-primary text-on-primary px-5 py-2.5 rounded-full text-label-md font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-md" onclick="openProductModal()">
+              <span class="material-symbols-outlined text-[18px]">add</span>
+              Thêm sản phẩm mới
+            </button>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-surface-container-low p-4 rounded-xl border border-outline-variant">
+            <div class="relative col-span-2">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+              <input id="product-search-input" onkeyup="filterAdminProducts()" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary text-body-sm outline-none" placeholder="Tìm sản phẩm bằng tên..."/>
+            </div>
+            <select id="product-category-filter" onchange="filterAdminProducts()" class="w-full py-2.5 px-4 rounded-xl bg-white border border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary text-body-sm outline-none">
+              <option value="">Tất cả danh mục</option>
+            </select>
+          </div>
+
+          <!-- Products Table -->
+          <div class="overflow-x-auto border border-outline-variant rounded-xl bg-white">
+            <table class="w-full text-left text-body-sm min-w-[700px]">
+              <thead class="bg-surface-container-low text-on-surface font-bold border-b border-outline-variant">
+                <tr>
+                  <th class="px-6 py-4">Hình ảnh</th>
+                  <th class="px-6 py-4">Tên sản phẩm</th>
+                  <th class="px-6 py-4">Danh mục</th>
+                  <th class="px-6 py-4">Đơn giá</th>
+                  <th class="px-6 py-4 text-center">Tồn kho</th>
+                  <th class="px-6 py-4 text-center">Trạng thái</th>
+                  <th class="px-6 py-4 text-right">Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="admin-product-table-rows" class="divide-y divide-surface-container-high">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. CATEGORIES TAB PANEL -->
+        <div id="panel-categories" class="admin-panel hidden bg-surface-container-lowest rounded-xl custom-shadow p-6 sm:p-8 space-y-6 border border-outline-variant">
+          <div class="flex justify-between items-center border-b border-outline-variant pb-4">
+            <div>
+              <h3 class="text-headline-md font-bold text-primary">Quản Lý Danh Mục</h3>
+              <p class="text-body-sm text-on-surface-variant">Quản lý các nhóm danh mục nông sản sạch</p>
+            </div>
+            <button class="bg-primary text-on-primary px-5 py-2.5 rounded-full text-label-md font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-md" onclick="openCategoryModal()">
+              <span class="material-symbols-outlined text-[18px]">add</span>
+              Thêm danh mục
+            </button>
+          </div>
+
+          <!-- Categories Table -->
+          <div class="overflow-x-auto border border-outline-variant rounded-xl bg-white">
+            <table class="w-full text-left text-body-sm">
+              <thead class="bg-surface-container-low text-on-surface font-bold border-b border-outline-variant">
+                <tr>
+                  <th class="px-6 py-4">ID</th>
+                  <th class="px-6 py-4">Tên danh mục</th>
+                  <th class="px-6 py-4">Slug đại diện</th>
+                  <th class="px-6 py-4">Icon hiển thị</th>
+                  <th class="px-6 py-4 text-right">Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="admin-category-table-rows" class="divide-y divide-surface-container-high">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. ORDERS TAB PANEL -->
+        <div id="panel-orders" class="admin-panel hidden bg-surface-container-lowest rounded-xl custom-shadow p-6 sm:p-8 space-y-6 border border-outline-variant">
+          <div class="border-b border-outline-variant pb-4">
+            <h3 class="text-headline-md font-bold text-primary">Quản Lý Đơn Hàng</h3>
+            <p class="text-body-sm text-on-surface-variant">Theo dõi và cập nhật trạng thái giao nhận hàng</p>
+          </div>
+
+          <!-- Order Status Filtering Tabs -->
+          <div class="flex gap-2 overflow-x-auto pb-2 border-b border-surface-container-high">
+            <button onclick="filterAdminOrders('all')" class="px-4 py-2 rounded-full text-label-sm font-bold bg-primary text-on-primary order-filter-tab shadow-sm whitespace-nowrap">Tất cả</button>
+            <button onclick="filterAdminOrders('pending')" class="px-4 py-2 rounded-full text-label-sm font-bold bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest order-filter-tab whitespace-nowrap">Chờ xử lý</button>
+            <button onclick="filterAdminOrders('confirmed')" class="px-4 py-2 rounded-full text-label-sm font-bold bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest order-filter-tab whitespace-nowrap">Đã xác nhận</button>
+            <button onclick="filterAdminOrders('processing')" class="px-4 py-2 rounded-full text-label-sm font-bold bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest order-filter-tab whitespace-nowrap">Đang xử lý</button>
+            <button onclick="filterAdminOrders('shipping')" class="px-4 py-2 rounded-full text-label-sm font-bold bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest order-filter-tab whitespace-nowrap">Đang giao</button>
+            <button onclick="filterAdminOrders('delivered')" class="px-4 py-2 rounded-full text-label-sm font-bold bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest order-filter-tab whitespace-nowrap">Đã giao</button>
+            <button onclick="filterAdminOrders('cancelled')" class="px-4 py-2 rounded-full text-label-sm font-bold bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest order-filter-tab whitespace-nowrap">Đã hủy</button>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="overflow-x-auto border border-outline-variant rounded-xl bg-white">
+            <table class="w-full text-left text-body-sm min-w-[800px]">
+              <thead class="bg-surface-container-low text-on-surface font-bold border-b border-outline-variant">
+                <tr>
+                  <th class="px-6 py-4">Mã đơn</th>
+                  <th class="px-6 py-4">Khách hàng</th>
+                  <th class="px-6 py-4">Thời gian</th>
+                  <th class="px-6 py-4">Tổng giá trị</th>
+                  <th class="px-6 py-4">Trạng thái</th>
+                  <th class="px-6 py-4 text-right">Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="admin-order-table-rows" class="divide-y divide-surface-container-high">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. USERS TAB PANEL -->
+        <div id="panel-users" class="admin-panel hidden bg-surface-container-lowest rounded-xl custom-shadow p-6 sm:p-8 space-y-6 border border-outline-variant">
+          <div class="border-b border-outline-variant pb-4">
+            <h3 class="text-headline-md font-bold text-primary">Quản Lý Thành Viên</h3>
+            <p class="text-body-sm text-on-surface-variant">Xem danh sách người dùng và khóa/mở tài khoản</p>
+          </div>
+
+          <!-- Users Table -->
+          <div class="overflow-x-auto border border-outline-variant rounded-xl bg-white">
+            <table class="w-full text-left text-body-sm">
+              <thead class="bg-surface-container-low text-on-surface font-bold border-b border-outline-variant">
+                <tr>
+                  <th class="px-6 py-4">ID</th>
+                  <th class="px-6 py-4">Họ và tên</th>
+                  <th class="px-6 py-4">Email</th>
+                  <th class="px-6 py-4">Số điện thoại</th>
+                  <th class="px-6 py-4">Vai trò</th>
+                  <th class="px-6 py-4 text-center">Trạng thái</th>
+                  <th class="px-6 py-4 text-right">Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="admin-user-table-rows" class="divide-y divide-surface-container-high">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- MODALS SECTION -->
+  <!-- ============================================================ -->
+
+  <!-- PRODUCT MODAL (ADD & EDIT) -->
+  <div id="product-modal" class="fixed inset-0 z-50 items-center justify-center bg-black/50 hidden flex">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-6 m-4 custom-shadow animate-in zoom-in duration-200 overflow-y-auto max-h-[90vh] border border-outline-variant">
+      <div class="flex justify-between items-center border-b border-outline-variant pb-3">
+        <h3 id="product-modal-title" class="text-headline-sm font-bold text-primary">Thêm Sản Phẩm Mới</h3>
+        <button onclick="closeProductModal()" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-[28px]">close</span>
+        </button>
+      </div>
+
+      <form id="product-form" class="space-y-4" onsubmit="saveProduct(event)">
+        <input type="hidden" id="prod-id" value=""/>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="block text-label-sm font-bold text-on-surface-variant">Tên sản phẩm</label>
+            <input id="prod-name" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" type="text" required placeholder="ví dụ: Cam sành hữu cơ"/>
+          </div>
+          <div class="space-y-1">
+            <label class="block text-label-sm font-bold text-on-surface-variant">Danh mục</label>
+            <select id="prod-category" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="space-y-1">
+            <label class="block text-label-sm font-bold text-on-surface-variant">Giá gốc (₫)</label>
+            <input id="prod-price" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" type="number" min="0" required placeholder="35000"/>
+          </div>
+          <div class="space-y-1">
+            <label class="block text-label-sm font-bold text-on-surface-variant">Giá khuyến mãi (₫)</label>
+            <input id="prod-sale-price" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" type="number" min="0" placeholder="Trống nếu không giảm"/>
+          </div>
+          <div class="space-y-1">
+            <label class="block text-label-sm font-bold text-on-surface-variant">Đơn vị tính</label>
+            <input id="prod-unit" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" type="text" required placeholder="ví dụ: kg, bó, túi"/>
+          </div>
+          <div class="space-y-1">
+            <label class="block text-label-sm font-bold text-on-surface-variant">Số lượng kho</label>
+            <input id="prod-stock" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" type="number" min="0" required placeholder="100"/>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-label-sm font-bold text-on-surface-variant">Ảnh sản phẩm (Emoji hoặc URL Unsplash)</label>
+          <input id="prod-image" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" type="text" placeholder="ví dụ: 🍇 hoặc URL ảnh"/>
+          <p class="text-xs text-outline-variant">Nhập Emoji (như 🍎, 🥦, 🥬, 🥩) hoặc URL ảnh trực tiếp từ Unsplash.</p>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-label-sm font-bold text-on-surface-variant">Mô tả sản phẩm</label>
+          <textarea id="prod-desc" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" rows="3" placeholder="Chi tiết mô tả nông sản sạch, nguồn gốc xuất xứ..."></textarea>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input id="prod-active" type="checkbox" class="rounded text-primary focus:ring-primary h-4 w-4" checked/>
+          <label for="prod-active" class="text-label-sm font-bold text-on-surface-variant cursor-pointer">Sản phẩm đang được kinh doanh công khai</label>
+        </div>
+
+        <div class="flex gap-3 justify-end pt-3 border-t border-outline-variant">
+          <button type="button" onclick="closeProductModal()" class="px-6 py-2.5 border border-outline text-on-surface hover:bg-surface-container rounded-full text-label-sm font-bold transition-all">Đóng</button>
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary hover:bg-primary-container rounded-full text-label-sm font-bold transition-all shadow-md">Lưu dữ liệu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CATEGORY MODAL (ADD & EDIT) -->
+  <div id="category-modal" class="fixed inset-0 z-50 items-center justify-center bg-black/50 hidden flex">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-6 m-4 custom-shadow border border-outline-variant">
+      <div class="flex justify-between items-center border-b border-outline-variant pb-3">
+        <h3 id="category-modal-title" class="text-headline-sm font-bold text-primary">Thêm Danh Mục</h3>
+        <button onclick="closeCategoryModal()" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-[28px]">close</span>
+        </button>
+      </div>
+
+      <form id="category-form" class="space-y-4" onsubmit="saveCategory(event)">
+        <input type="hidden" id="cat-id" value=""/>
+        <div class="space-y-1">
+          <label class="block text-label-sm font-bold text-on-surface-variant">Tên danh mục</label>
+          <input id="cat-name" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm" type="text" required placeholder="ví dụ: Hải sản tươi sống"/>
+        </div>
+
+        <div class="flex gap-3 justify-end pt-3 border-t border-outline-variant">
+          <button type="button" onclick="closeCategoryModal()" class="px-6 py-2.5 border border-outline text-on-surface hover:bg-surface-container rounded-full text-label-sm font-bold transition-all">Đóng</button>
+          <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary hover:bg-primary-container rounded-full text-label-sm font-bold transition-all shadow-md">Lưu danh mục</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ORDER DETAIL MODAL -->
+  <div id="order-detail-modal" class="fixed inset-0 z-50 items-center justify-center bg-black/50 hidden flex">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 m-4 custom-shadow overflow-y-auto max-h-[90vh] border border-outline-variant">
+      <div class="flex justify-between items-center border-b border-outline-variant pb-3">
+        <h3 id="order-detail-modal-title" class="text-headline-sm font-bold text-primary">Chi Tiết Đơn Hàng #0</h3>
+        <button onclick="closeOrderDetailModal()" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-[28px]">close</span>
+        </button>
+      </div>
+      
+      <div class="space-y-6" id="order-detail-content">
+        <!-- Dynamically loaded order info & list items -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full py-6 flex flex-col items-center justify-center bg-surface-container-low border-t border-outline-variant">
+    <p class="text-xs text-on-surface-variant opacity-70">
+      © 2026 Pure Vitality Market. Trang Quản Trị Hệ Thống. Bảo mật cao cấp.
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <!-- Authentication Guard Script (Inline check to prevent quick visual flicker of protected route) -->
+  <script>
+    (function() {
+      const user = window.auth.getUser();
+      if (!user || (user.role !== 'admin' && user.role !== 'staff')) {
+        alert('Bạn không có quyền truy cập Trang Quản Trị!');
+        window.location.href = '/index.html';
+      } else {
+        // Render basic admin user headers immediately
+        document.addEventListener('DOMContentLoaded', () => {
+          document.getElementById('admin-user-name').innerText = user.name;
+          document.getElementById('admin-user-role').innerText = user.role === 'admin' ? 'Quản trị viên tối cao' : 'Nhân viên bán hàng';
+          if (user.role === 'admin') {
+            // Show users tab to admins
+            document.getElementById('tab-btn-users').classList.remove('hidden');
+          }
+        });
+      }
+    })();
+  </script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

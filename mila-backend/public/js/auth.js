@@ -69,7 +69,7 @@ const auth = {
           dropdown.innerHTML = `
             <div class="px-4 py-2 border-b border-surface-container-low text-body-sm font-bold truncate text-on-surface">${user.name}</div>
             <a href="/profile.html" class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">Tài khoản cá nhân</a>
-            ${user.role === 'admin' || user.role === 'staff' ? `<a href="/profile.html?tab=admin" class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">Trang quản trị</a>` : ''}
+            ${user.role === 'admin' || user.role === 'staff' ? `<a href="/admin.html" class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">Trang quản trị</a>` : ''}
             <button id="nav-logout-btn" class="w-full text-left px-4 py-2 text-body-sm text-error hover:bg-surface-container-low transition-colors border-t border-surface-container-low">Đăng xuất</button>
           `;
           headerProfileBtn.appendChild(dropdown);

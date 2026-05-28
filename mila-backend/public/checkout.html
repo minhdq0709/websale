@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Thanh Toán | Pure Vitality Market</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#c9c6c0",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#005313",
+            "secondary": "#006e1c",
+            "inverse-primary": "#a1d494",
+            "outline-variant": "#c2c9bb",
+            "inverse-on-surface": "#f0f1f2",
+            "on-tertiary-container": "#c5c2bc",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-primary-fixed-variant": "#23501e",
+            "on-surface": "#191c1d",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed": "#1c1c18",
+            "on-secondary": "#ffffff",
+            "tertiary": "#3a3935",
+            "secondary-container": "#91f78e",
+            "surface-dim": "#d9dadb",
+            "background": "#f8f9fa",
+            "primary-fixed-dim": "#a1d494",
+            "surface-bright": "#f8f9fa",
+            "on-primary-container": "#9dd090",
+            "on-error": "#ffffff",
+            "on-background": "#191c1d",
+            "on-surface-variant": "#42493e",
+            "surface-container-high": "#e7e8e9",
+            "secondary-fixed-dim": "#78dc77",
+            "primary-container": "#2d5a27",
+            "surface-tint": "#3b6934",
+            "tertiary-container": "#51504b",
+            "surface-container-low": "#f3f4f5",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed-variant": "#474742",
+            "surface": "#f8f9fa",
+            "primary-fixed": "#bcf0ae",
+            "primary": "#154212",
+            "on-secondary-fixed": "#002204",
+            "surface-variant": "#e1e3e4",
+            "on-secondary-container": "#00731e",
+            "inverse-surface": "#2e3132",
+            "secondary-fixed": "#94f990",
+            "surface-container": "#edeeef",
+            "outline": "#72796e",
+            "on-primary-fixed": "#002201",
+            "tertiary-fixed": "#e5e2db"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "16px",
+            "gutter": "24px",
+            "unit": "8px",
+            "margin-desktop": "48px",
+            "container-max": "1280px"
+          },
+          "fontFamily": {
+            "body-lg": ["Be Vietnam Pro"],
+            "headline-md": ["Be Vietnam Pro"],
+            "headline-lg": ["Be Vietnam Pro"],
+            "headline-sm": ["Be Vietnam Pro"],
+            "headline-lg-mobile": ["Be Vietnam Pro"],
+            "body-md": ["Be Vietnam Pro"],
+            "label-md": ["Be Vietnam Pro"],
+            "body-sm": ["Be Vietnam Pro"],
+            "label-sm": ["Be Vietnam Pro"]
+          },
+          "fontSize": {
+            "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+            "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "headline-sm": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}],
+            "headline-lg-mobile": ["30px", {"lineHeight": "1.2", "fontWeight": "700"}],
+            "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8f9fa; }
+    .product-shadow { box-shadow: 0px 4px 20px rgba(45, 90, 39, 0.05); }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .glass-effect { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); }
+    .payment-option-active { border: 2px solid #154212; background-color: #f3f4f5; }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface">
+
+  <!-- TopNavBar -->
+  <header class="sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest shadow-sm">
+    <div class="text-headline-md font-headline-md font-bold text-primary tracking-tight">Pure Vitality Market</div>
+    <nav class="hidden md:flex gap-8 items-center">
+      <a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 text-label-md font-label-md" href="/index.html">Home</a>
+      <a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 text-label-md font-label-md" href="/products.html?category=rau-xanh-huu-co">Vegetables</a>
+      <a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 text-label-md font-label-md" href="/products.html?category=trai-cay-nhiet-doi">Fruits</a>
+      <a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 text-label-md font-label-md" href="/products.html?category=cu-qua-tuoi-song">Special Offers</a>
+    </nav>
+    <div class="flex items-center gap-6">
+      <div class="relative hidden lg:block">
+        <input id="main-search-input" class="pl-10 pr-4 py-2 rounded-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary text-body-sm font-body-sm w-64" placeholder="Tìm kiếm sản phẩm..." type="text"/>
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+      </div>
+      <div class="flex gap-4">
+        <button class="p-2 text-on-surface-variant hover:text-primary transition-colors duration-200 active:scale-95 duration-150 relative">
+          <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+        </button>
+        <button class="p-2 text-on-surface-variant hover:text-primary transition-colors duration-200 active:scale-95 duration-150 relative">
+          <span class="material-symbols-outlined" data-icon="person">person</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 min-h-[60vh]">
+    <div class="mb-10">
+      <h1 class="text-headline-lg font-headline-lg text-primary mb-2">Thanh toán</h1>
+      <p class="text-body-md text-on-surface-variant">Vui lòng kiểm tra lại thông tin nhận hàng và chọn phương thức thanh toán phù hợp.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+      <!-- Left Column: Checkout Information Form -->
+      <div class="lg:col-span-8 space-y-6">
+        <!-- Delivery info -->
+        <section class="bg-white p-8 rounded-xl product-shadow border border-surface-container-high">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="material-symbols-outlined text-primary text-2xl">local_shipping</span>
+            <h2 class="text-headline-sm font-headline-sm text-primary">Thông tin nhận hàng</h2>
+          </div>
+          
+          <form id="checkout-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Họ và tên <span class="text-error">*</span></label>
+              <input id="shipping-name" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Nguyễn Văn A" type="text" required/>
+            </div>
+            
+            <div class="space-y-2">
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Số điện thoại <span class="text-error">*</span></label>
+              <input id="shipping-phone" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="0901234567" type="tel" required/>
+            </div>
+
+            <div class="md:col-span-2 space-y-2">
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Số nhà, tên đường <span class="text-error">*</span></label>
+              <input id="shipping-street" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Ví dụ: 123 Đường Lê Lợi" type="text" required/>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Phường / Xã <span class="text-error">*</span></label>
+              <input id="shipping-ward" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Ví dụ: Phường Bến Nghé" type="text" required/>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Quận / Huyện <span class="text-error">*</span></label>
+              <input id="shipping-district" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Ví dụ: Quận 1" type="text" required/>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Tỉnh / Thành phố <span class="text-error">*</span></label>
+              <select id="shipping-province" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" required>
+                <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
+                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                <option value="Hà Nội">Hà Nội</option>
+                <option value="Đà Nẵng">Đà Nẵng</option>
+                <option value="Bình Dương">Bình Dương</option>
+                <option value="Đồng Nai">Đồng Nai</option>
+                <option value="Cần Thơ">Cần Thơ</option>
+                <option value="Lâm Đồng">Lâm Đồng</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Ghi chú giao hàng (Tùy chọn)</label>
+              <input id="shipping-note" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..." type="text"/>
+            </div>
+          </form>
+        </section>
+
+        <!-- Payment option -->
+        <section class="bg-white p-8 rounded-xl product-shadow border border-surface-container-high">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="material-symbols-outlined text-primary text-2xl">payments</span>
+            <h2 class="text-headline-sm font-headline-sm text-primary">Phương thức thanh toán</h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="payment-methods">
+            <div class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest" id="method-cod" onclick="selectPayment('cod')">
+              <span class="material-symbols-outlined text-3xl text-on-surface-variant">hand_gesture</span>
+              <span class="text-label-md font-label-md font-bold">Tiền mặt (COD)</span>
+            </div>
+            <div class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest" id="method-bank" onclick="selectPayment('bank')">
+              <span class="material-symbols-outlined text-3xl text-on-surface-variant">account_balance</span>
+              <span class="text-label-md font-label-md font-bold">Chuyển khoản</span>
+            </div>
+            <div class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest" id="method-qr" onclick="selectPayment('qr')">
+              <span class="material-symbols-outlined text-3xl text-on-surface-variant">qr_code_2</span>
+              <span class="text-label-md font-label-md font-bold">QR Code</span>
+            </div>
+          </div>
+
+          <!-- QR code detail -->
+          <div class="mt-8 p-8 bg-surface-container-low rounded-xl flex flex-col items-center text-center hidden" id="qr-display">
+            <div class="bg-white p-4 rounded-xl shadow-sm mb-4">
+              <img id="qr-code-img" alt="QR Code Thanh Toán" class="w-44 h-44 object-contain" src="https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=400&q=80"/>
+            </div>
+            <p class="text-body-md font-body-md font-bold text-primary mb-1">Quét mã để thanh toán</p>
+            <p class="text-label-sm font-label-sm text-on-surface-variant max-w-xs">Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã này để hoàn tất thanh toán.</p>
+          </div>
+
+          <!-- Bank transfer detail -->
+          <div class="mt-8 p-8 bg-surface-container-low rounded-xl hidden" id="bank-display">
+            <h4 class="font-bold text-primary mb-4 text-center">Thông tin tài khoản ngân hàng</h4>
+            <div class="space-y-3 max-w-md mx-auto text-body-sm">
+              <div class="flex justify-between border-b border-outline-variant pb-2">
+                <span class="text-on-surface-variant">Ngân hàng:</span>
+                <span class="font-bold">Vietcombank (VCB)</span>
+              </div>
+              <div class="flex justify-between border-b border-outline-variant pb-2">
+                <span class="text-on-surface-variant">Số tài khoản:</span>
+                <span class="font-bold text-primary select-all">1023456789</span>
+              </div>
+              <div class="flex justify-between border-b border-outline-variant pb-2">
+                <span class="text-on-surface-variant">Chủ tài khoản:</span>
+                <span class="font-bold">CONG TY TNHH PURE VITALITY MARKET</span>
+              </div>
+              <div class="flex justify-between border-b border-outline-variant pb-2">
+                <span class="text-on-surface-variant">Số tiền:</span>
+                <span class="font-bold text-secondary" id="bank-amount">0₫</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-on-surface-variant">Nội dung chuyển khoản:</span>
+                <span class="font-bold text-primary select-all" id="bank-message">PVKM ORDER</span>
+              </div>
+            </div>
+            <p class="text-xs text-on-surface-variant text-center mt-6">Vui lòng chuyển đúng số tiền và nội dung để hệ thống tự động xác nhận.</p>
+          </div>
+
+          <!-- COD detail -->
+          <div class="mt-8 p-6 bg-surface-container-low rounded-xl flex items-center gap-4 text-left hidden" id="cod-display">
+            <span class="material-symbols-outlined text-secondary text-4xl">check_circle</span>
+            <div>
+              <h4 class="font-bold text-primary mb-1">Thanh toán khi nhận hàng (COD)</h4>
+              <p class="text-body-sm text-on-surface-variant">Bạn sẽ thanh toán bằng tiền mặt trực tiếp cho nhân viên giao hàng khi nhận được sản phẩm.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column: Order Summary Sidebar -->
+      <aside class="lg:col-span-4 w-full">
+        <div class="bg-primary p-8 rounded-2xl text-on-primary sticky top-28 shadow-xl overflow-hidden relative">
+          <!-- Background decoration -->
+          <div class="absolute -right-20 -top-20 w-64 h-64 bg-secondary rounded-full opacity-20 blur-3xl"></div>
+          
+          <h2 class="text-headline-sm font-headline-sm mb-6 relative z-10">Tóm tắt đơn hàng</h2>
+          
+          <!-- Products dynamic list -->
+          <div id="checkout-items-list" class="space-y-6 mb-8 max-h-[300px] overflow-y-auto pr-2 relative z-10">
+            <!-- Rendered dynamically by checkout.js -->
+          </div>
+
+          <div class="border-t border-white/20 pt-6 space-y-4 relative z-10">
+            <div class="flex justify-between text-label-md font-label-md">
+              <span class="opacity-80">Tạm tính</span>
+              <span id="checkout-subtotal">0₫</span>
+            </div>
+            <div class="flex justify-between text-label-md font-label-md">
+              <span class="opacity-80">Phí vận chuyển</span>
+              <span id="checkout-shipping">0₫</span>
+            </div>
+            
+            <div class="flex justify-between text-headline-sm font-headline-sm pt-4 border-t border-white/10">
+              <span>Tổng cộng</span>
+              <span id="checkout-total">0₫</span>
+            </div>
+          </div>
+
+          <button id="btn-confirm-order" class="w-full mt-8 py-4 bg-secondary-fixed text-on-secondary-fixed font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-lg relative z-10 flex justify-center items-center gap-2">
+            <span>Xác nhận đặt hàng</span>
+            <span class="material-symbols-outlined text-[20px]">shopping_cart_checkout</span>
+          </button>
+          
+          <p class="text-center text-label-sm font-label-sm mt-4 opacity-60 relative z-10">Cam kết chất lượng 100% tươi sạch</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full px-margin-desktop py-16 flex flex-col items-center gap-unit max-w-container-max mx-auto bg-surface-container-low mt-20">
+    <div class="w-full grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+      <div class="col-span-1 md:col-span-1">
+        <div class="text-headline-sm font-headline-sm font-bold text-primary mb-6">Pure Vitality Market</div>
+        <p class="text-body-sm font-body-sm text-on-surface-variant">Tận tâm vì sức khỏe cộng đồng thông qua những thực phẩm thuần khiết nhất từ thiên nhiên Việt Nam.</p>
+      </div>
+      <div class="grid grid-cols-2 col-span-1 md:col-span-3 gap-8">
+        <div class="flex flex-col gap-4">
+          <h5 class="font-bold text-primary">Về Chúng Tôi</h5>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">About Us</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">Sustainability</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">FAQs</a>
+        </div>
+        <div class="flex flex-col gap-4">
+          <h5 class="font-bold text-primary">Chính Sách</h5>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">Shipping Policy</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">Privacy Policy</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">Contact Us</a>
+        </div>
+      </div>
+    </div>
+    <div class="w-full pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-body-sm font-body-sm text-on-surface-variant text-center md:text-left">© 2026 Pure Vitality Market. All rights reserved. Locally sourced in Vietnam.</p>
+      <div class="flex gap-4">
+        <a class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-primary-fixed transition-colors" href="#">
+          <span class="material-symbols-outlined text-primary" style="font-size: 20px;">social_leaderboard</span>
+        </a>
+        <a class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-primary-fixed transition-colors" href="#">
+          <span class="material-symbols-outlined text-primary" style="font-size: 20px;">camera</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Navigation (Bottom) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex justify-around py-3 z-50">
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" href="/index.html">
+      <span class="material-symbols-outlined">home</span>
+      <span class="text-label-sm font-label-sm">Home</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" href="/products.html">
+      <span class="material-symbols-outlined">grid_view</span>
+      <span class="text-label-sm font-label-sm">Danh mục</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" href="/cart.html">
+      <span class="material-symbols-outlined">shopping_basket</span>
+      <span class="text-label-sm font-label-sm">Giỏ hàng</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" href="/profile.html">
+      <span class="material-symbols-outlined">person</span>
+      <span class="text-label-sm font-label-sm">Tôi</span>
+    </a>
+  </nav>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/checkout.js"></script>
+  <script>
+    // Sticky header background transition
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 50) {
+        header.classList.add('glass-effect');
+        header.classList.remove('bg-surface-container-lowest');
+      } else {
+        header.classList.remove('glass-effect');
+        header.classList.add('bg-surface-container-lowest');
+      }
+    });
+  </script>
+</body>
+</html>

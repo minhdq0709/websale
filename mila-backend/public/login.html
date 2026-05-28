@@ -130,8 +130,8 @@
 
         <!-- Tabs -->
         <div class="flex gap-8 border-b border-outline-variant mb-8">
-          <button class="pb-3 text-label-md font-label-md transition-all active-tab" id="tab-login" onclick="switchTab('login')">Đăng nhập</button>
-          <button class="pb-3 text-label-md font-label-md text-on-surface-variant hover:text-primary transition-all" id="tab-signup" onclick="switchTab('signup')">Đăng ký</button>
+          <a class="pb-3 text-label-md font-label-md transition-all active-tab cursor-pointer" id="tab-login" href="/login.html">Đăng nhập</a>
+          <a class="pb-3 text-label-md font-label-md text-on-surface-variant hover:text-primary transition-all cursor-pointer" id="tab-signup" href="/register.html">Đăng ký</a>
         </div>
 
         <!-- Login Form -->
@@ -160,37 +160,9 @@
             <button type="submit" class="w-full py-4 bg-primary text-on-primary font-label-md text-label-md rounded-xl hover:bg-primary-container hover:scale-[1.01] transition-all duration-200 shadow-md">
               Đăng nhập
             </button>
-          </form>
-        </div>
-
-        <!-- Signup Form -->
-        <div class="form-transition hidden opacity-0 translate-y-4" id="form-signup">
-          <form class="space-y-4" id="register-form">
-            <div class="space-y-1.5">
-              <label class="block text-label-sm font-label-sm text-on-surface-variant">Họ và Tên</label>
-              <input id="register-name" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="Nguyễn Văn A" type="text" required/>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="space-y-1.5">
-                <label class="block text-label-sm font-label-sm text-on-surface-variant">Email</label>
-                <input id="register-email" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="email@example.com" type="email" required/>
-              </div>
-              <div class="space-y-1.5">
-                <label class="block text-label-sm font-label-sm text-on-surface-variant">Số điện thoại</label>
-                <input id="register-phone" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="0901234567" type="tel" required/>
-              </div>
-            </div>
-            <div class="space-y-1.5">
-              <label class="block text-label-sm font-label-sm text-on-surface-variant">Mật khẩu</label>
-              <input id="register-password" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="Tối thiểu 6 ký tự" type="password" minlength="6" required/>
-            </div>
-            <div class="space-y-1.5">
-              <label class="block text-label-sm font-label-sm text-on-surface-variant">Xác nhận mật khẩu</label>
-              <input id="register-confirm-password" class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md" placeholder="••••••••" type="password" minlength="6" required/>
-            </div>
-            <button type="submit" class="w-full py-4 mt-4 bg-primary text-on-primary font-label-md text-label-md rounded-xl hover:bg-primary-container hover:scale-[1.01] transition-all duration-200 shadow-md">
-              Đăng ký ngay
-            </button>
+            <p class="text-center text-body-sm text-on-surface-variant mt-4">
+              Chưa có tài khoản? <a class="text-primary font-bold hover:underline" href="/register.html">Đăng ký ngay tại đây</a>
+            </p>
           </form>
         </div>
 
@@ -228,37 +200,5 @@
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/login.js"></script>
-  <script>
-    function switchTab(tab) {
-      const loginForm = document.getElementById('form-login');
-      const signupForm = document.getElementById('form-signup');
-      const tabLogin = document.getElementById('tab-login');
-      const tabSignup = document.getElementById('tab-signup');
-
-      if (tab === 'login') {
-        signupForm.classList.add('hidden', 'opacity-0', 'translate-y-4');
-        loginForm.classList.remove('hidden');
-        setTimeout(() => {
-          loginForm.classList.remove('opacity-0', 'translate-y-4');
-        }, 10);
-        
-        tabLogin.classList.add('active-tab');
-        tabLogin.classList.remove('text-on-surface-variant');
-        tabSignup.classList.remove('active-tab');
-        tabSignup.classList.add('text-on-surface-variant');
-      } else {
-        loginForm.classList.add('hidden', 'opacity-0', 'translate-y-4');
-        signupForm.classList.remove('hidden');
-        setTimeout(() => {
-          signupForm.classList.remove('opacity-0', 'translate-y-4');
-        }, 10);
-
-        tabSignup.classList.add('active-tab');
-        tabSignup.classList.remove('text-on-surface-variant');
-        tabLogin.classList.remove('active-tab');
-        tabLogin.classList.add('text-on-surface-variant');
-      }
-    }
-  </script>
 </body>
 </html>

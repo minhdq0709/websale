@@ -57,8 +57,8 @@ async function loadCategories() {
 
   html += categories.map(cat => `
     <label class="flex items-center gap-3 cursor-pointer group">
-      <input type="radio" name="category-radio" value="${cat.slug}" class="rounded-full border-outline-variant text-primary focus:ring-primary h-5 w-5" ${state.category === cat.slug ? 'checked' : ''}/>
-      <span class="text-body-md font-body-md group-hover:text-primary transition-colors ${state.category === cat.slug ? 'text-primary font-bold' : ''}">${cat.name}</span>
+      <input type="radio" name="category-radio" value="${window.escapeHTML(cat.slug)}" class="rounded-full border-outline-variant text-primary focus:ring-primary h-5 w-5" ${state.category === cat.slug ? 'checked' : ''}/>
+      <span class="text-body-md font-body-md group-hover:text-primary transition-colors ${state.category === cat.slug ? 'text-primary font-bold' : ''}">${window.escapeHTML(cat.name)}</span>
     </label>
   `).join('');
 
@@ -155,8 +155,8 @@ async function loadProducts() {
     return `
       <div class="product-card-shadow rounded-xl bg-white overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer" onclick="goToDetail(${product.id})">
         <div class="relative h-64 bg-surface-container-low flex items-center justify-center overflow-hidden">
-          <img alt="${product.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
-               src="${imageUrl}"
+          <img alt="${window.escapeHTML(product.name)}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
+               src="${window.escapeHTML(imageUrl)}"
                onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80'"
           />
           ${isSale 
@@ -166,9 +166,9 @@ async function loadProducts() {
           ${product.stock === 0 ? `<div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-headline-sm z-10">Tạm hết hàng</div>` : ''}
         </div>
         <div class="p-6 flex flex-col flex-grow">
-          <p class="text-label-sm font-label-sm text-outline mb-2">${product.category_name || 'Nông sản sạch'}</p>
-          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-2 truncate group-hover:text-primary transition-colors">${product.name}</h4>
-          <p class="text-on-surface-variant text-body-sm mb-4 line-clamp-2">${product.description || 'Nguồn gốc an toàn, chuẩn VietGAP, tươi ngon mỗi ngày cho bữa cơm gia đình bạn.'}</p>
+          <p class="text-label-sm font-label-sm text-outline mb-2">${window.escapeHTML(product.category_name || 'Nông sản sạch')}</p>
+          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-2 truncate group-hover:text-primary transition-colors">${window.escapeHTML(product.name)}</h4>
+          <p class="text-on-surface-variant text-body-sm mb-4 line-clamp-2">${window.escapeHTML(product.description || 'Nguồn gốc an toàn, chuẩn VietGAP, tươi ngon mỗi ngày cho bữa cơm gia đình bạn.')}</p>
           <div class="mt-auto pt-2">
             <div class="flex flex-col mb-4">
               ${isSale 
@@ -177,16 +177,16 @@ async function loadProducts() {
               }
               <span class="${isSale ? 'text-error' : 'text-secondary'} font-headline-md text-headline-md leading-none font-bold">
                 ${formatVND(displayPrice)} 
-                <small class="text-body-sm text-on-surface-variant font-normal">/${product.unit}</small>
+                <small class="text-body-sm text-on-surface-variant font-normal">/${window.escapeHTML(product.unit)}</small>
               </span>
             </div>
             <div class="flex items-center gap-3" onclick="event.stopPropagation();">
-              <button class="flex-grow py-3 bg-primary text-on-primary text-label-md font-label-md rounded-lg hover:bg-primary-container transition-colors active:scale-95 duration-100" 
+              <button class="flex-grow bg-primary text-on-primary h-12 rounded-lg font-bold text-label-md hover:bg-primary-container transition-colors shadow-sm active:scale-95 duration-100 flex items-center justify-center" 
                       onclick="buyNow(${product.id}, ${product.stock})"
                       ${product.stock === 0 ? 'disabled' : ''}>
                 Mua ngay
               </button>
-              <button class="w-12 h-12 rounded-lg border border-outline-variant text-primary flex items-center justify-center hover:bg-surface-container-low transition-colors active:scale-90 duration-100" 
+              <button class="w-12 h-12 rounded-lg border border-outline-variant text-primary flex items-center justify-center hover:bg-surface-container-low transition-colors active:scale-90 duration-100 shrink-0" 
                       title="Thêm vào giỏ hàng" 
                       onclick="addToCart(${product.id}, ${product.stock})"
                       ${product.stock === 0 ? 'disabled' : ''}>
@@ -339,6 +339,41 @@ function setupFilters() {
       if (e.key === 'Enter') handleSearch(mobileSearch.value.trim());
     });
   }
+
+  // --- Origin Filter Buttons ---
+  const originBtns = document.querySelectorAll('.origin-filter-btn');
+  originBtns.forEach(btn => {
+    const origin = btn.getAttribute('data-origin');
+    
+    // Set initial active state if state.search matches origin
+    if (state.search === origin) {
+      btn.className = 'origin-filter-btn px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm border border-secondary transition-all';
+    }
+
+    btn.addEventListener('click', () => {
+      if (state.search === origin) {
+        state.search = null;
+        btn.className = 'origin-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all';
+        if (mainSearch) mainSearch.value = '';
+        if (mobileSearch) mobileSearch.value = '';
+      } else {
+        state.search = origin;
+        // Reset all other origin buttons
+        originBtns.forEach(b => {
+          b.className = 'origin-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all';
+        });
+        btn.className = 'origin-filter-btn px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm border border-secondary transition-all';
+        
+        // Sync search input
+        if (mainSearch) mainSearch.value = origin;
+        if (mobileSearch) mobileSearch.value = origin;
+      }
+      
+      state.page = 1;
+      updateURL();
+      loadProducts();
+    });
+  });
 }
 
 /**
@@ -374,6 +409,11 @@ window.resetAllFilters = function() {
   const quickBtns = document.querySelectorAll('.quick-filter-btn');
   quickBtns.forEach(b => {
     b.className = 'quick-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all';
+  });
+
+  const originBtns = document.querySelectorAll('.origin-filter-btn');
+  originBtns.forEach(b => {
+    b.className = 'origin-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all';
   });
 
   // Reset category radio check to index 0
