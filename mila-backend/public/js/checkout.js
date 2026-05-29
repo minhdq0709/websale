@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (user.phone) document.getElementById('shipping-phone').value = user.phone;
   }
 
+  // Load payment information (decrypting bank details)
+  loadPaymentInfo();
+
   // Load cart data for checkout
   loadCheckoutCart();
 
@@ -18,12 +21,70 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmOrderBtn.addEventListener('click', handleConfirmOrder);
   }
 
+  // Initialize OTP digits keyboard and event bindings
+  initOtpUI();
+
   // Initialize payment option state
   selectPayment('qr');
 });
 
 let currentPaymentMethod = 'qr';
 let checkoutSubtotal = 0;
+let bankInfo = null; // Store decrypted bank details
+const PAYMENT_SECRET_KEY = 'MilaMarketSecretKey2026';
+
+// OTP active state variables
+let otpCountdownInterval = null;
+const otpExpiryTime = 300; // 5 minutes in seconds
+let currentOtpTimeLeft = 0;
+let cachedOrderPayload = null;
+
+/**
+ * Decrypt a hex string encrypted with XOR Cipher from the backend
+ */
+function decryptBankData(hex) {
+  if (!hex) return '';
+  let result = '';
+  const hexStr = String(hex);
+  for (let i = 0; i < hexStr.length; i += 2) {
+    const hexPart = hexStr.substring(i, i + 2);
+    const charCode = parseInt(hexPart, 16);
+    const keyChar = PAYMENT_SECRET_KEY.charCodeAt((i / 2) % PAYMENT_SECRET_KEY.length);
+    const originalChar = charCode ^ keyChar;
+    result += String.fromCharCode(originalChar);
+  }
+  return result;
+}
+
+/**
+ * Fetch bank payment details from backend and decrypt them
+ */
+async function loadPaymentInfo() {
+  const res = await window.api.get('/orders/payment-info');
+  if (res.success) {
+    bankInfo = {
+      bankName: res.data.bankName,
+      bankAccount: decryptBankData(res.data.bankAccount),
+      bankOwner: res.data.bankOwner,
+      bankCode: decryptBankData(res.data.bankCode)
+    };
+    
+    // Update dynamic text in DOM
+    const bankNameEl = document.getElementById('bank-name-text');
+    const bankAccountEl = document.getElementById('bank-account-text');
+    const bankOwnerEl = document.getElementById('bank-owner-text');
+    
+    if (bankNameEl) bankNameEl.innerText = bankInfo.bankName;
+    if (bankAccountEl) bankAccountEl.innerText = bankInfo.bankAccount;
+    if (bankOwnerEl) bankOwnerEl.innerText = bankInfo.bankOwner;
+
+    // Trigger QR refresh if QR tab was loaded first
+    refreshPaymentDisplay();
+  } else {
+    console.error('Không thể tải thông tin tài khoản ngân hàng bảo mật:', res.message);
+    window.toast.error('Lỗi tải thông tin tài khoản ngân hàng.');
+  }
+}
 
 /**
  * Handle payment option selection
@@ -52,7 +113,13 @@ window.selectPayment = function(method) {
     }
   }
 
-  // Toggle detail displays
+  refreshPaymentDisplay();
+};
+
+/**
+ * Refresh QR Code and Bank Transfer dynamic data
+ */
+function refreshPaymentDisplay() {
   const qrDisplay = document.getElementById('qr-display');
   const bankDisplay = document.getElementById('bank-display');
   const codDisplay = document.getElementById('cod-display');
@@ -61,21 +128,35 @@ window.selectPayment = function(method) {
   if (bankDisplay) bankDisplay.classList.add('hidden');
   if (codDisplay) codDisplay.classList.add('hidden');
 
-  if (method === 'qr' && qrDisplay) {
+  // Maintain consistent order code message
+  let orderCode = document.getElementById('bank-message') ? document.getElementById('bank-message').innerText : '';
+  if (!orderCode || orderCode === 'PVKM ORDER' || orderCode === 'PVKM ORDER' || orderCode.trim() === '') {
+    orderCode = 'PVK' + Math.floor(Math.random() * 900000 + 100000);
+  }
+
+  const totalAmount = checkoutSubtotal + (checkoutSubtotal >= 300000 ? 0 : 15000);
+
+  if (currentPaymentMethod === 'qr' && qrDisplay) {
     qrDisplay.classList.remove('hidden');
-  } else if (method === 'bank' && bankDisplay) {
+    if (bankInfo) {
+      // Dynamic scanable QR code with VietQR containing real amount, bank details, and unique description
+      const qrUrl = `https://img.vietqr.io/image/${bankInfo.bankCode}-${bankInfo.bankAccount}-compact.jpg?amount=${totalAmount}&addInfo=${orderCode}&accountName=${encodeURIComponent(bankInfo.bankOwner)}`;
+      const qrImg = document.getElementById('qr-code-img');
+      if (qrImg) qrImg.src = qrUrl;
+    }
+  } else if (currentPaymentMethod === 'bank' && bankDisplay) {
     bankDisplay.classList.remove('hidden');
-    // Update transfer content
-    const totalAmount = checkoutSubtotal + (checkoutSubtotal >= 300000 ? 0 : 15000);
-    document.getElementById('bank-amount').innerText = formatVND(totalAmount);
     
-    // Generate unique transfer message
-    const orderCode = 'PVK' + Math.floor(Math.random() * 900000 + 100000);
-    document.getElementById('bank-message').innerText = orderCode;
-  } else if (method === 'cod' && codDisplay) {
+    // Update amount & unique order code
+    const bankAmountEl = document.getElementById('bank-amount');
+    const bankMessageEl = document.getElementById('bank-message');
+    
+    if (bankAmountEl) bankAmountEl.innerText = formatVND(totalAmount);
+    if (bankMessageEl) bankMessageEl.innerText = orderCode;
+  } else if (currentPaymentMethod === 'cod' && codDisplay) {
     codDisplay.classList.remove('hidden');
   }
-};
+}
 
 /**
  * Load cart items and populate the checkout sidebar summary
@@ -165,14 +246,12 @@ async function loadCheckoutCart() {
   document.getElementById('checkout-shipping').innerText = shippingFee === 0 ? 'Miễn phí' : formatVND(shippingFee);
   document.getElementById('checkout-total').innerText = formatVND(total);
 
-  // If bank method was already active, refresh bank transfer details
-  if (currentPaymentMethod === 'bank') {
-    selectPayment('bank');
-  }
+  // Refresh display values
+  refreshPaymentDisplay();
 }
 
 /**
- * Handle confirmation of order placement
+ * Handle confirmation of order placement - Trigger OTP Validation Lifecycle
  */
 async function handleConfirmOrder(e) {
   e.preventDefault();
@@ -191,14 +270,14 @@ async function handleConfirmOrder(e) {
     return;
   }
 
-  // Phone regex pattern: ^(0[3|5|7|8|9])([0-9]{8})$
+  // Phone regex pattern
   const phoneRegex = /^(0[3|5|7|8|9])([0-9]{8})$/;
   if (!phoneRegex.test(phone)) {
     window.toast.error('Số điện thoại không đúng định dạng Việt Nam (e.g. 0901234567)');
     return;
   }
 
-  // Construct shipping address matching backend schema
+  // Construct shipping address payload
   const shipping_address = {
     name,
     phone,
@@ -208,27 +287,23 @@ async function handleConfirmOrder(e) {
     province
   };
 
+  // Cache order payload for submission after OTP verification
+  cachedOrderPayload = { shipping_address, note };
+
   const confirmBtn = document.getElementById('btn-confirm-order');
   confirmBtn.disabled = true;
   confirmBtn.innerHTML = `
     <span class="material-symbols-outlined animate-spin text-[20px]">sync</span>
-    Đang xử lý đặt hàng...
+    Đang yêu cầu mã OTP...
   `;
 
-  const response = await window.api.post('/orders', { shipping_address, note });
-  
-  if (response.success) {
-    window.toast.success('Đặt hàng thành công! Đơn hàng của bạn đã được tạo.');
-    
-    // Clear navigation badges
-    window.auth.updateNavigationUI();
-
-    // Redirect to profile page after 2 seconds
-    setTimeout(() => {
-      window.location.href = '/profile.html';
-    }, 2000);
+  // Request the payment OTP from backend
+  const res = await window.api.post('/orders/request-otp');
+  if (res.success) {
+    // Open the verification OTP modal
+    openOtpModal(res.data ? res.data.demoOtp : null);
   } else {
-    window.toast.error(response.message || 'Đặt hàng thất bại. Vui lòng kiểm tra lại.');
+    window.toast.error(res.message || 'Không thể yêu cầu mã OTP lúc này.');
     confirmBtn.disabled = false;
     confirmBtn.innerHTML = `
       <span>Xác nhận đặt hàng</span>
@@ -237,6 +312,212 @@ async function handleConfirmOrder(e) {
   }
 }
 
+/**
+ * Initialize OTP keyboard traverse UI elements
+ */
+function initOtpUI() {
+  const otpDigits = document.querySelectorAll('.otp-digit');
+  const otpModal = document.getElementById('otp-modal');
+  const otpModalContent = document.getElementById('otp-modal-content');
+  const btnResendOtp = document.getElementById('btn-resend-otp');
+  const btnCancelOtp = document.getElementById('btn-cancel-otp');
+  const otpForm = document.getElementById('otp-form');
+  const btnVerifyOtp = document.getElementById('btn-verify-otp');
+
+  if (!otpModal) return;
+
+  // Auto-focus next field on input typing, shift back on backspace
+  otpDigits.forEach((input, idx) => {
+    input.addEventListener('input', (e) => {
+      const val = e.target.value;
+      // Allow only numbers
+      e.target.value = val.replace(/[^0-9]/g, '');
+      if (e.target.value.length === 1 && idx < otpDigits.length - 1) {
+        otpDigits[idx + 1].focus();
+      }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+        otpDigits[idx - 1].focus();
+      }
+    });
+  });
+
+  // Cancel checkout verification
+  btnCancelOtp.addEventListener('click', () => {
+    closeOtpModal();
+    const confirmBtn = document.getElementById('btn-confirm-order');
+    if (confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = `
+        <span>Xác nhận đặt hàng</span>
+        <span class="material-symbols-outlined text-[20px]">shopping_cart_checkout</span>
+      `;
+    }
+  });
+
+  // Resend OTP code request
+  btnResendOtp.addEventListener('click', async () => {
+    btnResendOtp.disabled = true;
+    window.toast.info('Đang gửi lại mã OTP mới...');
+    
+    const res = await window.api.post('/orders/request-otp');
+    if (res.success) {
+      window.toast.success('Mã OTP mới đã được gửi thành công.');
+      startOtpTimer();
+      if (res.data && res.data.demoOtp) {
+        // Clear previous toast immediately and show the new one
+        window.toast.info(`[DEMO SMS] Mã OTP mới của bạn là: ${res.data.demoOtp}`, 8000);
+      }
+    } else {
+      window.toast.error(res.message || 'Không thể gửi lại mã OTP.');
+      btnResendOtp.disabled = false;
+    }
+  });
+
+  // Submit OTP Form for complete order confirmation
+  otpForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    let otpCode = '';
+    otpDigits.forEach(input => otpCode += input.value);
+
+    if (otpCode.length !== 6) {
+      window.toast.error('Vui lòng nhập đầy đủ mã OTP gồm 6 chữ số.');
+      return;
+    }
+
+    btnVerifyOtp.disabled = true;
+    btnVerifyOtp.innerHTML = `
+      <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>
+      Đang xác thực...
+    `;
+
+    // Place the order by verifying the OTP on the backend
+    const response = await window.api.post('/orders', {
+      shipping_address: cachedOrderPayload.shipping_address,
+      note: cachedOrderPayload.note,
+      otp: otpCode
+    });
+
+    if (response.success) {
+      closeOtpModal();
+      window.toast.success('Xác thực OTP thành công! Đơn hàng của bạn đã được khởi tạo.');
+      
+      // Update global navigation badges
+      if (window.auth && typeof window.auth.updateNavigationUI === 'function') {
+        window.auth.updateNavigationUI();
+      }
+
+      // Redirect to profile page after 2 seconds
+      setTimeout(() => {
+        window.location.href = '/profile.html';
+      }, 2000);
+    } else {
+      window.toast.error(response.message || 'Xác thực OTP thất bại. Vui lòng kiểm tra lại.');
+      btnVerifyOtp.disabled = false;
+      btnVerifyOtp.innerHTML = `
+        <span>Xác nhận</span>
+        <span class="material-symbols-outlined text-[18px]">done</span>
+      `;
+      
+      // Select last digit for user convenience
+      if (otpDigits[5]) otpDigits[5].focus();
+    }
+  });
+}
+
+/**
+ * Open OTP Modal dialog
+ */
+function openOtpModal(demoOtp = null) {
+  const otpModal = document.getElementById('otp-modal');
+  const otpModalContent = document.getElementById('otp-modal-content');
+  const otpDigits = document.querySelectorAll('.otp-digit');
+
+  if (!otpModal) return;
+
+  // Clear inputs
+  otpDigits.forEach(input => input.value = '');
+
+  // Animation open
+  otpModal.classList.remove('pointer-events-none');
+  otpModal.classList.remove('opacity-0');
+  if (otpModalContent) {
+    otpModalContent.classList.remove('scale-95');
+    otpModalContent.classList.add('scale-100');
+  }
+
+  // Focus first input box
+  if (otpDigits[0]) {
+    setTimeout(() => otpDigits[0].focus(), 100);
+  }
+
+  // If demoOtp is provided, display a mock SMS notification toast
+  if (demoOtp) {
+    setTimeout(() => {
+      window.toast.info(`[DEMO SMS] Mã OTP của bạn là: ${demoOtp}`, 8000);
+    }, 600);
+  }
+
+  startOtpTimer();
+}
+
+/**
+ * Close OTP Modal dialog
+ */
+function closeOtpModal() {
+  const otpModal = document.getElementById('otp-modal');
+  const otpModalContent = document.getElementById('otp-modal-content');
+
+  if (!otpModal) return;
+
+  // Animation close
+  otpModal.classList.add('pointer-events-none');
+  otpModal.classList.add('opacity-0');
+  if (otpModalContent) {
+    otpModalContent.classList.remove('scale-100');
+    otpModalContent.classList.add('scale-95');
+  }
+
+  // Clear interval
+  if (otpCountdownInterval) {
+    clearInterval(otpCountdownInterval);
+  }
+}
+
+/**
+ * Start OTP countdown timer (5 mins = 300 secs)
+ */
+function startOtpTimer() {
+  const otpTimer = document.getElementById('otp-timer');
+  const btnResendOtp = document.getElementById('btn-resend-otp');
+
+  if (!otpTimer || !btnResendOtp) return;
+
+  clearInterval(otpCountdownInterval);
+  currentOtpTimeLeft = otpExpiryTime;
+  btnResendOtp.disabled = true;
+
+  function updateTimer() {
+    if (currentOtpTimeLeft <= 0) {
+      clearInterval(otpCountdownInterval);
+      otpTimer.innerText = 'Đã hết hạn';
+      btnResendOtp.disabled = false;
+    } else {
+      const minutes = Math.floor(currentOtpTimeLeft / 60);
+      const seconds = currentOtpTimeLeft % 60;
+      otpTimer.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      currentOtpTimeLeft--;
+    }
+  }
+
+  updateTimer();
+  otpCountdownInterval = setInterval(updateTimer, 1000);
+}
+
 function formatVND(amount) {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }
+

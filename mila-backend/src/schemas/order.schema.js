@@ -1,6 +1,6 @@
 const createOrderSchema = {
   type: 'object',
-  required: ['shipping_address'],
+  required: ['shipping_address', 'otp'],
   properties: {
     shipping_address: {
       type: 'object',
@@ -19,10 +19,12 @@ const createOrderSchema = {
       },
       additionalProperties: false
     },
-    note: { type: 'string', maxLength: 500, default: '' }
+    note: { type: 'string', maxLength: 500, default: '' },
+    otp: { type: 'string', pattern: '^[0-9]{6}$' }
   },
   additionalProperties: false
 };
+
 
 const updateOrderStatusSchema = {
   type: 'object',

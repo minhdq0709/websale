@@ -1,23 +1,165 @@
 const OrderModel = require('../models/order.model');
+const pool = require('../config/db');
+const crypto = require('crypto');
+const paymentCrypto = require('../utils/payment-crypto.util');
 
 const OrderController = {
   /**
-   * DAT HANG (TAO DON HANG TU GIO HANG)
+   * YÊU CẦU GỬI MÃ OTP THANH TOÁN (Giả lập gửi qua SMS)
+   */
+  /**
+   * YÊU CẦU GỬI MÃ OTP THANH TOÁN (Mã hóa bất đối xứng thuần toán học - Không ghi DB)
+   */
+  async requestOTP(req, res) {
+    try {
+      const userId = req.user.id;
+
+      // 1. Lấy thông tin user để tìm hoặc tạo khóa bí mật riêng (Private Key)
+      const [users] = await pool.query('SELECT id, email, phone, otp_secret FROM users WHERE id = ?', [userId]);
+      const user = users[0];
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'Không tìm thấy thông tin người dùng.'
+        });
+      }
+
+      // 2. Tạo khóa bí mật riêng biệt (Private Key) nếu chưa có
+      let otpSecret = user.otp_secret;
+      if (!otpSecret) {
+        otpSecret = crypto.randomBytes(32).toString('hex');
+        await pool.query('UPDATE users SET otp_secret = ? WHERE id = ?', [otpSecret, userId]);
+      }
+
+      // 3. Sinh mã OTP 6 chữ số thuần toán học dựa trên Private Key của người dùng và chu kỳ thời gian 5 phút
+      const OTP_TIME_STEP = 5 * 60 * 1000; // 5 phút
+      const timeBlock = Math.floor(Date.now() / OTP_TIME_STEP);
+
+      const hmac = crypto.createHmac('sha256', otpSecret);
+      hmac.update(timeBlock.toString());
+      const hash = hmac.digest('hex');
+      const otpCode = (parseInt(hash.substring(0, 8), 16) % 1000000).toString().padStart(6, '0');
+
+      // 4. Ghi log giả lập gửi tin nhắn SMS tới số điện thoại khách hàng (Không lưu DB!)
+      console.log(`\n📬 [SMS Simulator to ${user.phone || 'customer'}] (TOTP Không Lưu DB) Mã OTP thanh toán của bạn là: ${otpCode}. Mã có hiệu lực trong 5 phút.\n`);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Mã xác thực OTP đã được gửi thành công.',
+        data: {
+          // Trả về kèm theo mã OTP ở chế độ phát triển để Frontend hiển thị giả lập tin nhắn SMS cho người dùng
+          demoOtp: process.env.NODE_ENV === 'production' ? undefined : otpCode
+        }
+      });
+    } catch (error) {
+      console.error('Lỗi yêu cầu OTP:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Có lỗi xảy ra khi tạo mã OTP. Vui lòng thử lại.',
+        code: 'OTP_GEN_ERROR'
+      });
+    }
+  },
+
+  /**
+   * LẤY THÔNG TIN TÀI KHOẢN NGÂN HÀNG (ĐÃ MÃ HÓA)
+   */
+  async getPaymentInfo(req, res) {
+    try {
+      const bankName = process.env.BANK_NAME || 'Vietcombank (VCB)';
+      const bankAccount = process.env.BANK_ACCOUNT || '1023456789';
+      const bankOwner = process.env.BANK_OWNER || 'CONG TY TNHH PURE VITALITY MARKET';
+      const bankCode = process.env.BANK_CODE || 'VCB';
+
+      // Mã hóa các thông tin nhạy cảm
+      const encryptedAccount = paymentCrypto.encrypt(bankAccount);
+      const encryptedCode = paymentCrypto.encrypt(bankCode);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Lấy thông tin thanh toán thành công.',
+        data: {
+          bankName,
+          bankAccount: encryptedAccount,
+          bankOwner,
+          bankCode: encryptedCode
+        }
+      });
+    } catch (error) {
+      console.error('Lỗi lấy thông tin ngân hàng:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Có lỗi xảy ra khi tải thông tin thanh toán.',
+        code: 'PAYMENT_INFO_ERROR'
+      });
+    }
+  },
+
+  /**
+   * DAT HANG (TAO DON HANG TU GIO HANG - XÁC THỰC OTP THUẦN TOÁN HỌC KHÔNG LƯU DB)
    */
   async createOrder(req, res) {
     try {
       const userId = req.user.id;
-      const { shipping_address, note } = req.body;
+      const { shipping_address, note, otp } = req.body;
 
+      if (!otp) {
+        return res.status(400).json({
+          success: false,
+          message: 'Mã xác thực OTP là bắt buộc để xác nhận đơn hàng.',
+          code: 'OTP_REQUIRED'
+        });
+      }
+
+      // 1. Lấy thông tin email, số điện thoại, và Private Key (otp_secret) của người dùng
+      const [users] = await pool.query('SELECT email, phone, otp_secret FROM users WHERE id = ?', [req.user.id]);
+      const user = users[0];
+      if (!user || !user.otp_secret) {
+        return res.status(400).json({
+          success: false,
+          message: 'Không tìm thấy yêu cầu gửi mã OTP hợp lệ. Vui lòng yêu cầu mã OTP mới.',
+          code: 'OTP_NOT_FOUND'
+        });
+      }
+
+      // 2. Tái tính toán mã OTP hợp lệ thuần toán học theo chu kỳ hiện tại và chu kỳ liền trước (sai lệch múi giờ/độ trễ)
+      const OTP_TIME_STEP = 5 * 60 * 1000; // Chu kỳ 5 phút
+      const timeBlock = Math.floor(Date.now() / OTP_TIME_STEP);
+
+      // Tính mã OTP của khối thời gian hiện tại
+      const hmacCurrent = crypto.createHmac('sha256', user.otp_secret);
+      hmacCurrent.update(timeBlock.toString());
+      const hashCurrent = hmacCurrent.digest('hex');
+      const otpCurrent = (parseInt(hashCurrent.substring(0, 8), 16) % 1000000).toString().padStart(6, '0');
+
+      // Tính mã OTP của khối thời gian liền trước (sai số lệch múi giờ tối đa 5 phút)
+      const hmacPrev = crypto.createHmac('sha256', user.otp_secret);
+      hmacPrev.update((timeBlock - 1).toString());
+      const hashPrev = hmacPrev.digest('hex');
+      const otpPrev = (parseInt(hashPrev.substring(0, 8), 16) % 1000000).toString().padStart(6, '0');
+
+      // 3. So khớp trực tiếp OTP người dùng gửi lên
+      if (String(otp) !== otpCurrent && String(otp) !== otpPrev) {
+        return res.status(400).json({
+          success: false,
+          message: 'Mã xác thực OTP không chính xác hoặc đã hết hạn. Vui lòng kiểm tra lại.',
+          code: 'INVALID_OTP'
+        });
+      }
+
+      // 4. Tiến hành tạo đơn hàng và trừ kho hàng trong Database
       const orderId = await OrderModel.createOrder(userId, { shipping_address, note });
 
       return res.status(201).json({
         success: true,
-        message: 'Đặt hàng thành công. Đơn hàng của bạn đang được xử lý.',
+        message: 'Đặt hàng thành công. Đơn hàng của bạn đã được khởi tạo.',
         data: {
           orderId
         }
       });
+
+
     } catch (error) {
       console.error('Lỗi đặt hàng:', error);
 

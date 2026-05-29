@@ -20,11 +20,13 @@ CREATE TABLE IF NOT EXISTS users (
   is_active     TINYINT(1) NOT NULL DEFAULT 1,
   avatar_url    VARCHAR(500),
   address       TEXT,
+  otp_secret    VARCHAR(255) DEFAULT NULL,
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_email (email),
   INDEX idx_phone (phone)
 ) ENGINE=InnoDB;
+
 
 -- ============================================================
 -- 2. CATEGORIES
