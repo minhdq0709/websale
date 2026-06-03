@@ -123,10 +123,11 @@ const AuthController = {
       });
 
       // 6. Set refresh token vao HttpOnly cookie de bao mat CSRF/XSS
+      // sameSite: 'strict' — cookie không được gửi trong bất kỳ cross-site request nào
       res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        httpOnly: true,   // Không đọc được từ JavaScript
+        secure: process.env.NODE_ENV === 'production', // Chỉ gửi qua HTTPS
+        sameSite: 'strict', // Chặn gửi cookie trong cross-site request
         maxAge: REFRESH_TOKEN_EXPIRY_DAYS * 24 * 60 * 60 * 1000 // 7 ngay
       });
 
@@ -253,7 +254,7 @@ const AuthController = {
       res.clearCookie('refreshToken', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
+        sameSite: 'strict' // Giữ nhất quán với thiết lập khi set cookie
       });
 
       return res.status(200).json({

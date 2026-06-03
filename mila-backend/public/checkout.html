@@ -223,39 +223,85 @@
 
           <!-- QR code detail -->
           <div class="mt-8 p-8 bg-surface-container-low rounded-xl flex flex-col items-center text-center hidden" id="qr-display">
-            <div class="bg-white p-4 rounded-xl shadow-sm mb-4">
-              <img id="qr-code-img" alt="QR Code Thanh Toán" class="w-44 h-44 object-contain" src="https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=400&q=80"/>
+            <!-- Loading Spinner for QR -->
+            <div id="qr-loading" class="flex flex-col items-center justify-center py-8 space-y-3">
+              <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <p class="text-label-sm font-label-sm text-on-surface-variant">Đang tạo mã QR thanh toán bảo mật...</p>
             </div>
-            <p class="text-body-md font-body-md font-bold text-primary mb-1">Quét mã để thanh toán</p>
-            <p class="text-label-sm font-label-sm text-on-surface-variant max-w-xs">Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã này để hoàn tất thanh toán.</p>
+            
+            <!-- Real QR Content Container -->
+            <div id="qr-content" class="flex flex-col items-center hidden">
+              <div class="bg-white p-4 rounded-xl shadow-sm mb-4 border border-outline-variant/30">
+                <img id="qr-code-img" alt="QR Code Thanh Toán" class="w-44 h-44 object-contain" src=""/>
+              </div>
+              <p class="text-body-md font-body-md font-bold text-primary mb-1">Quét mã để thanh toán</p>
+              <p class="text-label-sm font-label-sm text-on-surface-variant max-w-xs">Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã này để hoàn tất thanh toán.</p>
+              
+              <!-- Manual bank details fallback under QR -->
+              <div class="mt-6 w-full max-w-xs border-t border-outline-variant/60 pt-4 text-left">
+                <p class="text-xs font-bold text-primary mb-2 text-center">Hoặc chuyển khoản thủ công:</p>
+                <div class="space-y-1.5 text-[12px] bg-white p-3 rounded-lg border border-outline-variant/40">
+                  <div class="flex justify-between">
+                    <span class="text-on-surface-variant">Ngân hàng:</span>
+                    <span class="font-bold text-primary text-right" id="qr-bank-name-text">Đang tải...</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-on-surface-variant">Số tài khoản:</span>
+                    <span class="font-bold text-primary select-all cursor-pointer hover:underline text-right" id="qr-bank-account-text" onclick="navigator.clipboard.writeText(this.innerText); window.toast.success('Đã sao chép số tài khoản!')" title="Click để sao chép">Đang tải...</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-on-surface-variant">Chủ tài khoản:</span>
+                    <span class="font-bold text-primary text-right" id="qr-bank-owner-text">Đang tải...</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20 flex items-center gap-2 max-w-sm justify-center">
+                <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+                <p class="text-xs text-primary font-semibold text-left">Sau khi quét mã, hãy nhấn nút <strong>"Xác nhận đặt hàng"</strong> bên phải để nhận & nhập mã xác thực OTP.</p>
+              </div>
+            </div>
           </div>
 
           <!-- Bank transfer detail -->
           <div class="mt-8 p-8 bg-surface-container-low rounded-xl hidden" id="bank-display">
-            <h4 class="font-bold text-primary mb-4 text-center">Thông tin tài khoản ngân hàng</h4>
-            <div class="space-y-3 max-w-md mx-auto text-body-sm">
-              <div class="flex justify-between border-b border-outline-variant pb-2">
-                <span class="text-on-surface-variant">Ngân hàng:</span>
-                <span class="font-bold text-primary" id="bank-name-text">Đang tải...</span>
+            <!-- Loading Spinner for Bank -->
+            <div id="bank-loading" class="flex flex-col items-center justify-center py-8 space-y-3">
+              <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <p class="text-label-sm font-label-sm text-on-surface-variant">Đang tải thông tin tài khoản bảo mật...</p>
+            </div>
+
+            <!-- Real Bank Content Container -->
+            <div id="bank-content" class="hidden">
+              <h4 class="font-bold text-primary mb-4 text-center">Thông tin tài khoản ngân hàng</h4>
+              <div class="space-y-3 max-w-md mx-auto text-body-sm">
+                <div class="flex justify-between border-b border-outline-variant pb-2">
+                  <span class="text-on-surface-variant">Ngân hàng:</span>
+                  <span class="font-bold text-primary" id="bank-name-text">Đang tải...</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant pb-2">
+                  <span class="text-on-surface-variant">Số tài khoản:</span>
+                  <span class="font-bold text-primary select-all cursor-pointer hover:underline" id="bank-account-text" onclick="navigator.clipboard.writeText(this.innerText); window.toast.success('Đã sao chép số tài khoản!')" title="Click để sao chép">Đang tải...</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant pb-2">
+                  <span class="text-on-surface-variant">Chủ tài khoản:</span>
+                  <span class="font-bold text-primary" id="bank-owner-text">Đang tải...</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant pb-2">
+                  <span class="text-on-surface-variant">Số tiền:</span>
+                  <span class="font-bold text-secondary" id="bank-amount">0₫</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-on-surface-variant">Nội dung chuyển khoản:</span>
+                  <span class="font-bold text-primary select-all cursor-pointer hover:underline" id="bank-message" onclick="navigator.clipboard.writeText(this.innerText); window.toast.success('Đã sao chép nội dung chuyển khoản!')" title="Click để sao chép">PVKM ORDER</span>
+                </div>
               </div>
-              <div class="flex justify-between border-b border-outline-variant pb-2">
-                <span class="text-on-surface-variant">Số tài khoản:</span>
-                <span class="font-bold text-primary select-all" id="bank-account-text">Đang tải...</span>
-              </div>
-              <div class="flex justify-between border-b border-outline-variant pb-2">
-                <span class="text-on-surface-variant">Chủ tài khoản:</span>
-                <span class="font-bold text-primary" id="bank-owner-text">Đang tải...</span>
-              </div>
-              <div class="flex justify-between border-b border-outline-variant pb-2">
-                <span class="text-on-surface-variant">Số tiền:</span>
-                <span class="font-bold text-secondary" id="bank-amount">0₫</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-on-surface-variant">Nội dung chuyển khoản:</span>
-                <span class="font-bold text-primary select-all" id="bank-message">PVKM ORDER</span>
+              <p class="text-xs text-on-surface-variant text-center mt-6">Vui lòng chuyển đúng số tiền và nội dung để hệ thống tự động xác nhận.</p>
+              <div class="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20 flex items-center gap-2 max-w-sm mx-auto justify-center">
+                <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+                <p class="text-xs text-primary font-semibold text-left">Sau khi chuyển khoản, hãy nhấn nút <strong>"Xác nhận đặt hàng"</strong> bên phải để nhận & nhập mã xác thực OTP.</p>
               </div>
             </div>
-            <p class="text-xs text-on-surface-variant text-center mt-6">Vui lòng chuyển đúng số tiền và nội dung để hệ thống tự động xác nhận.</p>
           </div>
 
 
@@ -363,6 +409,7 @@
       <span class="material-symbols-outlined">person</span>
       <span class="text-label-sm font-label-sm">Tôi</span>
     </a>
+  </nav>
   <!-- OTP Verification Modal -->
   <div id="otp-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
     <div class="bg-white rounded-2xl shadow-2xl border border-outline-variant p-8 max-w-md w-full space-y-6 transform scale-95 transition-all duration-300 relative overflow-hidden" id="otp-modal-content">

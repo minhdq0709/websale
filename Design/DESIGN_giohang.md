@@ -1,101 +1,96 @@
 ---
-name: Organic Harvest
+name: Pure Vitality Design System
 colors:
-  surface: '#f8f9fa'
-  surface-dim: '#d9dadb'
-  surface-bright: '#f8f9fa'
+  surface: '#fbf9f9'
+  surface-dim: '#dbdad9'
+  surface-bright: '#fbf9f9'
   surface-container-lowest: '#ffffff'
-  surface-container-low: '#f3f4f5'
-  surface-container: '#edeeef'
-  surface-container-high: '#e7e8e9'
-  surface-container-highest: '#e1e3e4'
-  on-surface: '#191c1d'
-  on-surface-variant: '#42493e'
-  inverse-surface: '#2e3132'
-  inverse-on-surface: '#f0f1f2'
-  outline: '#72796e'
-  outline-variant: '#c2c9bb'
-  surface-tint: '#3b6934'
-  primary: '#154212'
+  surface-container-low: '#f5f3f3'
+  surface-container: '#efeded'
+  surface-container-high: '#e9e8e7'
+  surface-container-highest: '#e3e2e2'
+  on-surface: '#1b1c1c'
+  on-surface-variant: '#41493e'
+  inverse-surface: '#303031'
+  inverse-on-surface: '#f2f0f0'
+  outline: '#717a6d'
+  outline-variant: '#c0c9bb'
+  surface-tint: '#2a6b2c'
+  primary: '#00450d'
   on-primary: '#ffffff'
-  primary-container: '#2d5a27'
-  on-primary-container: '#9dd090'
-  inverse-primary: '#a1d494'
-  secondary: '#006e1c'
+  primary-container: '#1b5e20'
+  on-primary-container: '#90d689'
+  inverse-primary: '#91d78a'
+  secondary: '#286b33'
   on-secondary: '#ffffff'
-  secondary-container: '#91f78e'
-  on-secondary-container: '#00731e'
-  tertiary: '#3a3935'
+  secondary-container: '#abf4ac'
+  on-secondary-container: '#2e7238'
+  tertiary: '#363d33'
   on-tertiary: '#ffffff'
-  tertiary-container: '#51504b'
-  on-tertiary-container: '#c5c2bc'
+  tertiary-container: '#4d5449'
+  on-tertiary-container: '#c1c8ba'
   error: '#ba1a1a'
   on-error: '#ffffff'
   error-container: '#ffdad6'
   on-error-container: '#93000a'
-  primary-fixed: '#bcf0ae'
-  primary-fixed-dim: '#a1d494'
-  on-primary-fixed: '#002201'
-  on-primary-fixed-variant: '#23501e'
-  secondary-fixed: '#94f990'
-  secondary-fixed-dim: '#78dc77'
-  on-secondary-fixed: '#002204'
-  on-secondary-fixed-variant: '#005313'
-  tertiary-fixed: '#e5e2db'
-  tertiary-fixed-dim: '#c9c6c0'
-  on-tertiary-fixed: '#1c1c18'
-  on-tertiary-fixed-variant: '#474742'
-  background: '#f8f9fa'
-  on-background: '#191c1d'
-  surface-variant: '#e1e3e4'
+  primary-fixed: '#acf4a4'
+  primary-fixed-dim: '#91d78a'
+  on-primary-fixed: '#002203'
+  on-primary-fixed-variant: '#0c5216'
+  secondary-fixed: '#abf4ac'
+  secondary-fixed-dim: '#90d792'
+  on-secondary-fixed: '#002107'
+  on-secondary-fixed-variant: '#07521d'
+  tertiary-fixed: '#dee5d6'
+  tertiary-fixed-dim: '#c2c9bb'
+  on-tertiary-fixed: '#171d14'
+  on-tertiary-fixed-variant: '#42493e'
+  background: '#fbf9f9'
+  on-background: '#1b1c1c'
+  surface-variant: '#e3e2e2'
 typography:
-  headline-lg:
-    fontFamily: Be Vietnam Pro
-    fontSize: 40px
+  headline-xl:
+    fontFamily: Inter
+    fontSize: 48px
     fontWeight: '700'
-    lineHeight: '1.2'
+    lineHeight: 56px
     letterSpacing: -0.02em
-  headline-lg-mobile:
-    fontFamily: Be Vietnam Pro
-    fontSize: 30px
+  headline-lg:
+    fontFamily: Inter
+    fontSize: 32px
     fontWeight: '700'
-    lineHeight: '1.2'
-  headline-md:
-    fontFamily: Be Vietnam Pro
+    lineHeight: 40px
+    letterSpacing: -0.01em
+  headline-lg-mobile:
+    fontFamily: Inter
     fontSize: 28px
+    fontWeight: '700'
+    lineHeight: 36px
+  headline-md:
+    fontFamily: Inter
+    fontSize: 24px
     fontWeight: '600'
-    lineHeight: '1.3'
-  headline-sm:
-    fontFamily: Be Vietnam Pro
-    fontSize: 22px
-    fontWeight: '600'
-    lineHeight: '1.4'
+    lineHeight: 32px
   body-lg:
-    fontFamily: Be Vietnam Pro
+    fontFamily: Inter
     fontSize: 18px
     fontWeight: '400'
-    lineHeight: '1.6'
+    lineHeight: 28px
   body-md:
-    fontFamily: Be Vietnam Pro
+    fontFamily: Inter
     fontSize: 16px
     fontWeight: '400'
-    lineHeight: '1.6'
-  body-sm:
-    fontFamily: Be Vietnam Pro
-    fontSize: 14px
-    fontWeight: '400'
-    lineHeight: '1.5'
+    lineHeight: 24px
   label-md:
-    fontFamily: Be Vietnam Pro
+    fontFamily: Inter
     fontSize: 14px
     fontWeight: '600'
-    lineHeight: '1'
-    letterSpacing: 0.05em
+    lineHeight: 20px
   label-sm:
-    fontFamily: Be Vietnam Pro
+    fontFamily: Inter
     fontSize: 12px
     fontWeight: '500'
-    lineHeight: '1'
+    lineHeight: 16px
 rounded:
   sm: 0.25rem
   DEFAULT: 0.5rem
@@ -104,77 +99,69 @@ rounded:
   xl: 1.5rem
   full: 9999px
 spacing:
-  unit: 8px
+  unit: 4px
+  xs: 4px
+  sm: 8px
+  md: 16px
+  lg: 24px
+  xl: 48px
+  xxl: 80px
   container-max: 1280px
   gutter: 24px
-  margin-desktop: 48px
-  margin-mobile: 16px
 ---
 
 ## Brand & Style
+The design system is anchored in the concept of "Freshness through Clarity." It targets health-conscious consumers who value transparency, organic quality, and effortless shopping. The brand personality is **Professional, Organic, and Vital**.
 
-The design system is centered on the concept of "Pure Vitality." It aims to evoke the sensory experience of a fresh morning market: crisp, clean, and life-giving. The target audience consists of health-conscious consumers and families who value transparency, sustainability, and quality in their food sources.
-
-The aesthetic follows a **Minimalist** approach with **Soft Modernist** influences. By prioritizing expansive white space and high-quality food photography, the UI steps back to let the natural colors of the produce provide the primary visual interest. The emotional response should be one of trust, calm, and appetite appeal, localized specifically for the Vietnamese market through thoughtful typography and cultural resonance.
+The visual style is **Modern Corporate** with a heavy emphasis on **Minimalism** and **Spaciousness**. By utilizing expansive white space and high-quality product photography, the UI recedes to let the vibrant colors of the fresh produce take center stage. The interface evokes a sense of trust and "clean living" through disciplined alignment, soft edges, and a refreshing, nature-inspired palette.
 
 ## Colors
+The palette is a functional tribute to nature and purity. 
+- **Primary Green (#1B5E20):** A deep, forest-toned green used for high-level branding, primary actions, and semantic "freshness" cues. It provides the necessary contrast for accessibility.
+- **Secondary Light Green (#81C784):** Used for accents, success states, and subtle badges.
+- **Tertiary Tint (#F1F8E9):** A soft, organic wash used for large surface areas, section backgrounds, and hover states to avoid the sterility of pure white.
+- **Neutrals:** A range of grays from `#212121` (Text) to `#F5F5F5` (Borders). 
 
-The palette is rooted in the natural world. 
-- **Primary Green (#2D5A27):** A deep, forest green used for headers, primary actions, and brand-critical elements to convey authority and the "organic" promise.
-- **Secondary Green (#4CAF50):** A vibrant, leaf-green used for accents, success states, and badges to evoke growth and freshness.
-- **Earth Tone (#F4F1EA):** A soft, sandy beige used for section backgrounds and card containers to prevent the UI from feeling "sterile" or overly clinical.
-- **Neutral Background (#FFFFFF / #F9FAFB):** High-reflectance whites ensure that product photography pops and the interface feels breathable.
+The default mode is **Light**, reinforcing the themes of cleanliness and daylight markets.
 
 ## Typography
+This design system uses **Inter** for its exceptional readability and neutral, professional character. The hierarchy is optimized for SEO with clear distinctions between Heading levels.
 
-This design system utilizes **Be Vietnam Pro** for its entire typographic hierarchy. As a font family designed with the Vietnamese language in mind, it handles complex diacritics with grace while maintaining a contemporary, friendly, and approachable feel.
-
-Headlines should use tighter letter spacing and heavier weights to create a sense of groundedness. Body text utilizes a generous line height (1.6) to ensure maximum readability for nutritional information and product descriptions. All localized Vietnamese text should maintain these standards to ensure a premium, curated editorial feel.
+- **Headlines:** Use tight letter-spacing and bold weights to create impact. `Headline-xl` is reserved for Hero sections.
+- **Body:** `Body-md` is the standard for product descriptions. Line heights are generous (1.5x) to prevent eye fatigue during long shopping sessions.
+- **Semantic Tags:** Use `label-md` for categories and status badges, often paired with a subtle background tint.
 
 ## Layout & Spacing
+The system utilizes a **12-column Fluid Grid** with a fixed maximum width of 1280px for desktop to maintain readability.
 
-The layout utilizes a **Fluid Grid** system with a focus on asymmetrical balance to mimic the organic nature of produce. 
+- **Desktop:** 24px gutters, 80px side margins. Elements reflow into 4-column product grids.
+- **Tablet:** 16px gutters, 40px side margins. Elements reflow into 2 or 3-column grids.
+- **Mobile:** 16px side margins. Product lists stack or use horizontal carousels to preserve vertical space.
 
-- **Desktop:** A 12-column grid with 24px gutters. Product listings typically span 3 or 4 columns.
-- **Tablet:** An 8-column grid with 20px gutters.
-- **Mobile:** A 4-column grid with 16px margins. 
-
-Spacing is based on an 8px base unit. Large sections of content should be separated by substantial vertical padding (64px to 80px) to maintain the minimalist, airy aesthetic. Elements should never feel "cramped"; when in doubt, increase padding to allow the organic shapes of the imagery to breathe.
+Spacing follows a linear 4px scale. Use `xl` (48px) for vertical section padding to maintain the "spacious" feel requested in the brief.
 
 ## Elevation & Depth
+Depth is conveyed through **Soft Ambient Shadows** and **Tonal Layering**. 
 
-Visual hierarchy is established through **Ambient Shadows** and **Tonal Layering**. 
+1.  **Level 0 (Flat):** Main background (#FFFFFF).
+2.  **Level 1 (Surface):** Subtle containers use #F9FBF9 with a 1px border (#E0E0E0).
+3.  **Level 2 (Raised):** Product cards use a very diffused shadow: `0 4px 20px rgba(27, 94, 32, 0.05)`. This slight green tint in the shadow adds to the organic feel.
+4.  **Level 3 (Overlay):** Modals and dropdowns use a more pronounced shadow: `0 12px 32px rgba(0, 0, 0, 0.1)`.
 
-1. **Surface Base:** Pure white (#FFFFFF) for the primary background.
-2. **Surface Low:** Soft earth-toned backgrounds (#F4F1EA) to group related content without adding visual weight.
-3. **Soft Depth:** Components like cards use a very subtle, diffused shadow: `0px 4px 20px rgba(45, 90, 39, 0.05)`. This shadow uses a hint of the primary green to keep the depth feeling organic rather than synthetic grey.
-4. **Interactive States:** On hover, cards may lift slightly with a more pronounced shadow, but should never use heavy outlines or harsh borders.
+Avoid harsh black shadows; favor depth created through color shifts (e.g., placing a white card on a #F1F8E9 background).
 
 ## Shapes
+The shape language is consistently **Rounded (Level 2)**. 
+- **Product Cards & Containers:** Use a 16px (`rounded-xl` contextually) radius to feel friendly and safe.
+- **Buttons & Inputs:** Use a 12px radius. 
+- **Badges/Chips:** Use a fully rounded (pill) shape to differentiate from clickable buttons.
 
-The shape language is **Rounded (Level 2)**. This level of curvature (0.5rem / 8px base) avoids the clinical feel of sharp corners while remaining structured enough for an e-commerce platform. 
-
-- **Product Images:** Use `rounded-xl` (1.5rem / 24px) to soften the photography.
-- **Secondary Buttons & Inputs:** Use the standard `rounded` (0.5rem / 8px).
-- **Search Bars & Badges:** May utilize pill-shaped ends to denote high interactivity and friendly navigation.
+This consistent use of curves removes the "industrial" feel and reinforces the organic nature of the grocery products.
 
 ## Components
-
-### Buttons
-- **Primary:** Solid Primary Green (#2D5A27) with white text. High-contrast, bold, and reliable.
-- **Secondary:** Outline Primary Green or solid Earth Tone. Used for "Add to Cart" or "View Details."
-- **States:** Hover states should involve a subtle shift to a slightly darker shade or a gentle scale increase (1.02x).
-
-### Product Cards
-Cards are the heart of the system. They feature a large image area with a `rounded-xl` corner radius, a clean title in Be Vietnam Pro Bold, and the price highlighted in the Secondary Green. Avoid borders; use a soft ambient shadow to separate the card from the background.
-
-### Input Fields & Selectors
-Text inputs use a light grey or earth-tone background with a subtle 1px border that turns Primary Green on focus. Labels sit clearly above the field in `label-sm` style.
-
-### Category Chips
-Small, rounded elements used for filtering (e.g., "Rau củ," "Trái cây," "Đồ khô"). Active states use a soft tint of the Secondary Green with dark green text.
-
-### Feedback Elements
-- **Success:** Secondary Green (#4CAF50).
-- **Warning:** A warm, organic orange (reminiscent of a carrot or citrus).
-- **Error:** A soft brick red, used sparingly to maintain the calm atmosphere.
+- **Buttons:** Primary buttons use a solid #1B5E20 background with white text. Secondary buttons use a #F1F8E9 background with primary green text. Hover states should involve a slight darkening of the green.
+- **Product Cards:** Must feature a large image area with a 16px radius. Price should be bolded using `headline-md`. The "Add to Cart" button should be prominent but not overshadow the product image.
+- **Inputs:** Text fields use a 12px radius, a light gray border (#E0E0E0), and the Primary Green for the focus ring.
+- **Chips/Categories:** Use the secondary light green for "Active" states and neutral light gray for "Inactive" states.
+- **Navigation:** The sticky header should be pure white with a very subtle bottom border. Use the Primary Green for the active link indicator (a 2px bottom bar).
+- **SEO Elements:** Breadcrumbs and descriptive footer links should use `label-sm` with a medium-gray color to remain secondary to main content.

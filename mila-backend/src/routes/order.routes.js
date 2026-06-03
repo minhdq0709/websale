@@ -5,17 +5,19 @@ const auth = require('../middleware/auth.middleware');
 const validate = require('../middleware/validate.middleware');
 const { createOrderSchema } = require('../schemas/order.schema');
 
+const { orderLimiter } = require('../middleware/rateLimiter.middleware');
+
 // Tat ca cac route lien quan toi don hang deu bat buoc phai dang nhap
 router.use(auth);
 
-// Yêu cầu gửi mã OTP để thanh toán
-router.post('/request-otp', OrderController.requestOTP);
+// Yêu cầu gửi mã OTP để thanh toán (Áp dụng rate limit chống spam)
+router.post('/request-otp', orderLimiter, OrderController.requestOTP);
 
-// Lấy thông tin tài khoản ngân hàng bảo mật (đã mã hóa)
+// Lấy thông tin tài khoản ngân hàng bảo mật (đã mã hóa) - Không áp dụng rate limit giao dịch nghiêm ngặt
 router.get('/payment-info', OrderController.getPaymentInfo);
 
-// Dat hang (Lay hang tu gio hang de tao don hang)
-router.post('/', validate(createOrderSchema), OrderController.createOrder);
+// Dat hang (Lay hang tu gio hang de tao don hang - Áp dụng rate limit và xác thực OTP)
+router.post('/', orderLimiter, validate(createOrderSchema), OrderController.createOrder);
 
 // Lay lich su mua hang cua ca nhan
 router.get('/my', OrderController.getMyOrders);

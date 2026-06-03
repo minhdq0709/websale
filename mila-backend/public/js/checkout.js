@@ -9,9 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (user.phone) document.getElementById('shipping-phone').value = user.phone;
   }
 
-  // Load payment information (decrypting bank details)
-  loadPaymentInfo();
-
   // Load cart data for checkout
   loadCheckoutCart();
 
@@ -24,13 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize OTP digits keyboard and event bindings
   initOtpUI();
 
-  // Initialize payment option state
-  selectPayment('qr');
+  // Initialize payment option state - Default to COD for zero initial load overhead
+  selectPayment('cod');
 });
 
-let currentPaymentMethod = 'qr';
+let currentPaymentMethod = 'cod';
 let checkoutSubtotal = 0;
 let bankInfo = null; // Store decrypted bank details
+let transactionOrderCode = ''; // Stable order code message across tab switches
 const PAYMENT_SECRET_KEY = 'MilaMarketSecretKey2026';
 
 // OTP active state variables
@@ -38,6 +36,7 @@ let otpCountdownInterval = null;
 const otpExpiryTime = 300; // 5 minutes in seconds
 let currentOtpTimeLeft = 0;
 let cachedOrderPayload = null;
+let isFetchingBankInfo = false;
 
 /**
  * Decrypt a hex string encrypted with XOR Cipher from the backend
@@ -60,7 +59,15 @@ function decryptBankData(hex) {
  * Fetch bank payment details from backend and decrypt them
  */
 async function loadPaymentInfo() {
+  if (isFetchingBankInfo) return;
+  isFetchingBankInfo = true;
+
+  // Show loading spinner
+  updateLoadingState(true);
+
   const res = await window.api.get('/orders/payment-info');
+  isFetchingBankInfo = false;
+
   if (res.success) {
     bankInfo = {
       bankName: res.data.bankName,
@@ -69,20 +76,61 @@ async function loadPaymentInfo() {
       bankCode: decryptBankData(res.data.bankCode)
     };
     
+    // Auto-map bank code to vietinbank/vietcombank standard names for VietQR API
+    let mappedCode = bankInfo.bankCode;
+    if (mappedCode === 'ICB' || mappedCode === 'VTB') {
+      bankInfo.bankCodeForQr = 'vietinbank';
+    } else if (mappedCode === 'VCB') {
+      bankInfo.bankCodeForQr = 'vietcombank';
+    } else {
+      bankInfo.bankCodeForQr = mappedCode.toLowerCase();
+    }
+    
     // Update dynamic text in DOM
     const bankNameEl = document.getElementById('bank-name-text');
     const bankAccountEl = document.getElementById('bank-account-text');
     const bankOwnerEl = document.getElementById('bank-owner-text');
     
+    const qrBankNameEl = document.getElementById('qr-bank-name-text');
+    const qrBankAccountEl = document.getElementById('qr-bank-account-text');
+    const qrBankOwnerEl = document.getElementById('qr-bank-owner-text');
+    
     if (bankNameEl) bankNameEl.innerText = bankInfo.bankName;
     if (bankAccountEl) bankAccountEl.innerText = bankInfo.bankAccount;
     if (bankOwnerEl) bankOwnerEl.innerText = bankInfo.bankOwner;
 
-    // Trigger QR refresh if QR tab was loaded first
+    if (qrBankNameEl) qrBankNameEl.innerText = bankInfo.bankName;
+    if (qrBankAccountEl) qrBankAccountEl.innerText = bankInfo.bankAccount;
+    if (qrBankOwnerEl) qrBankOwnerEl.innerText = bankInfo.bankOwner;
+
+    updateLoadingState(false);
     refreshPaymentDisplay();
   } else {
+    updateLoadingState(false);
     console.error('Không thể tải thông tin tài khoản ngân hàng bảo mật:', res.message);
     window.toast.error('Lỗi tải thông tin tài khoản ngân hàng.');
+  }
+}
+
+/**
+ * Update UI Loading indicators for lazy fetching
+ */
+function updateLoadingState(isLoading) {
+  const qrLoading = document.getElementById('qr-loading');
+  const qrContent = document.getElementById('qr-content');
+  const bankLoading = document.getElementById('bank-loading');
+  const bankContent = document.getElementById('bank-content');
+
+  if (isLoading) {
+    if (qrLoading) qrLoading.classList.remove('hidden');
+    if (qrContent) qrContent.classList.add('hidden');
+    if (bankLoading) bankLoading.classList.remove('hidden');
+    if (bankContent) bankContent.classList.add('hidden');
+  } else {
+    if (qrLoading) qrLoading.classList.add('hidden');
+    if (qrContent) qrContent.classList.remove('hidden');
+    if (bankLoading) bankLoading.classList.add('hidden');
+    if (bankContent) bankContent.classList.remove('hidden');
   }
 }
 
@@ -113,6 +161,11 @@ window.selectPayment = function(method) {
     }
   }
 
+  // Lazy loading: fetch payment details on demand if selecting QR or Bank Transfer for first time
+  if ((method === 'qr' || method === 'bank') && !bankInfo) {
+    loadPaymentInfo();
+  }
+
   refreshPaymentDisplay();
 };
 
@@ -128,10 +181,9 @@ function refreshPaymentDisplay() {
   if (bankDisplay) bankDisplay.classList.add('hidden');
   if (codDisplay) codDisplay.classList.add('hidden');
 
-  // Maintain consistent order code message
-  let orderCode = document.getElementById('bank-message') ? document.getElementById('bank-message').innerText : '';
-  if (!orderCode || orderCode === 'PVKM ORDER' || orderCode === 'PVKM ORDER' || orderCode.trim() === '') {
-    orderCode = 'PVK' + Math.floor(Math.random() * 900000 + 100000);
+  // Maintain consistent stable order code message
+  if (!transactionOrderCode) {
+    transactionOrderCode = 'PVK' + Math.floor(Math.random() * 900000 + 100000);
   }
 
   const totalAmount = checkoutSubtotal + (checkoutSubtotal >= 300000 ? 0 : 15000);
@@ -140,7 +192,7 @@ function refreshPaymentDisplay() {
     qrDisplay.classList.remove('hidden');
     if (bankInfo) {
       // Dynamic scanable QR code with VietQR containing real amount, bank details, and unique description
-      const qrUrl = `https://img.vietqr.io/image/${bankInfo.bankCode}-${bankInfo.bankAccount}-compact.jpg?amount=${totalAmount}&addInfo=${orderCode}&accountName=${encodeURIComponent(bankInfo.bankOwner)}`;
+      const qrUrl = `https://img.vietqr.io/image/${bankInfo.bankCodeForQr}-${bankInfo.bankAccount}-compact.png?amount=${totalAmount}&addInfo=${encodeURIComponent(transactionOrderCode)}&accountName=${encodeURIComponent(bankInfo.bankOwner)}`;
       const qrImg = document.getElementById('qr-code-img');
       if (qrImg) qrImg.src = qrUrl;
     }
@@ -152,7 +204,7 @@ function refreshPaymentDisplay() {
     const bankMessageEl = document.getElementById('bank-message');
     
     if (bankAmountEl) bankAmountEl.innerText = formatVND(totalAmount);
-    if (bankMessageEl) bankMessageEl.innerText = orderCode;
+    if (bankMessageEl) bankMessageEl.innerText = transactionOrderCode;
   } else if (currentPaymentMethod === 'cod' && codDisplay) {
     codDisplay.classList.remove('hidden');
   }

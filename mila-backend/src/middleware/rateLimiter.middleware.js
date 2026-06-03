@@ -16,7 +16,7 @@ const apiLimiter = rateLimit({
 // Limiter nghiem ngat cho dang nhap / dang ky / lay lai mat khau
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phut
-  max: 15, // Toi da 15 lan thu trong 15 phut
+  max: 10, // Toi da 10 lan thu trong 15 phut (giam tu 15 xuong 10 theo best practice)
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -26,7 +26,21 @@ const authLimiter = rateLimit({
   }
 });
 
+// Limiter cho cac route dat hang / giao dich thanh toan
+const orderLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 gio
+  max: 20, // Toi da 20 giao dich / gio moi IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Bạn đã thực hiện quá nhiều giao dịch. Vui lòng thử lại sau 1 giờ.',
+    code: 'ORDER_RATE_LIMIT_EXCEEDED'
+  }
+});
+
 module.exports = {
   apiLimiter,
-  authLimiter
+  authLimiter,
+  orderLimiter
 };

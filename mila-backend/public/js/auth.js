@@ -45,7 +45,7 @@ const auth = {
   // Cap nhat Navbar phia tren va Navigation Mobile phia duoi
   async updateNavigationUI() {
     const user = this.getUser();
-    
+
     // 1. Cap nhat Header Icons
     const headerProfileBtn = document.querySelector('header button span[data-icon="person"]')?.parentElement;
     if (headerProfileBtn) {
@@ -57,10 +57,10 @@ const auth = {
         };
         // Hien thi tooltip hoac ten viet tat
         headerProfileBtn.title = `Chào, ${user.name} (${user.role})`;
-        
+
         // Neu muon dep hon, co the render dropdown dang xuat khi hover
         headerProfileBtn.classList.add('relative', 'group');
-        
+
         // Check xem da co dropdown chua, neu chua thi append
         let dropdown = headerProfileBtn.querySelector('.profile-dropdown');
         if (!dropdown) {
@@ -73,7 +73,7 @@ const auth = {
             <button id="nav-logout-btn" class="w-full text-left px-4 py-2 text-body-sm text-error hover:bg-surface-container-low transition-colors border-t border-surface-container-low">Đăng xuất</button>
           `;
           headerProfileBtn.appendChild(dropdown);
-          
+
           // Gan event logout
           dropdown.querySelector('#nav-logout-btn').addEventListener('click', (e) => {
             e.stopPropagation();
@@ -86,7 +86,7 @@ const auth = {
           window.location.href = '/login.html';
         };
         headerProfileBtn.title = 'Đăng nhập / Đăng ký';
-        
+
         // Remove dropdown cu neu co
         const dropdown = headerProfileBtn.querySelector('.profile-dropdown');
         if (dropdown) dropdown.remove();
@@ -100,21 +100,24 @@ const auth = {
         e.preventDefault();
         window.location.href = '/cart.html';
       };
-      
       headerCartBtn.classList.add('relative');
-      
-      // Update quantity
+
       if (user) {
         try {
           const cartRes = await window.api.get('/cart');
           if (cartRes.success) {
             const totalItems = cartRes.data.totalItems || 0;
             this.updateCartBadge(headerCartBtn, totalItems);
-            // Dong bo luon badge tren mobile navigation neu co
-            const mobileCartBtn = document.querySelector('nav.md\\:hidden a[href*="cart"], nav.md\\:hidden a span:contains("Giỏ hàng"), nav.md\\:hidden a:has(span:contains("shopping_basket"))');
+
+            // ✅ FIXED: Safely find mobile cart link
             const allMobileLinks = document.querySelectorAll('nav.md\\:hidden a');
             allMobileLinks.forEach(link => {
-              if (link.getAttribute('href') === '/cart.html' || link.innerText.includes('Giỏ hàng') || link.querySelector('span')?.innerText === 'shopping_basket') {
+              const iconSpan = link.querySelector('span.material-symbols-outlined');
+              const iconText = iconSpan ? iconSpan.innerText : '';
+              const href = link.getAttribute('href') || '';
+              const linkText = link.innerText.toLowerCase();
+
+              if (href === '/cart.html' || linkText.includes('giỏ hàng') || iconText === 'shopping_basket' || iconText === 'shopping_cart') {
                 link.classList.add('relative');
                 this.updateCartBadge(link, totalItems);
               }
@@ -127,7 +130,7 @@ const auth = {
     }
 
     // 3. Cap nhat bottom navigation tren mobile cho hop ly
-    const mobileProfileLink = Array.from(document.querySelectorAll('nav.md\\:hidden a')).find(a => 
+    const mobileProfileLink = Array.from(document.querySelectorAll('nav.md\\:hidden a')).find(a =>
       a.getAttribute('href') === '/profile.html' || a.querySelector('span')?.innerText === 'person' || a.innerText.includes('Tôi')
     );
     if (mobileProfileLink) {

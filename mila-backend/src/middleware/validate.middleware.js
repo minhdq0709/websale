@@ -37,6 +37,7 @@ const validateMiddleware = (schema, source = 'body') => {
         };
       });
 
+      console.error('AJV Validation Error Details:', JSON.stringify(errors, null, 2));
       return res.status(400).json({
         success: false,
         message: 'Dữ liệu đầu vào không hợp lệ. Vui lòng kiểm tra lại.',
