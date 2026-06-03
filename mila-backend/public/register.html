@@ -5,8 +5,10 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Đăng Ký | Pure Vitality Market</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -116,7 +118,9 @@
     <!-- Left Side: Visual Inspiration with mouse movement parallax -->
     <section class="hidden md:flex md:w-1/2 relative bg-primary-container items-center justify-center p-12 overflow-hidden">
       <div class="absolute inset-0 z-0">
-        <img id="parallax-bg" alt="Rau Củ Tươi Sạch Hữu Cơ" class="w-full h-full object-cover opacity-80 scale-105 transition-transform duration-300 ease-out" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80"/>
+        <img id="parallax-bg" alt="Rau Củ Tươi Sạch Hữu Cơ" class="w-full h-full object-cover opacity-80 scale-105 transition-transform duration-300 ease-out"
+          src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80"
+          loading="lazy" decoding="async"/>
         <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
       </div>
       <div class="relative z-10 text-center max-w-lg">
@@ -249,8 +253,8 @@
     </section>
   </main>
 
-  <script src="/js/api.js"></script>
-  <script src="/js/auth.js"></script>
-  <script src="/js/register.js"></script>
+  <script src="/js/api.js" defer></script>
+  <script src="/js/auth.js" defer></script>
+  <script src="/js/register.js" defer></script>
 </body>
 </html>

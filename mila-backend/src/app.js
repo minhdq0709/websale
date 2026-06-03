@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const compression = require('compression');
 
 const { loggerMiddleware, logger } = require('./middleware/logger.middleware');
 const { apiLimiter, authLimiter, orderLimiter } = require('./middleware/rateLimiter.middleware');
@@ -15,6 +16,11 @@ const app = express();
 // ==========================================
 // MIDDLEWARES NỀN TẢNG (SECURITY & PARSING)
 // ==========================================
+
+// 0. Gzip / Deflate Compression — giảm 60–70% kích thước response
+// Áp dụng cho text/html, text/css, application/javascript, application/json...
+// threshold: 1kb — không compress file rất nhỏ (overhead không đáng)
+app.use(compression({ threshold: 1024 }));
 
 // 1. Helmet bảo mật HTTP headers
 // CSP: loại bỏ unsafe-eval (cho phép XSS qua eval). unsafe-inline giữ lại tạm thời
@@ -98,7 +104,31 @@ app.use(loggerMiddleware);
 // ==========================================
 
 // Phục vụ các file tĩnh ở thư mục public (Frontend)
-app.use(express.static(path.join(__dirname, '../public')));
+// Cache-Control thông minh:
+//   - .html           → no-cache (browser revalidate bằng ETag, không cache cứng)
+//   - .js / .css      → 1 năm immutable (tên file thường không đổi trừ khi deploy mới)
+//   - ảnh / font      → 1 ngày
+app.use(express.static(path.join(__dirname, '../public'), {
+  etag: true,        // ETag để revalidate hiệu quả (304 Not Modified)
+  lastModified: true,
+  setHeaders: (res, filePath) => {
+    const ext = path.extname(filePath).toLowerCase();
+    if (ext === '.html') {
+      // HTML: revalidate mỗi lần nhưng dùng ETag — tránh nội dung stale
+      res.setHeader('Cache-Control', 'no-cache');
+    } else if (ext === '.js' || ext === '.css') {
+      // JS/CSS: cache 1 năm — immutable vì khi deploy mới tên file giữ nguyên
+      // Nếu sau này bạn thêm content hash vào tên file, đây là tối ưu hoàn hảo
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    } else if (['.png','.jpg','.jpeg','.webp','.gif','.svg','.ico'].includes(ext)) {
+      // Ảnh: cache 1 ngày
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+    } else if (['.woff','.woff2','.ttf','.otf'].includes(ext)) {
+      // Font: cache 1 năm
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+}));
 
 // Gắn cụm API chính thức
 app.use('/api/v1', apiRouter);
