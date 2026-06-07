@@ -76,14 +76,14 @@ async function loadPaymentInfo() {
       bankCode: decryptBankData(res.data.bankCode)
     };
     
-    // Auto-map bank code to vietinbank/vietcombank standard names for VietQR API
-    let mappedCode = bankInfo.bankCode;
-    if (mappedCode === 'ICB' || mappedCode === 'VTB') {
-      bankInfo.bankCodeForQr = 'vietinbank';
-    } else if (mappedCode === 'VCB') {
-      bankInfo.bankCodeForQr = 'vietcombank';
+    // Auto-map bank code to NAPAS standard names for VietQR API
+    let mappedCode = (bankInfo.bankCode || '').toLowerCase().trim();
+    if (mappedCode === 'vtb' || mappedCode === 'vietinbank' || mappedCode === 'icb') {
+      bankInfo.bankCodeForQr = 'ICB';
+    } else if (mappedCode === 'vietcombank' || mappedCode === 'vcb') {
+      bankInfo.bankCodeForQr = 'VCB';
     } else {
-      bankInfo.bankCodeForQr = mappedCode.toLowerCase();
+      bankInfo.bankCodeForQr = bankInfo.bankCode.toUpperCase().trim();
     }
     
     // Update dynamic text in DOM

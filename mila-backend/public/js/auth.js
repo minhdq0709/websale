@@ -50,22 +50,25 @@ const auth = {
     const headerProfileBtn = document.querySelector('header button span[data-icon="person"]')?.parentElement;
     if (headerProfileBtn) {
       if (user) {
-        // Thay doi hanh dong click: Thay vi chuyen toi login, chuyen toi profile
+        // Thay doi hanh dong click: click de hien thi/an dropdown
         headerProfileBtn.onclick = (e) => {
           e.preventDefault();
-          window.location.href = '/profile.html';
+          e.stopPropagation();
+          const dropdown = headerProfileBtn.querySelector('.profile-dropdown');
+          if (dropdown) {
+            dropdown.classList.toggle('hidden');
+          }
         };
         // Hien thi tooltip hoac ten viet tat
         headerProfileBtn.title = `Chào, ${user.name} (${user.role})`;
 
-        // Neu muon dep hon, co the render dropdown dang xuat khi hover
-        headerProfileBtn.classList.add('relative', 'group');
+        headerProfileBtn.classList.add('relative');
 
         // Check xem da co dropdown chua, neu chua thi append
         let dropdown = headerProfileBtn.querySelector('.profile-dropdown');
         if (!dropdown) {
           dropdown = document.createElement('div');
-          dropdown.className = 'profile-dropdown absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-surface-container-high py-2 hidden group-hover:block z-50 text-left';
+          dropdown.className = 'profile-dropdown absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-surface-container-high py-2 hidden z-50 text-left';
           dropdown.innerHTML = `
             <div class="px-4 py-2 border-b border-surface-container-low text-body-sm font-bold truncate text-on-surface">${user.name}</div>
             <a href="/profile.html" class="block px-4 py-2 text-body-sm text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">Tài khoản cá nhân</a>
@@ -221,6 +224,17 @@ const auth = {
 // Tu dong chay khi trang duoc load xong
 document.addEventListener('DOMContentLoaded', () => {
   auth.updateNavigationUI();
+
+  // Click outside to close profile dropdown
+  document.addEventListener('click', (e) => {
+    const profileBtn = document.querySelector('header button span[data-icon="person"]')?.parentElement;
+    if (profileBtn && !profileBtn.contains(e.target)) {
+      const dropdown = profileBtn.querySelector('.profile-dropdown');
+      if (dropdown) {
+        dropdown.classList.add('hidden');
+      }
+    }
+  });
 });
 
 // Export de dung o file khac

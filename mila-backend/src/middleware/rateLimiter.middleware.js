@@ -1,9 +1,11 @@
 const rateLimit = require('express-rate-limit');
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 // Limiter chung cho tat ca cac API
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phut
-  max: 300, // Gioi han 300 requests moi IP tren 15 phut
+  max: isDev ? 10000 : 300, // Gioi han 300 requests moi IP tren 15 phut (tang len 10000 cho dev)
   standardHeaders: true, // Tra ve thong tin rate limit trong headers `RateLimit-*`
   legacyHeaders: false, // Tat headers `X-RateLimit-*` cu
   message: {
@@ -16,7 +18,7 @@ const apiLimiter = rateLimit({
 // Limiter nghiem ngat cho dang nhap / dang ky / lay lai mat khau
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phut
-  max: 10, // Toi da 10 lan thu trong 15 phut (giam tu 15 xuong 10 theo best practice)
+  max: isDev ? 1000 : 10, // Toi da 10 lan thu trong 15 phut (tang len 1000 cho dev)
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -29,7 +31,7 @@ const authLimiter = rateLimit({
 // Limiter cho cac route dat hang / giao dich thanh toan
 const orderLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 gio
-  max: 20, // Toi da 20 giao dich / gio moi IP
+  max: isDev ? 1000 : 20, // Toi da 20 giao dich / gio moi IP (tang len 1000 cho dev)
   standardHeaders: true,
   legacyHeaders: false,
   message: {

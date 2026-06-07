@@ -196,7 +196,7 @@ const OrderModel = {
       await conn.query(
         `INSERT INTO audit_logs (user_id, action, resource_type, resource_id, payload) 
          VALUES (?, 'update_order_status', 'order', ?, ?)`,
-        [updatedByUserId || orders[0].user_id, 'update_status', orderId, JSON.stringify({ from: currentStatus, to: status })]
+        [updatedByUserId || orders[0].user_id, orderId, JSON.stringify({ from: currentStatus, to: status })]
       );
 
       await conn.commit();

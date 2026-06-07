@@ -6,7 +6,7 @@ const CartModel = {
    */
   async getCart(userId) {
     const [rows] = await pool.query(
-      `SELECT ci.id as cart_item_id, ci.product_id, ci.quantity, 
+      `SELECT ci.id, ci.id as cart_item_id, ci.product_id, ci.quantity, 
               p.name, p.slug, p.price, p.sale_price, p.unit, p.images, p.stock, p.is_active
        FROM cart_items ci
        INNER JOIN products p ON ci.product_id = p.id

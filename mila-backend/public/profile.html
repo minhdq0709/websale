@@ -267,7 +267,7 @@
         </div>
 
         <!-- SECTION 2: Addresses Management (Cached locally for checkout facilitation) -->
-        <div class="section-content hidden bg-surface-container-lowest rounded-xl custom-shadow p-8 space-y-6 animate-in fade-in duration-500" id="addresses">
+        <div class="section-content bg-surface-container-lowest rounded-xl custom-shadow p-8 space-y-6 animate-in fade-in duration-500" id="addresses" style="display:none">
           <div class="flex justify-between items-center border-b border-outline-variant pb-4">
             <h3 class="text-headline-sm font-headline-sm text-primary">Địa chỉ của tôi</h3>
             <button id="add-address-btn" class="bg-primary text-on-primary px-4 py-2 rounded-full text-label-md font-label-md flex items-center gap-2 hover:opacity-90 transition-opacity shadow-md">
@@ -280,7 +280,7 @@
           </div>
 
           <!-- Add Address Form Modal (Hidden by default) -->
-          <div id="address-modal" class="fixed inset-0 z-50 items-center justify-center bg-black/50 hidden flex">
+          <div id="address-modal" class="fixed inset-0 z-50 items-center justify-center bg-black/50" style="display:none">
             <div class="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 m-4 custom-shadow animate-in zoom-in duration-200">
               <h3 class="text-headline-sm font-headline-sm text-primary">Thêm Địa Chỉ Mới</h3>
               <form id="address-form" class="space-y-4">
@@ -316,7 +316,7 @@
         </div>
 
         <!-- SECTION 3: Order History -->
-        <div class="section-content hidden bg-surface-container-lowest rounded-xl custom-shadow p-8 space-y-6 animate-in fade-in duration-500" id="orders">
+        <div class="section-content bg-surface-container-lowest rounded-xl custom-shadow p-8 space-y-6 animate-in fade-in duration-500" id="orders" style="display:none">
           <div class="flex justify-between items-center border-b border-outline-variant pb-4">
             <h3 class="text-headline-sm font-headline-sm text-primary">Lịch sử đơn hàng</h3>
             <!-- Filter statuses -->
@@ -340,7 +340,7 @@
         </div>
 
         <!-- ORDER DETAIL MODAL -->
-        <div id="order-detail-modal" class="fixed inset-0 z-50 items-center justify-center bg-black/50 hidden flex">
+        <div id="order-detail-modal" class="fixed inset-0 z-50 items-center justify-center bg-black/50" style="display:none">
           <div class="bg-white rounded-xl max-w-2xl w-full p-6 space-y-4 m-4 custom-shadow animate-in zoom-in duration-200 overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-outline-variant pb-3">
               <h3 id="detail-modal-title" class="text-headline-sm font-headline-sm text-primary">Chi Tiết Đơn Hàng</h3>
@@ -379,13 +379,21 @@
   <script>
     // Tab toggle helper
     function showSection(sectionId) {
-      // Hide all sections
+      console.log('[showSection] Switching to:', sectionId);
+
+      // Hide all sections using direct style
       document.querySelectorAll('.section-content').forEach(section => {
-        section.classList.add('hidden');
+        section.style.display = 'none';
       });
       
       // Show target section
-      document.getElementById(sectionId).classList.remove('hidden');
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.style.display = 'block';
+        console.log('[showSection] Shown:', sectionId);
+      } else {
+        console.error('[showSection] Section not found:', sectionId);
+      }
 
       // Reset all nav links
       document.querySelectorAll('.nav-link').forEach(link => {
@@ -398,6 +406,14 @@
       if (activeLink) {
         activeLink.classList.add('text-primary', 'font-bold', 'border-r-4', 'border-primary', 'bg-surface-container');
         activeLink.classList.remove('text-on-surface-variant');
+      }
+
+      // Reload data for the active section
+      if (sectionId === 'addresses' && typeof window.renderAddresses === 'function') {
+        window.renderAddresses();
+      }
+      if (sectionId === 'orders' && typeof window.loadOrders === 'function') {
+        window.loadOrders();
       }
     }
 

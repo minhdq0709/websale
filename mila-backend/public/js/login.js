@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     togglePasswordBtn.addEventListener('click', () => {
       const isPassword = loginPasswordInput.type === 'password';
       loginPasswordInput.type = isPassword ? 'text' : 'password';
-      
+
       const iconSpan = togglePasswordBtn.querySelector('span');
       if (iconSpan) {
         iconSpan.innerText = isPassword ? 'visibility_off' : 'visibility';
@@ -48,17 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         const res = await window.api.post('/auth/login', { email, password });
-        
+
         if (res.success && res.data) {
           window.toast.success(res.message || 'Đăng nhập thành công!');
-          
+
           // Save session
           window.auth.saveSession(res.data.user, res.data.token);
 
           // Get redirect url from query params
           const urlParams = new URLSearchParams(window.location.search);
           const redirect = urlParams.get('redirect');
-          
+
           setTimeout(() => {
             if (redirect) {
               window.location.href = decodeURIComponent(redirect);
@@ -128,17 +128,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (res.success) {
           window.toast.success(res.message || 'Đăng ký tài khoản thành công!');
-          
+
           // Switch to login tab and prefill email
           if (typeof window.switchTab === 'function') {
             window.switchTab('login');
           }
-          
+
           const usernameInput = document.getElementById('login-username');
           if (usernameInput) {
             usernameInput.value = email;
           }
-          
+
           // Reset register form
           registerForm.reset();
         }
