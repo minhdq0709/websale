@@ -19,7 +19,7 @@ const loginSchema = {
   type: 'object',
   required: ['email', 'password'],
   properties: {
-    email: { type: 'string', format: 'email' },
+    email: { type: 'string', minLength: 3, maxLength: 150 },
     password: { type: 'string', minLength: 6 }
   },
   additionalProperties: false

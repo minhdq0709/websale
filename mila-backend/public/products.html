@@ -127,30 +127,8 @@
     </style>
 </head>
 <body class="bg-surface-container-lowest font-body-md text-on-surface">
-<!-- TopNavBar -->
-<header class="sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest shadow-sm">
-<div class="text-headline-md font-headline-md font-bold text-primary tracking-tight">Pure Vitality Market</div>
-<nav class="hidden md:flex gap-8 items-center">
-<a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="/index.html">Home</a>
-<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md" href="/products.html?category=rau-xanh-huu-co">Vegetables</a>
-<a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="/products.html?category=trai-cay-nhiet-doi">Fruits</a>
-<a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="/products.html?category=cu-qua-tuoi-song">Special Offers</a>
-</nav>
-<div class="flex items-center gap-6">
-<div class="hidden lg:flex items-center bg-surface-container rounded-full px-4 py-2">
-<span class="material-symbols-outlined text-outline">search</span>
-<input id="main-search-input" class="bg-transparent border-none focus:ring-0 text-body-sm font-body-sm w-48" placeholder="Tìm kiếm thực phẩm sạch..." type="text"/>
-</div>
-<div class="flex gap-4">
-<button class="text-primary active:scale-95 duration-150 relative">
-<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-</button>
-<button class="text-primary active:scale-95 duration-150">
-<span class="material-symbols-outlined" data-icon="person">person</span>
-</button>
-</div>
-</div>
-</header>
+<!-- Shared Header Component (populated by header.js) -->
+<div id="app-header"></div>
 <main class="max-w-container-max mx-auto px-margin-desktop py-12">
 <div class="flex flex-col md:flex-row gap-gutter">
 <!-- Sidebar Filters -->
@@ -227,7 +205,7 @@
 </div>
 </div>
 
-<div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+<div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
   <!-- Dynamic Product Cards will be injected by products.js -->
 </div>
 
@@ -259,40 +237,11 @@
 </div>
 </footer>
 
-<!-- Mobile Navigation (Bottom) -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex justify-around py-3 z-50">
-<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="/index.html">
-<span class="material-symbols-outlined">home</span>
-<span class="text-label-sm font-label-sm">Home</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-primary" href="/products.html">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
-<span class="text-label-sm font-label-sm">Danh mục</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="/cart.html">
-<span class="material-symbols-outlined">shopping_basket</span>
-<span class="text-label-sm font-label-sm">Giỏ hàng</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="/profile.html">
-<span class="material-symbols-outlined">person</span>
-<span class="text-label-sm font-label-sm">Tôi</span>
-</a>
-</nav>
+<!-- Shared Mobile Navigation (populated by header.js) -->
+<div id="app-mobile-nav-root"></div>
 
+<script src="/js/header.js"></script>
 <script src="/js/api.js" defer></script>
 <script src="/js/auth.js" defer></script>
 <script src="/js/products.js" defer></script>
-<script>
-    // Sticky header background transition
-    window.addEventListener('scroll', () => {
-        const header = document.querySelector('header');
-        if (window.scrollY > 50) {
-            header.classList.add('glass-effect');
-            header.classList.remove('bg-surface-container-lowest');
-        } else {
-            header.classList.remove('glass-effect');
-            header.classList.add('bg-surface-container-lowest');
-        }
-    });
-</script>
 </body></html>

@@ -170,9 +170,9 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 
 -- Admin account (password: Admin@123)
 INSERT IGNORE INTO users (name, email, phone, password_hash, role) VALUES
-('Admin Mila', 'admin@milamarket.vn', '0900000001', '$2b$12$LqnV3q/Ir4JvFxFg9E8XnOBgpMW7d/Cw2s1FDe2yRmhAMLJn5EGd6', 'admin'),
-('Nhan Vien 1', 'staff@milamarket.vn', '0900000002', '$2b$12$LqnV3q/Ir4JvFxFg9E8XnOBgpMW7d/Cw2s1FDe2yRmhAMLJn5EGd6', 'staff'),
-('Khach Hang Demo', 'demo@gmail.com', '0901234567', '$2b$12$LqnV3q/Ir4JvFxFg9E8XnOBgpMW7d/Cw2s1FDe2yRmhAMLJn5EGd6', 'customer');
+('Admin Mila', 'admin@milamarket.vn', '0900000001', '$2b$12$V.P2NihyRZaI7.z7YfSZL.2a36RHo//Ma.y8RusjeVL3HaXS.3kSi', 'admin'),
+('Nhan Vien 1', 'staff@milamarket.vn', '0900000002', '$2b$12$V.P2NihyRZaI7.z7YfSZL.2a36RHo//Ma.y8RusjeVL3HaXS.3kSi', 'staff'),
+('Khach Hang Demo', 'demo@gmail.com', '0901234567', '$2b$12$V.P2NihyRZaI7.z7YfSZL.2a36RHo//Ma.y8RusjeVL3HaXS.3kSi', 'customer');
 
 -- Categories
 INSERT IGNORE INTO categories (id, name, slug, icon, sort_order) VALUES

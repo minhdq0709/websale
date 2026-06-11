@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="vi" class="light">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Thanh Toán | Pure Vitality Market</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    rel="stylesheet" />
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -88,61 +91,52 @@
             "label-sm": ["Be Vietnam Pro"]
           },
           "fontSize": {
-            "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-            "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
-            "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-            "headline-sm": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}],
-            "headline-lg-mobile": ["30px", {"lineHeight": "1.2", "fontWeight": "700"}],
-            "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-            "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
-            "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
-            "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}]
+            "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+            "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "600" }],
+            "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["22px", { "lineHeight": "1.4", "fontWeight": "600" }],
+            "headline-lg-mobile": ["30px", { "lineHeight": "1.2", "fontWeight": "700" }],
+            "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+            "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "500" }]
           }
         }
       }
     };
   </script>
   <style>
-    body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f8f9fa; }
-    .product-shadow { box-shadow: 0px 4px 20px rgba(45, 90, 39, 0.05); }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    .glass-effect { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); }
-    .payment-option-active { border: 2px solid #154212; background-color: #f3f4f5; }
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .product-shadow {
+      box-shadow: 0px 4px 20px rgba(45, 90, 39, 0.05);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+    }
+
+    .payment-option-active {
+      border: 2px solid #154212;
+      background-color: #f3f4f5;
+    }
   </style>
 </head>
+
 <body class="bg-surface-container-lowest text-on-surface">
 
-  <!-- TopNavBar -->
-  <header class="sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest shadow-sm">
-    <div class="text-headline-md font-headline-md font-bold text-primary tracking-tight">Pure Vitality Market</div>
-    <nav class="hidden md:flex gap-8 items-center">
-      <a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 text-label-md font-label-md" href="/index.html">Home</a>
-      <a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 text-label-md font-label-md" href="/products.html?category=rau-xanh-huu-co">Vegetables</a>
-      <a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 text-label-md font-label-md" href="/products.html?category=trai-cay-nhiet-doi">Fruits</a>
-      <a class="text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200 text-label-md font-label-md" href="/products.html?category=cu-qua-tuoi-song">Special Offers</a>
-    </nav>
-    <div class="flex items-center gap-6">
-      <div class="relative hidden lg:block">
-        <input id="main-search-input" class="pl-10 pr-4 py-2 rounded-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary text-body-sm font-body-sm w-64" placeholder="Tìm kiếm sản phẩm..." type="text"/>
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
-      </div>
-      <div class="flex gap-4">
-        <button class="p-2 text-on-surface-variant hover:text-primary transition-colors duration-200 active:scale-95 duration-150 relative">
-          <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-        </button>
-        <button class="p-2 text-on-surface-variant hover:text-primary transition-colors duration-200 active:scale-95 duration-150 relative">
-          <span class="material-symbols-outlined" data-icon="person">person</span>
-        </button>
-      </div>
-    </div>
-  </header>
+  <!-- Shared Header Component (populated by header.js) -->
+  <div id="app-header"></div>
 
   <main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 min-h-[60vh]">
-    <div class="mb-10">
-      <h1 class="text-headline-lg font-headline-lg text-primary mb-2">Thanh toán</h1>
-      <p class="text-body-md text-on-surface-variant">Vui lòng kiểm tra lại thông tin nhận hàng và chọn phương thức thanh toán phù hợp.</p>
-    </div>
-
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
       <!-- Left Column: Checkout Information Form -->
       <div class="lg:col-span-8 space-y-6">
@@ -152,36 +146,54 @@
             <span class="material-symbols-outlined text-primary text-2xl">local_shipping</span>
             <h2 class="text-headline-sm font-headline-sm text-primary">Thông tin nhận hàng</h2>
           </div>
-          
+
           <form id="checkout-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
-              <label class="text-label-sm font-label-sm text-on-surface-variant">Họ và tên <span class="text-error">*</span></label>
-              <input id="shipping-name" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Nguyễn Văn A" type="text" required/>
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Họ và tên <span
+                  class="text-error">*</span></label>
+              <input id="shipping-name"
+                class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md"
+                placeholder="Nguyễn Văn A" type="text" required />
             </div>
-            
+
             <div class="space-y-2">
-              <label class="text-label-sm font-label-sm text-on-surface-variant">Số điện thoại <span class="text-error">*</span></label>
-              <input id="shipping-phone" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="0901234567" type="tel" required/>
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Số điện thoại <span
+                  class="text-error">*</span></label>
+              <input id="shipping-phone"
+                class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md"
+                placeholder="0901234567" type="tel" required />
             </div>
 
             <div class="md:col-span-2 space-y-2">
-              <label class="text-label-sm font-label-sm text-on-surface-variant">Số nhà, tên đường <span class="text-error">*</span></label>
-              <input id="shipping-street" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Ví dụ: 123 Đường Lê Lợi" type="text" required/>
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Số nhà, tên đường <span
+                  class="text-error">*</span></label>
+              <input id="shipping-street"
+                class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md"
+                placeholder="Ví dụ: 123 Đường Lê Lợi" type="text" required />
             </div>
 
             <div class="space-y-2">
-              <label class="text-label-sm font-label-sm text-on-surface-variant">Phường / Xã <span class="text-error">*</span></label>
-              <input id="shipping-ward" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Ví dụ: Phường Bến Nghé" type="text" required/>
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Phường / Xã <span
+                  class="text-error">*</span></label>
+              <input id="shipping-ward"
+                class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md"
+                placeholder="Ví dụ: Phường Bến Nghé" type="text" required />
             </div>
 
             <div class="space-y-2">
-              <label class="text-label-sm font-label-sm text-on-surface-variant">Quận / Huyện <span class="text-error">*</span></label>
-              <input id="shipping-district" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Ví dụ: Quận 1" type="text" required/>
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Quận / Huyện <span
+                  class="text-error">*</span></label>
+              <input id="shipping-district"
+                class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md"
+                placeholder="Ví dụ: Quận 1" type="text" required />
             </div>
 
             <div class="space-y-2">
-              <label class="text-label-sm font-label-sm text-on-surface-variant">Tỉnh / Thành phố <span class="text-error">*</span></label>
-              <select id="shipping-province" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" required>
+              <label class="text-label-sm font-label-sm text-on-surface-variant">Tỉnh / Thành phố <span
+                  class="text-error">*</span></label>
+              <select id="shipping-province"
+                class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md"
+                required>
                 <option value="" disabled selected>Chọn Tỉnh/Thành phố</option>
                 <option value="Hồ Chí Minh">Hồ Chí Minh</option>
                 <option value="Hà Nội">Hà Nội</option>
@@ -196,7 +208,9 @@
 
             <div class="space-y-2">
               <label class="text-label-sm font-label-sm text-on-surface-variant">Ghi chú giao hàng (Tùy chọn)</label>
-              <input id="shipping-note" class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md" placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..." type="text"/>
+              <input id="shipping-note"
+                class="w-full p-4 rounded-lg bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-0 transition-all outline-none text-body-md font-body-md"
+                placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..." type="text" />
             </div>
           </form>
         </section>
@@ -209,58 +223,55 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="payment-methods">
-            <div class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest" id="method-cod" onclick="selectPayment('cod')">
+            <div
+              class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest"
+              id="method-cod">
               <span class="material-symbols-outlined text-3xl text-on-surface-variant">hand_gesture</span>
               <span class="text-label-md font-label-md font-bold">Tiền mặt (COD)</span>
             </div>
-            <div class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest" id="method-bank" onclick="selectPayment('bank')">
+            <div
+              class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest"
+              id="method-bank">
               <span class="material-symbols-outlined text-3xl text-on-surface-variant">account_balance</span>
               <span class="text-label-md font-label-md font-bold">Chuyển khoản</span>
             </div>
-            <div class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest" id="method-qr" onclick="selectPayment('qr')">
+            <div
+              class="payment-option cursor-pointer flex flex-col items-center justify-center p-6 border border-outline-variant rounded-xl hover:border-primary transition-all gap-3 bg-surface-container-lowest"
+              id="method-qr">
               <span class="material-symbols-outlined text-3xl text-on-surface-variant">qr_code_2</span>
               <span class="text-label-md font-label-md font-bold">QR Code</span>
             </div>
           </div>
 
           <!-- QR code detail -->
-          <div class="mt-8 p-8 bg-surface-container-low rounded-xl flex flex-col items-center text-center hidden" id="qr-display">
+          <div class="mt-8 p-8 bg-surface-container-low rounded-xl flex flex-col items-center text-center hidden"
+            id="qr-display">
             <!-- Loading Spinner for QR -->
             <div id="qr-loading" class="flex flex-col items-center justify-center py-8 space-y-3">
               <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
               <p class="text-label-sm font-label-sm text-on-surface-variant">Đang tạo mã QR thanh toán bảo mật...</p>
             </div>
-            
+
             <!-- Real QR Content Container -->
-            <div id="qr-content" class="flex flex-col items-center hidden">
-              <div class="bg-white p-4 rounded-xl shadow-sm mb-4 border border-outline-variant/30">
-                <img id="qr-code-img" alt="QR Code Thanh Toán" class="w-44 h-44 object-contain" src=""/>
+            <div id="qr-content" class="flex flex-col items-center hidden relative">
+              <div class="relative bg-white p-4 rounded-xl shadow-sm mb-4 border border-outline-variant/30">
+                <img id="qr-code-img" alt="QR Code Thanh Toán" class="w-44 h-44 object-contain" src="" />
+                <!-- Icon tải xuống QR -->
+                <button type="button" id="btn-download-qr"
+                  class="absolute top-2 right-2 w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20 transition-all"
+                  title="Tải xuống mã QR">
+                  <span class="material-symbols-outlined text-[18px]">download</span>
+                </button>
               </div>
               <p class="text-body-md font-body-md font-bold text-primary mb-1">Quét mã để thanh toán</p>
-              <p class="text-label-sm font-label-sm text-on-surface-variant max-w-xs">Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã này để hoàn tất thanh toán.</p>
-              
-              <!-- Manual bank details fallback under QR -->
-              <div class="mt-6 w-full max-w-xs border-t border-outline-variant/60 pt-4 text-left">
-                <p class="text-xs font-bold text-primary mb-2 text-center">Hoặc chuyển khoản thủ công:</p>
-                <div class="space-y-1.5 text-[12px] bg-white p-3 rounded-lg border border-outline-variant/40">
-                  <div class="flex justify-between">
-                    <span class="text-on-surface-variant">Ngân hàng:</span>
-                    <span class="font-bold text-primary text-right" id="qr-bank-name-text">Đang tải...</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-on-surface-variant">Số tài khoản:</span>
-                    <span class="font-bold text-primary select-all cursor-pointer hover:underline text-right" id="qr-bank-account-text" onclick="navigator.clipboard.writeText(this.innerText); window.toast.success('Đã sao chép số tài khoản!')" title="Click để sao chép">Đang tải...</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-on-surface-variant">Chủ tài khoản:</span>
-                    <span class="font-bold text-primary text-right" id="qr-bank-owner-text">Đang tải...</span>
-                  </div>
-                </div>
-              </div>
+              <p class="text-label-sm font-label-sm text-on-surface-variant max-w-xs">Sử dụng ứng dụng ngân hàng hoặc ví
+                điện tử để quét mã này để hoàn tất thanh toán.</p>
 
-              <div class="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20 flex items-center gap-2 max-w-sm justify-center">
+              <div
+                class="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20 flex items-center gap-2 max-w-sm justify-center">
                 <span class="material-symbols-outlined text-primary text-[20px]">info</span>
-                <p class="text-xs text-primary font-semibold text-left">Sau khi quét mã, hãy nhấn nút <strong>"Xác nhận đặt hàng"</strong> bên phải để nhận & nhập mã xác thực OTP.</p>
+                <p class="text-xs text-primary font-semibold text-left">Sau khi quét mã, hãy nhấn nút <strong>"Xác nhận
+                    đặt hàng"</strong> bên phải để nhận & nhập mã xác thực OTP.</p>
               </div>
             </div>
           </div>
@@ -281,9 +292,13 @@
                   <span class="text-on-surface-variant">Ngân hàng:</span>
                   <span class="font-bold text-primary" id="bank-name-text">Đang tải...</span>
                 </div>
-                <div class="flex justify-between border-b border-outline-variant pb-2">
+                <div class="flex justify-between border-b border-outline-variant pb-2 items-center">
                   <span class="text-on-surface-variant">Số tài khoản:</span>
-                  <span class="font-bold text-primary select-all cursor-pointer hover:underline" id="bank-account-text" onclick="navigator.clipboard.writeText(this.innerText); window.toast.success('Đã sao chép số tài khoản!')" title="Click để sao chép">Đang tải...</span>
+                  <div class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity copy-account"
+                    title="Click để sao chép">
+                    <span class="font-bold text-primary hover:underline" id="bank-account-text">Đang tải...</span>
+                    <span class="material-symbols-outlined text-[16px] text-primary">content_copy</span>
+                  </div>
                 </div>
                 <div class="flex justify-between border-b border-outline-variant pb-2">
                   <span class="text-on-surface-variant">Chủ tài khoản:</span>
@@ -293,26 +308,35 @@
                   <span class="text-on-surface-variant">Số tiền:</span>
                   <span class="font-bold text-secondary" id="bank-amount">0₫</span>
                 </div>
-                <div class="flex justify-between">
+                <div class="flex justify-between items-center">
                   <span class="text-on-surface-variant">Nội dung chuyển khoản:</span>
-                  <span class="font-bold text-primary select-all cursor-pointer hover:underline" id="bank-message" onclick="navigator.clipboard.writeText(this.innerText); window.toast.success('Đã sao chép nội dung chuyển khoản!')" title="Click để sao chép">PVKM ORDER</span>
+                  <div class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity copy-message"
+                    title="Click để sao chép">
+                    <span class="font-bold text-primary hover:underline" id="bank-message">PVKM ORDER</span>
+                    <span class="material-symbols-outlined text-[16px] text-primary">content_copy</span>
+                  </div>
                 </div>
               </div>
-              <p class="text-xs text-on-surface-variant text-center mt-6">Vui lòng chuyển đúng số tiền và nội dung để hệ thống tự động xác nhận.</p>
-              <div class="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20 flex items-center gap-2 max-w-sm mx-auto justify-center">
+              <p class="text-xs text-on-surface-variant text-center mt-6">Vui lòng chuyển đúng số tiền và nội dung để hệ
+                thống tự động xác nhận.</p>
+              <div
+                class="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20 flex items-center gap-2 max-w-sm mx-auto justify-center">
                 <span class="material-symbols-outlined text-primary text-[20px]">info</span>
-                <p class="text-xs text-primary font-semibold text-left">Sau khi chuyển khoản, hãy nhấn nút <strong>"Xác nhận đặt hàng"</strong> bên phải để nhận & nhập mã xác thực OTP.</p>
+                <p class="text-xs text-primary font-semibold text-left">Sau khi chuyển khoản, hãy nhấn nút <strong>"Xác
+                    nhận đặt hàng"</strong> bên phải để nhận & nhập mã xác thực OTP.</p>
               </div>
             </div>
           </div>
 
 
           <!-- COD detail -->
-          <div class="mt-8 p-6 bg-surface-container-low rounded-xl flex items-center gap-4 text-left hidden" id="cod-display">
+          <div class="mt-8 p-6 bg-surface-container-low rounded-xl flex items-center gap-4 text-left hidden"
+            id="cod-display">
             <span class="material-symbols-outlined text-secondary text-4xl">check_circle</span>
             <div>
               <h4 class="font-bold text-primary mb-1">Thanh toán khi nhận hàng (COD)</h4>
-              <p class="text-body-sm text-on-surface-variant">Bạn sẽ thanh toán bằng tiền mặt trực tiếp cho nhân viên giao hàng khi nhận được sản phẩm.</p>
+              <p class="text-xs text-primary font-semibold text-left">Hãy nhấn nút <strong>"Xác
+                  nhận đặt hàng"</strong> để hoàn tất
             </div>
           </div>
         </section>
@@ -323,9 +347,9 @@
         <div class="bg-primary p-8 rounded-2xl text-on-primary sticky top-28 shadow-xl overflow-hidden relative">
           <!-- Background decoration -->
           <div class="absolute -right-20 -top-20 w-64 h-64 bg-secondary rounded-full opacity-20 blur-3xl"></div>
-          
+
           <h2 class="text-headline-sm font-headline-sm mb-6 relative z-10">Tóm tắt đơn hàng</h2>
-          
+
           <!-- Products dynamic list -->
           <div id="checkout-items-list" class="space-y-6 mb-8 max-h-[300px] overflow-y-auto pr-2 relative z-10">
             <!-- Rendered dynamically by checkout.js -->
@@ -340,53 +364,67 @@
               <span class="opacity-80">Phí vận chuyển</span>
               <span id="checkout-shipping">0₫</span>
             </div>
-            
+
             <div class="flex justify-between text-headline-sm font-headline-sm pt-4 border-t border-white/10">
               <span>Tổng cộng</span>
               <span id="checkout-total">0₫</span>
             </div>
           </div>
 
-          <button id="btn-confirm-order" class="w-full mt-8 py-4 bg-secondary-fixed text-on-secondary-fixed font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-lg relative z-10 flex justify-center items-center gap-2">
+          <button id="btn-confirm-order"
+            class="w-full mt-8 py-4 bg-secondary-fixed text-on-secondary-fixed font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-lg relative z-10 flex justify-center items-center gap-2">
             <span>Xác nhận đặt hàng</span>
             <span class="material-symbols-outlined text-[20px]">shopping_cart_checkout</span>
           </button>
-          
-          <p class="text-center text-label-sm font-label-sm mt-4 opacity-60 relative z-10">Cam kết chất lượng 100% tươi sạch</p>
+
+          <p class="text-center text-label-sm font-label-sm mt-4 opacity-60 relative z-10">Cam kết chất lượng 100% tươi
+            sạch</p>
         </div>
       </aside>
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="w-full px-margin-desktop py-16 flex flex-col items-center gap-unit max-w-container-max mx-auto bg-surface-container-low mt-20">
+  <footer
+    class="w-full px-margin-desktop py-16 flex flex-col items-center gap-unit max-w-container-max mx-auto bg-surface-container-low mt-20">
     <div class="w-full grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
       <div class="col-span-1 md:col-span-1">
         <div class="text-headline-sm font-headline-sm font-bold text-primary mb-6">Pure Vitality Market</div>
-        <p class="text-body-sm font-body-sm text-on-surface-variant">Tận tâm vì sức khỏe cộng đồng thông qua những thực phẩm thuần khiết nhất từ thiên nhiên Việt Nam.</p>
+        <p class="text-body-sm font-body-sm text-on-surface-variant">Tận tâm vì sức khỏe cộng đồng thông qua những thực
+          phẩm thuần khiết nhất từ thiên nhiên Việt Nam.</p>
       </div>
       <div class="grid grid-cols-2 col-span-1 md:col-span-3 gap-8">
         <div class="flex flex-col gap-4">
           <h5 class="font-bold text-primary">Về Chúng Tôi</h5>
-          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">About Us</a>
-          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">Sustainability</a>
-          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">FAQs</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all"
+            href="#">About Us</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all"
+            href="#">Sustainability</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all"
+            href="#">FAQs</a>
         </div>
         <div class="flex flex-col gap-4">
           <h5 class="font-bold text-primary">Chính Sách</h5>
-          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">Shipping Policy</a>
-          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">Privacy Policy</a>
-          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all" href="#">Contact Us</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all"
+            href="#">Shipping Policy</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all"
+            href="#">Privacy Policy</a>
+          <a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary underline transition-all"
+            href="#">Contact Us</a>
         </div>
       </div>
     </div>
-    <div class="w-full pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-body-sm font-body-sm text-on-surface-variant text-center md:text-left">© 2026 Pure Vitality Market. All rights reserved. Locally sourced in Vietnam.</p>
+    <div
+      class="w-full pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-body-sm font-body-sm text-on-surface-variant text-center md:text-left">© 2026 Pure Vitality Market.
+        All rights reserved. Locally sourced in Vietnam.</p>
       <div class="flex gap-4">
-        <a class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-primary-fixed transition-colors" href="#">
+        <a class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-primary-fixed transition-colors"
+          href="#">
           <span class="material-symbols-outlined text-primary" style="font-size: 20px;">social_leaderboard</span>
         </a>
-        <a class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-primary-fixed transition-colors" href="#">
+        <a class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-primary-fixed transition-colors"
+          href="#">
           <span class="material-symbols-outlined text-primary" style="font-size: 20px;">camera</span>
         </a>
       </div>
@@ -394,7 +432,8 @@
   </footer>
 
   <!-- Mobile Navigation (Bottom) -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex justify-around py-3 z-50">
+  <nav
+    class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex justify-around py-3 z-50">
     <a class="flex flex-col items-center gap-1 text-on-surface-variant" href="/index.html">
       <span class="material-symbols-outlined">home</span>
       <span class="text-label-sm font-label-sm">Home</span>
@@ -412,12 +451,16 @@
       <span class="text-label-sm font-label-sm">Tôi</span>
     </a>
   </nav>
+
   <!-- OTP Verification Modal -->
-  <div id="otp-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
-    <div class="bg-white rounded-2xl shadow-2xl border border-outline-variant p-8 max-w-md w-full space-y-6 transform scale-95 transition-all duration-300 relative overflow-hidden" id="otp-modal-content">
+  <div id="otp-modal"
+    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+    <div
+      class="bg-white rounded-2xl shadow-2xl border border-outline-variant p-8 max-w-md w-full space-y-6 transform scale-95 transition-all duration-300 relative overflow-hidden"
+      id="otp-modal-content">
       <!-- Background decoration -->
       <div class="absolute -right-16 -top-16 w-36 h-36 bg-primary/10 rounded-full blur-2xl"></div>
-      
+
       <div class="text-center space-y-2">
         <div class="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
@@ -431,12 +474,24 @@
       <form id="otp-form" class="space-y-6">
         <!-- OTP Digit Inputs -->
         <div class="flex justify-center gap-3" id="otp-inputs-container">
-          <input type="text" maxlength="1" class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" required autocomplete="off"/>
-          <input type="text" maxlength="1" class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" required autocomplete="off"/>
-          <input type="text" maxlength="1" class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" required autocomplete="off"/>
-          <input type="text" maxlength="1" class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" required autocomplete="off"/>
-          <input type="text" maxlength="1" class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" required autocomplete="off"/>
-          <input type="text" maxlength="1" class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" required autocomplete="off"/>
+          <input type="text" maxlength="1"
+            class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none"
+            required autocomplete="off" />
+          <input type="text" maxlength="1"
+            class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none"
+            required autocomplete="off" />
+          <input type="text" maxlength="1"
+            class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none"
+            required autocomplete="off" />
+          <input type="text" maxlength="1"
+            class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none"
+            required autocomplete="off" />
+          <input type="text" maxlength="1"
+            class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none"
+            required autocomplete="off" />
+          <input type="text" maxlength="1"
+            class="otp-digit w-12 h-14 text-center text-headline-sm font-bold bg-surface-container-low border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none"
+            required autocomplete="off" />
         </div>
 
         <!-- Timer & Resend -->
@@ -445,17 +500,20 @@
             <span class="material-symbols-outlined text-[16px] text-error">schedule</span>
             <span>Mã OTP hết hiệu lực sau: <span class="text-error font-bold" id="otp-timer">05:00</span></span>
           </div>
-          <button type="button" id="btn-resend-otp" class="text-secondary hover:text-primary font-bold underline transition-colors disabled:opacity-40 disabled:no-underline disabled:cursor-not-allowed text-[13px]">
+          <button type="button" id="btn-resend-otp"
+            class="text-secondary hover:text-primary font-bold underline transition-colors disabled:opacity-40 disabled:no-underline disabled:cursor-not-allowed text-[13px]">
             Gửi lại mã OTP
           </button>
         </div>
 
         <!-- Action/Submit Buttons -->
         <div class="flex gap-4 pt-2">
-          <button type="button" id="btn-cancel-otp" class="flex-1 py-3 border border-outline-variant text-on-surface-variant font-bold rounded-xl hover:bg-surface-container-low transition-colors text-center text-[14px]">
+          <button type="button" id="btn-cancel-otp"
+            class="flex-1 py-3 border border-outline-variant text-on-surface-variant font-bold rounded-xl hover:bg-surface-container-low transition-colors text-center text-[14px]">
             Hủy bỏ
           </button>
-          <button type="submit" id="btn-verify-otp" class="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all shadow-md flex justify-center items-center gap-2 text-[14px]">
+          <button type="submit" id="btn-verify-otp"
+            class="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all shadow-md flex justify-center items-center gap-2 text-[14px]">
             <span>Xác nhận</span>
             <span class="material-symbols-outlined text-[18px]">done</span>
           </button>
@@ -464,21 +522,13 @@
     </div>
   </div>
 
+  <!-- Shared Mobile Navigation (populated by header.js) -->
+  <div id="app-mobile-nav-root"></div>
+
+  <script src="/js/header.js"></script>
   <script src="/js/api.js" defer></script>
   <script src="/js/auth.js" defer></script>
   <script src="/js/checkout.js" defer></script>
-  <script>
-    // Sticky header background transition
-    window.addEventListener('scroll', () => {
-      const header = document.querySelector('header');
-      if (window.scrollY > 50) {
-        header.classList.add('glass-effect');
-        header.classList.remove('bg-surface-container-lowest');
-      } else {
-        header.classList.remove('glass-effect');
-        header.classList.add('bg-surface-container-lowest');
-      }
-    });
-  </script>
 </body>
+
 </html>

@@ -97,6 +97,40 @@ const OrderController = {
   },
 
   /**
+   * TẢI ẢNH QR CODE TỪ VIETQR QUA PROXY ĐỂ TRÁNH LỖI CORS
+   */
+  async downloadQR(req, res) {
+    try {
+      const { url, code } = req.query;
+      if (!url || !url.startsWith('https://img.vietqr.io/')) {
+        return res.status(400).json({
+          success: false,
+          message: 'URL tải ảnh không hợp lệ.'
+        });
+      }
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Không thể fetch ảnh từ VietQR.');
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const filename = `MilaMarket-QR-ThanhToan-${code || 'order'}.png`;
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      return res.send(buffer);
+    } catch (error) {
+      console.error('Lỗi tải QR qua proxy:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Có lỗi xảy ra khi tải ảnh QR.'
+      });
+    }
+  },
+
+  /**
    * DAT HANG (TAO DON HANG TU GIO HANG - XÁC THỰC OTP THUẦN TOÁN HỌC KHÔNG LƯU DB)
    */
   async createOrder(req, res) {

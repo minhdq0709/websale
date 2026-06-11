@@ -5,7 +5,7 @@ let state = {
   maxPrice: 200000,
   sortBy: 'newest',
   page: 1,
-  limit: 9
+  limit: 12
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -119,17 +119,17 @@ async function loadProducts() {
   const grid = document.getElementById('product-grid');
   if (!grid) return;
 
-  // Skeleton loading
-  grid.innerHTML = Array(6).fill(0).map(() => `
+  // Skeleton loading (8 skeletons for a 4-column layout)
+  grid.innerHTML = Array(8).fill(0).map(() => `
     <div class="bg-white rounded-xl product-card-shadow flex flex-col h-full overflow-hidden animate-pulse">
-      <div class="h-64 bg-surface-container-highest"></div>
-      <div class="p-6 flex-grow flex flex-col">
-        <div class="h-6 bg-surface-container-highest rounded w-3/4 mb-3"></div>
-        <div class="h-4 bg-surface-container-highest rounded w-full mb-2"></div>
-        <div class="h-4 bg-surface-container-highest rounded w-5/6 mb-4"></div>
+      <div class="h-48 bg-surface-container-highest"></div>
+      <div class="p-4 flex-grow flex flex-col">
+        <div class="h-5 bg-surface-container-highest rounded w-3/4 mb-2"></div>
+        <div class="h-3.5 bg-surface-container-highest rounded w-full mb-1.5"></div>
+        <div class="h-3.5 bg-surface-container-highest rounded w-5/6 mb-3"></div>
         <div class="mt-auto">
-          <div class="h-8 bg-surface-container-highest rounded w-1/3 mb-4"></div>
-          <div class="h-10 bg-surface-container-highest rounded w-full"></div>
+          <div class="h-6 bg-surface-container-highest rounded w-1/3 mb-3"></div>
+          <div class="h-8 bg-surface-container-highest rounded w-full"></div>
         </div>
       </div>
     </div>
@@ -182,40 +182,40 @@ async function loadProducts() {
       <div class="product-card-shadow rounded-xl bg-white overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer" 
            data-product-id="${product.id}" 
            data-stock="${product.stock}">
-        <div class="relative h-64 bg-surface-container-low flex items-center justify-center overflow-hidden">
+        <div class="relative h-48 bg-surface-container-low flex items-center justify-center overflow-hidden">
           <img alt="${window.escapeHTML(product.name)}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
                src="${window.escapeHTML(imageUrl)}"
           />
           ${isSale
-        ? `<span class="absolute top-4 left-4 bg-error text-on-error text-label-sm font-bold px-3 py-1.5 rounded-lg shadow-lg">-${discountPercent}% GIẢM</span>`
-        : `<span class="absolute top-4 left-4 bg-secondary text-on-secondary text-label-sm font-label-sm px-3 py-1 rounded-full">Tươi ngon</span>`
+        ? `<span class="absolute top-3 left-3 bg-error text-on-error text-[11px] font-bold px-2 py-0.5 rounded shadow-lg">-${discountPercent}% GIẢM</span>`
+        : `<span class="absolute top-3 left-3 bg-secondary text-on-secondary text-[11px] font-bold px-2 py-0.5 rounded shadow-sm">Tươi ngon</span>`
       }
-          ${product.stock === 0 ? `<div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-headline-sm z-10">Tạm hết hàng</div>` : ''}
+          ${product.stock === 0 ? `<div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-body-md z-10">Tạm hết hàng</div>` : ''}
         </div>
-        <div class="p-6 flex flex-col flex-grow">
-          <p class="text-label-sm font-label-sm text-outline mb-2">${window.escapeHTML(product.category_name || 'Nông sản sạch')}</p>
-          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-2 truncate group-hover:text-primary transition-colors">${window.escapeHTML(product.name)}</h4>
-          <p class="text-on-surface-variant text-body-sm mb-4 line-clamp-2">${window.escapeHTML(product.description || 'Nguồn gốc an toàn, chuẩn VietGAP, tươi ngon mỗi ngày cho bữa cơm gia đình bạn.')}</p>
-          <div class="mt-auto pt-2">
-            <div class="flex flex-col mb-4">
+        <div class="p-4 flex flex-col flex-grow">
+          <p class="text-label-sm font-label-sm text-outline mb-1.5">${window.escapeHTML(product.category_name || 'Nông sản sạch')}</p>
+          <h4 class="font-bold text-body-md text-on-surface mb-1.5 truncate group-hover:text-primary transition-colors">${window.escapeHTML(product.name)}</h4>
+          <p class="text-on-surface-variant text-xs mb-3 line-clamp-2">${window.escapeHTML(product.description || 'Nguồn gốc an toàn, chuẩn VietGAP, tươi ngon mỗi ngày cho bữa cơm gia đình bạn.')}</p>
+          <div class="mt-auto pt-1">
+            <div class="flex flex-col mb-3">
               ${isSale
-        ? `<span class="text-outline text-label-sm line-through mb-1">${formatVND(originalPrice)}</span>`
-        : `<span class="h-[18px] mb-1"></span>`
+        ? `<span class="text-outline text-label-sm line-through mb-0.5">${formatVND(originalPrice)}</span>`
+        : `<span class="h-[16px] mb-0.5"></span>`
       }
-              <span class="${isSale ? 'text-error' : 'text-secondary'} font-headline-md text-headline-md leading-none font-bold">
+              <span class="${isSale ? 'text-error' : 'text-secondary'} font-bold text-[17px] leading-none">
                 ${formatVND(displayPrice)} 
-                <small class="text-body-sm text-on-surface-variant font-normal">/${window.escapeHTML(product.unit)}</small>
+                <small class="text-label-sm text-on-surface-variant font-normal">/${window.escapeHTML(product.unit)}</small>
               </span>
             </div>
-            <div class="flex items-center gap-3">
-              <button class="btn-buy-now flex-grow bg-primary text-on-primary h-12 rounded-lg font-bold text-label-md hover:bg-primary-container transition-colors shadow-sm active:scale-95 duration-100 flex items-center justify-center"
+            <div class="flex items-center gap-2">
+              <button class="btn-buy-now flex-grow bg-primary text-on-primary h-10 rounded-lg font-bold text-label-sm hover:bg-primary-container transition-colors shadow-sm active:scale-95 duration-100 flex items-center justify-center"
                       ${product.stock === 0 ? 'disabled' : ''}>
                 Mua ngay
               </button>
-              <button class="btn-add-to-cart w-12 h-12 rounded-lg border border-outline-variant text-primary flex items-center justify-center hover:bg-surface-container-low transition-colors active:scale-90 duration-100 shrink-0"
+              <button class="btn-add-to-cart w-10 h-10 rounded-lg border border-outline-variant text-primary flex items-center justify-center hover:bg-surface-container-low transition-colors active:scale-90 duration-100 shrink-0"
                       title="Thêm vào giỏ hàng"
                       ${product.stock === 0 ? 'disabled' : ''}>
-                <span class="material-symbols-outlined">add_shopping_cart</span>
+                <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
               </button>
             </div>
           </div>

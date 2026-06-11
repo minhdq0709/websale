@@ -122,28 +122,8 @@
 </head>
 <body class="bg-surface text-on-surface min-h-screen flex flex-col justify-between">
 
-  <!-- Top Navigation Bar -->
-  <header class="sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest shadow-sm">
-    <div class="text-headline-md font-headline-md font-bold text-primary tracking-tight cursor-pointer" onclick="window.location.href='/index.html'">Pure Vitality Market</div>
-    <nav class="hidden md:flex items-center gap-8">
-      <a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-md font-label-md pb-1" href="/index.html">Home</a>
-      <a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-md font-label-md pb-1" href="/products.html?category=rau-xanh-huu-co">Vegetables</a>
-      <a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-md font-label-md pb-1" href="/products.html?category=trai-cay-nhiet-doi">Fruits</a>
-      <a class="text-on-surface-variant hover:text-primary transition-colors duration-200 text-label-md font-label-md pb-1" href="/products.html?category=cu-qua-tuoi-song">Special Offers</a>
-    </nav>
-    <div class="flex items-center gap-4">
-      <div class="relative hidden sm:block">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
-        <input id="header-search" class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-body-sm font-body-sm focus:ring-2 focus:ring-primary w-64" placeholder="Tìm kiếm sản phẩm..." type="text"/>
-      </div>
-      <button class="p-2 text-on-surface-variant hover:text-primary transition-colors duration-200 active:scale-95 duration-150 relative">
-        <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-      </button>
-      <button class="p-2 text-on-surface-variant hover:text-primary transition-colors duration-200 active:scale-95 duration-150 relative">
-        <span class="material-symbols-outlined" data-icon="person">person</span>
-      </button>
-    </div>
-  </header>
+  <!-- Shared Header Component (populated by header.js) -->
+  <div id="app-header"></div>
 
   <!-- Main Profile Page Container -->
   <main class="flex-grow max-w-container-max w-full mx-auto px-margin-mobile md:px-margin-desktop py-12">
@@ -373,6 +353,10 @@
     </p>
   </footer>
 
+  <!-- Shared Mobile Navigation (populated by header.js) -->
+  <div id="app-mobile-nav-root"></div>
+
+  <script src="/js/header.js"></script>
   <script src="/js/api.js" defer></script>
   <script src="/js/auth.js" defer></script>
   <script src="/js/profile.js" defer></script>

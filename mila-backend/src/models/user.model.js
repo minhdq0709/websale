@@ -14,6 +14,28 @@ const UserModel = {
   },
 
   /**
+   * Tim kiem user bang so dien thoai
+   */
+  async findByPhone(phone) {
+    const [rows] = await pool.query(
+      'SELECT id, name, email, phone, password_hash, role, is_active, created_at FROM users WHERE phone = ?',
+      [phone]
+    );
+    return rows[0] || null;
+  },
+
+  /**
+   * Tim kiem user bang email hoac so dien thoai
+   */
+  async findByEmailOrPhone(identifier) {
+    const [rows] = await pool.query(
+      'SELECT id, name, email, phone, password_hash, role, is_active, created_at FROM users WHERE email = ? OR phone = ?',
+      [identifier, identifier]
+    );
+    return rows[0] || null;
+  },
+
+  /**
    * Tim kiem user bang ID
    */
   async findById(id) {

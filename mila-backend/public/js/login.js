@@ -6,6 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  // Prefill email from query parameters if present
+  const urlParams = new URLSearchParams(window.location.search);
+  const emailParam = urlParams.get('email');
+  if (emailParam) {
+    const usernameInput = document.getElementById('login-username');
+    if (usernameInput) {
+      usernameInput.value = decodeURIComponent(emailParam);
+    }
+  }
+
   // --- Password Visibility Toggle ---
   const togglePasswordBtn = document.getElementById('login-toggle-password');
   const loginPasswordInput = document.getElementById('login-password');
@@ -37,8 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const password = passwordInput.value;
 
       // Basic client-side checks
-      if (!email.includes('@')) {
-        window.toast.error('Vui lòng nhập địa chỉ email hợp lệ.');
+      const isEmail = email.includes('@');
+      const phoneRegex = /^(0[3|5|7|8|9])([0-9]{8})$/;
+      const isPhone = phoneRegex.test(email);
+
+      if (!isEmail && !isPhone) {
+        window.toast.error('Vui lòng nhập địa chỉ email hoặc số điện thoại hợp lệ.');
         return;
       }
       if (password.length < 6) {
@@ -66,10 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
               window.location.href = '/index.html';
             }
           }, 800);
+        } else {
+          window.toast.error(res.message || 'Đăng nhập thất bại.');
         }
       } catch (error) {
         console.error('Login error:', error);
-        // Error toast will be shown automatically by api.js
+        window.toast.error('Có lỗi xảy ra trong quá trình đăng nhập.');
       }
     });
   }

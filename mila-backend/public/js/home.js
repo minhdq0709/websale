@@ -78,45 +78,45 @@ function renderProductCard(product) {
     : 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80';
 
   return `
-    <div class="bg-white rounded-xl product-card-shadow group flex flex-col h-full transition-all hover:-translate-y-2 overflow-hidden cursor-pointer shadow-sm border border-outline-variant hover:border-primary"
+    <div class="bg-white rounded-xl product-card-shadow group flex flex-col overflow-hidden cursor-pointer shadow-sm border border-outline-variant hover:border-primary transition-all hover:-translate-y-1"
          data-product-id="${product.id}"
          data-stock="${product.stock}">
-      <div class="relative h-64 overflow-hidden bg-surface-container-low">
+      <div class="relative h-32 overflow-hidden bg-surface-container-low flex-shrink-0">
         <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
              src="${window.escapeHTML(imageUrl)}" 
              alt="${window.escapeHTML(product.name)}"
         />
         ${isSale
-      ? `<div class="absolute top-4 left-4 bg-error text-on-error px-3 py-1 rounded-full text-label-sm font-bold shadow-sm">-${discountPercent}% GIẢM</div>`
+      ? `<div class="absolute top-2 left-2 bg-error text-on-error px-1.5 py-0.5 rounded text-[10px] font-bold shadow-sm">-${discountPercent}%</div>`
       : (product.stock > 0 && product.stock <= 5
-        ? `<div class="absolute top-4 left-4 bg-tertiary-container text-white px-3 py-1 rounded-full text-label-sm font-bold shadow-sm">Sắp hết hàng</div>`
-        : `<div class="absolute top-4 left-4 bg-secondary text-on-secondary px-3 py-1 rounded-full text-label-sm font-label-sm shadow-sm">Tươi mới</div>`
+        ? `<div class="absolute top-2 left-2 bg-tertiary-container text-white px-1.5 py-0.5 rounded text-[10px] font-bold shadow-sm">Sắp hết</div>`
+        : `<div class="absolute top-2 left-2 bg-secondary text-on-secondary px-1.5 py-0.5 rounded text-[10px] font-bold shadow-sm">Tươi</div>`
       )
     }
-        ${product.stock === 0 ? `<div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-headline-sm">Hết hàng</div>` : ''}
+        ${product.stock === 0 ? `<div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-xs">Hết hàng</div>` : ''}
       </div>
-      <div class="flex flex-col flex-grow p-6">
-        <h3 class="text-body-md font-bold text-on-surface mb-2 line-clamp-1 group-hover:text-primary transition-colors">${window.escapeHTML(product.name)}</h3>
-        <p class="text-on-surface-variant text-body-sm mb-4 line-clamp-2">${window.escapeHTML(product.description || 'Sản phẩm tươi sạch chất lượng cao, cung cấp nhiều dinh dưỡng hữu ích.')}</p>
-        <div class="mt-auto pt-2">
-          <div class="flex flex-col mb-4">
+      <div class="flex flex-col flex-grow p-3" style="min-height:130px">
+        <h3 class="text-[13px] font-bold text-on-surface mb-1 line-clamp-1 group-hover:text-primary transition-colors leading-tight">${window.escapeHTML(product.name)}</h3>
+        <p class="text-on-surface-variant text-[11px] mb-2 line-clamp-1 leading-snug">${window.escapeHTML(product.description || 'Sản phẩm tươi sạch chất lượng cao.')}</p>
+        <div class="mt-auto">
+          <div class="flex flex-col mb-2">
             ${isSale
-      ? `<span class="text-outline text-label-sm line-through mb-1">${formatVND(originalPrice)}</span>`
-      : `<span class="h-[18px] mb-1"></span>`
+      ? `<span class="text-outline text-[10px] line-through leading-none mb-0.5">${formatVND(originalPrice)}</span>`
+      : `<span class="h-[14px] mb-0.5"></span>`
     }
-            <div class="flex items-center gap-2">
-              <span class="${isSale ? 'text-error' : 'text-secondary'} font-bold text-headline-sm">${formatVND(displayPrice)}</span>
-              <span class="text-on-surface-variant text-label-sm font-normal">/${window.escapeHTML(product.unit)}</span>
+            <div class="flex items-baseline gap-1">
+              <span class="${isSale ? 'text-error' : 'text-secondary'} font-bold text-[14px] leading-none">${formatVND(displayPrice)}</span>
+              <span class="text-on-surface-variant text-[10px]">/${window.escapeHTML(product.unit)}</span>
             </div>
           </div>
-          <div class="flex items-center gap-3">
-            <button class="btn-buy-now flex-grow bg-primary text-on-primary h-12 rounded-lg font-bold text-label-md hover:bg-primary-container transition-colors shadow-sm active:scale-95 duration-100 flex items-center justify-center" 
+          <div class="flex items-center gap-1.5">
+            <button class="btn-buy-now flex-grow bg-primary text-on-primary h-8 rounded-lg font-bold text-[11px] hover:bg-primary-container transition-colors shadow-sm active:scale-95 duration-100 flex items-center justify-center" 
                     ${product.stock === 0 ? 'disabled' : ''}>
               Mua ngay
             </button>
-            <button class="btn-add-to-cart w-12 h-12 border border-outline-variant text-primary rounded-lg flex items-center justify-center hover:bg-surface-container-low transition-colors active:scale-90 duration-100 shrink-0" 
+            <button class="btn-add-to-cart w-8 h-8 border border-outline-variant text-primary rounded-lg flex items-center justify-center hover:bg-surface-container-low transition-colors active:scale-90 duration-100 shrink-0" 
                     ${product.stock === 0 ? 'disabled' : ''}>
-              <span class="material-symbols-outlined">add_shopping_cart</span>
+              <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span>
             </button>
           </div>
         </div>
@@ -131,22 +131,21 @@ async function loadFeaturedProducts() {
   if (!gridContainer) return;
 
   // Skeleton loading
-  gridContainer.innerHTML = Array(4).fill(0).map(() => `
-    <div class="bg-white rounded-xl product-card-shadow flex flex-col h-full overflow-hidden animate-pulse">
-      <div class="h-64 bg-surface-container-highest"></div>
-      <div class="p-6 flex-grow flex flex-col">
-        <div class="h-6 bg-surface-container-highest rounded w-3/4 mb-3"></div>
-        <div class="h-4 bg-surface-container-highest rounded w-full mb-2"></div>
-        <div class="h-4 bg-surface-container-highest rounded w-5/6 mb-4"></div>
+  gridContainer.innerHTML = Array(5).fill(0).map(() => `
+    <div class="bg-white rounded-xl product-card-shadow flex flex-col overflow-hidden animate-pulse">
+      <div class="h-32 bg-surface-container-highest flex-shrink-0"></div>
+      <div class="p-3 flex flex-col" style="min-height:130px">
+        <div class="h-4 bg-surface-container-highest rounded w-3/4 mb-1.5"></div>
+        <div class="h-3 bg-surface-container-highest rounded w-full mb-2"></div>
         <div class="mt-auto">
-          <div class="h-8 bg-surface-container-highest rounded w-1/3 mb-4"></div>
-          <div class="h-10 bg-surface-container-highest rounded w-full"></div>
+          <div class="h-4 bg-surface-container-highest rounded w-1/3 mb-2"></div>
+          <div class="h-7 bg-surface-container-highest rounded w-full"></div>
         </div>
       </div>
     </div>
   `).join('');
 
-  const res = await window.api.get('/products/featured?limit=4');
+  const res = await window.api.get('/products/featured?limit=5');
   if (!res.success) {
     gridContainer.innerHTML = `
       <div class="col-span-full py-12 text-center text-on-surface-variant font-bold">
@@ -208,19 +207,19 @@ async function loadCategoryGroupedProducts() {
 
   // Skeleton loading cho 3 nhóm danh mục
   container.innerHTML = Array(3).fill(0).map(() => `
-    <div class="space-y-6">
+    <div class="space-y-4">
       <div class="flex justify-between items-end">
         <div class="h-8 bg-surface-container-highest rounded w-48 animate-pulse"></div>
         <div class="h-6 bg-surface-container-highest rounded w-20 animate-pulse"></div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
-        ${Array(4).fill(0).map(() => `
-          <div class="bg-white rounded-xl product-card-shadow flex flex-col h-full overflow-hidden animate-pulse">
-            <div class="h-64 bg-surface-container-highest"></div>
-            <div class="p-6">
-              <div class="h-6 bg-surface-container-highest rounded w-3/4 mb-3"></div>
-              <div class="h-4 bg-surface-container-highest rounded w-full mb-2"></div>
-              <div class="h-8 bg-surface-container-highest rounded w-1/3 mt-4"></div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        ${Array(5).fill(0).map(() => `
+          <div class="bg-white rounded-xl product-card-shadow flex flex-col overflow-hidden animate-pulse">
+            <div class="h-32 bg-surface-container-highest flex-shrink-0"></div>
+            <div class="p-3" style="min-height:130px">
+              <div class="h-4 bg-surface-container-highest rounded w-3/4 mb-1.5"></div>
+              <div class="h-3 bg-surface-container-highest rounded w-full mb-2"></div>
+              <div class="h-4 bg-surface-container-highest rounded w-1/3 mt-auto"></div>
             </div>
           </div>
         `).join('')}
@@ -243,7 +242,7 @@ async function loadCategoryGroupedProducts() {
   container.innerHTML = '';
 
   for (const cat of categories) {
-    const prodRes = await window.api.get(`/products?category=${encodeURIComponent(cat.slug)}&limit=4`);
+    const prodRes = await window.api.get(`/products?category=${encodeURIComponent(cat.slug)}&limit=5`);
     if (!prodRes.success || !prodRes.data.products || prodRes.data.products.length === 0) {
       continue;
     }
@@ -260,7 +259,7 @@ async function loadCategoryGroupedProducts() {
           <span class="material-symbols-outlined text-[18px]">chevron_right</span>
         </a>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         ${products.map(prod => renderProductCard(prod)).join('')}
       </div>
     `;

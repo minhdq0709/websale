@@ -42,6 +42,16 @@ const AuthController = {
         });
       }
 
+      // Kiem tra so dien thoai da ton tai chua
+      const existingPhone = await UserModel.findByPhone(phone);
+      if (existingPhone) {
+        return res.status(409).json({
+          success: false,
+          message: 'Số điện thoại này đã được sử dụng trên hệ thống.',
+          code: 'PHONE_ALREADY_EXISTS'
+        });
+      }
+
       // 2. Tao user moi
       const userId = await UserModel.create({
         name,
@@ -78,12 +88,12 @@ const AuthController = {
     try {
       const { email, password } = req.body;
 
-      // 1. Kiem tra user ton tai theo email
-      const user = await UserModel.findByEmail(email);
+      // 1. Kiem tra user ton tai theo email hoac so dien thoai
+      const user = await UserModel.findByEmailOrPhone(email);
       if (!user) {
         return res.status(401).json({
           success: false,
-          message: 'Email hoặc mật khẩu không chính xác.',
+          message: 'Email, số điện thoại hoặc mật khẩu không chính xác.',
           code: 'INVALID_CREDENTIALS'
         });
       }
@@ -102,7 +112,7 @@ const AuthController = {
       if (!isMatch) {
         return res.status(401).json({
           success: false,
-          message: 'Email hoặc mật khẩu không chính xác.',
+          message: 'Email, số điện thoại hoặc mật khẩu không chính xác.',
           code: 'INVALID_CREDENTIALS'
         });
       }

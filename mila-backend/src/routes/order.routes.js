@@ -7,6 +7,9 @@ const { createOrderSchema } = require('../schemas/order.schema');
 
 const { orderLimiter } = require('../middleware/rateLimiter.middleware');
 
+// Route tải ảnh QR qua proxy (công khai không qua Auth Header để tải trực tiếp trên trình duyệt)
+router.get('/download-qr', OrderController.downloadQR);
+
 // Tat ca cac route lien quan toi don hang deu bat buoc phai dang nhap
 router.use(auth);
 

@@ -23,6 +23,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize payment option state - Default to COD for zero initial load overhead
   selectPayment('cod');
+
+  // ========== FIX CSP: replace inline onclick with event listeners ==========
+  // Payment method selection
+  const methodCOD = document.getElementById('method-cod');
+  const methodBank = document.getElementById('method-bank');
+  const methodQR = document.getElementById('method-qr');
+
+  if (methodCOD) methodCOD.addEventListener('click', () => selectPayment('cod'));
+  if (methodBank) methodBank.addEventListener('click', () => selectPayment('bank'));
+  if (methodQR) methodQR.addEventListener('click', () => selectPayment('qr'));
+
+  // Copy account number (for both bank and QR sections)
+  document.querySelectorAll('.copy-account').forEach(el => {
+    el.addEventListener('click', function () {
+      let text = this.innerText;
+      if (text) {
+        text = text.replace('content_copy', '').trim();
+      }
+      if (text && text !== 'Đang tải...') {
+        navigator.clipboard.writeText(text);
+        if (window.toast) window.toast.success('Đã sao chép số tài khoản!');
+      }
+    });
+  });
+
+  // Copy transfer message
+  document.querySelectorAll('.copy-message').forEach(el => {
+    el.addEventListener('click', function () {
+      let text = this.innerText;
+      if (text) {
+        text = text.replace('content_copy', '').trim();
+      }
+      if (text) {
+        navigator.clipboard.writeText(text);
+        if (window.toast) window.toast.success('Đã sao chép nội dung chuyển khoản!');
+      }
+    });
+  });
+
+  // Download QR Code image
+  const btnDownloadQr = document.getElementById('btn-download-qr');
+  if (btnDownloadQr) {
+    btnDownloadQr.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const qrImg = document.getElementById('qr-code-img');
+      if (!qrImg || !qrImg.src) return;
+
+      if (window.toast) window.toast.info('Đang tải ảnh QR về máy...');
+
+      // Redirect browser directly to proxy download endpoint to bypass CORS
+      const downloadUrl = `/api/v1/orders/download-qr?url=${encodeURIComponent(qrImg.src)}&code=${transactionOrderCode || 'order'}`;
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = `MilaMarket-QR-ThanhToan-${transactionOrderCode || 'order'}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+  }
 });
 
 let currentPaymentMethod = 'cod';
@@ -75,7 +134,7 @@ async function loadPaymentInfo() {
       bankOwner: res.data.bankOwner,
       bankCode: decryptBankData(res.data.bankCode)
     };
-    
+
     // Auto-map bank code to NAPAS standard names for VietQR API
     let mappedCode = (bankInfo.bankCode || '').toLowerCase().trim();
     if (mappedCode === 'vtb' || mappedCode === 'vietinbank' || mappedCode === 'icb') {
@@ -85,16 +144,16 @@ async function loadPaymentInfo() {
     } else {
       bankInfo.bankCodeForQr = bankInfo.bankCode.toUpperCase().trim();
     }
-    
+
     // Update dynamic text in DOM
     const bankNameEl = document.getElementById('bank-name-text');
     const bankAccountEl = document.getElementById('bank-account-text');
     const bankOwnerEl = document.getElementById('bank-owner-text');
-    
+
     const qrBankNameEl = document.getElementById('qr-bank-name-text');
     const qrBankAccountEl = document.getElementById('qr-bank-account-text');
     const qrBankOwnerEl = document.getElementById('qr-bank-owner-text');
-    
+
     if (bankNameEl) bankNameEl.innerText = bankInfo.bankName;
     if (bankAccountEl) bankAccountEl.innerText = bankInfo.bankAccount;
     if (bankOwnerEl) bankOwnerEl.innerText = bankInfo.bankOwner;
@@ -137,7 +196,7 @@ function updateLoadingState(isLoading) {
 /**
  * Handle payment option selection
  */
-window.selectPayment = function(method) {
+window.selectPayment = function (method) {
   currentPaymentMethod = method;
 
   // Reset payment option styles
@@ -198,11 +257,11 @@ function refreshPaymentDisplay() {
     }
   } else if (currentPaymentMethod === 'bank' && bankDisplay) {
     bankDisplay.classList.remove('hidden');
-    
+
     // Update amount & unique order code
     const bankAmountEl = document.getElementById('bank-amount');
     const bankMessageEl = document.getElementById('bank-message');
-    
+
     if (bankAmountEl) bankAmountEl.innerText = formatVND(totalAmount);
     if (bankMessageEl) bankMessageEl.innerText = transactionOrderCode;
   } else if (currentPaymentMethod === 'cod' && codDisplay) {
@@ -413,7 +472,7 @@ function initOtpUI() {
   btnResendOtp.addEventListener('click', async () => {
     btnResendOtp.disabled = true;
     window.toast.info('Đang gửi lại mã OTP mới...');
-    
+
     const res = await window.api.post('/orders/request-otp');
     if (res.success) {
       window.toast.success('Mã OTP mới đã được gửi thành công.');
@@ -456,7 +515,7 @@ function initOtpUI() {
     if (response.success) {
       closeOtpModal();
       window.toast.success('Xác thực OTP thành công! Đơn hàng của bạn đã được khởi tạo.');
-      
+
       // Update global navigation badges
       if (window.auth && typeof window.auth.updateNavigationUI === 'function') {
         window.auth.updateNavigationUI();
@@ -473,7 +532,7 @@ function initOtpUI() {
         <span>Xác nhận</span>
         <span class="material-symbols-outlined text-[18px]">done</span>
       `;
-      
+
       // Select last digit for user convenience
       if (otpDigits[5]) otpDigits[5].focus();
     }
@@ -572,4 +631,3 @@ function startOtpTimer() {
 function formatVND(amount) {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }
-
