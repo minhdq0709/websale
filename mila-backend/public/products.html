@@ -132,33 +132,54 @@
 <main class="max-w-container-max mx-auto px-margin-desktop py-12">
 <div class="flex flex-col md:flex-row gap-gutter">
 <!-- Sidebar Filters -->
-<aside class="w-full md:w-64 flex-shrink-0 space-y-10">
-<div>
-<h3 class="font-headline-sm text-headline-sm mb-6 text-primary">Bộ lọc sản phẩm</h3>
+<aside class="w-full md:w-64 flex-shrink-0">
+<h3 class="hidden md:block font-headline-sm text-headline-sm mb-6 text-primary">Bộ lọc sản phẩm</h3>
 
 <!-- Search for Mobile -->
-<div class="block lg:hidden mb-8">
-  <p class="font-label-md text-label-md text-on-surface-variant mb-3 uppercase tracking-wider">Tìm kiếm</p>
+<div class="block md:hidden mb-4">
   <div class="relative">
     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
-    <input id="mobile-search-input" class="pl-10 pr-4 py-2 w-full bg-surface-container-low border-none rounded-xl text-body-sm" placeholder="Nhập từ khóa..." type="text"/>
+    <input id="mobile-search-input" class="pl-10 pr-4 py-2 w-full bg-surface-container-low border-none rounded-xl text-body-sm focus:ring-1 focus:ring-primary" placeholder="Tìm kiếm sản phẩm..." type="text"/>
   </div>
 </div>
 
 <!-- Category Filter -->
-<div class="mb-8">
-<p class="font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-wider">Danh mục</p>
-<div id="category-filter-container" class="flex flex-col gap-3">
+<div class="mb-2 md:mb-8">
+<p class="hidden md:block font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-wider">Danh mục</p>
+<div id="category-filter-container" class="flex flex-row md:flex-col gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0 items-center md:items-start">
   <!-- Dynamic Categories will be injected here -->
-  <div class="animate-pulse flex flex-col gap-2">
-    <div class="h-5 bg-surface-container rounded w-3/4"></div>
-    <div class="h-5 bg-surface-container rounded w-5/6"></div>
-    <div class="h-5 bg-surface-container rounded w-2/3"></div>
+  <div class="animate-pulse flex flex-row md:flex-col gap-2">
+    <div class="h-8 md:h-5 bg-surface-container rounded-full md:rounded w-24 md:w-3/4 shrink-0"></div>
+    <div class="h-8 md:h-5 bg-surface-container rounded-full md:rounded w-24 md:w-5/6 shrink-0"></div>
+    <div class="h-8 md:h-5 bg-surface-container rounded-full md:rounded w-24 md:w-2/3 shrink-0"></div>
   </div>
 </div>
 </div>
-<!-- Price Filter -->
-<div class="mb-8">
+
+<!-- Mobile Filter Row (Sort & Origin) -->
+<div class="flex md:hidden items-center justify-between gap-2 mb-6 border-y border-surface-container py-3">
+  <div class="flex items-center gap-1 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[20px]">tune</span>
+    <select id="mobile-sort-select" class="border-none bg-transparent font-label-md text-label-md text-on-surface-variant focus:ring-0 cursor-pointer p-0 pr-6 py-1">
+      <option value="newest">Lọc: Mới nhất</option>
+      <option value="popular">Lọc: Bán chạy</option>
+      <option value="price-asc">Lọc: Giá thấp đến cao</option>
+      <option value="price-desc">Lọc: Giá cao đến thấp</option>
+    </select>
+  </div>
+  <div>
+    <select id="mobile-origin-select" class="border-none bg-surface-container-low rounded-full px-4 py-1.5 font-label-md text-label-md text-primary focus:ring-0 cursor-pointer">
+      <option value="">Nguồn gốc</option>
+      <option value="Đà Lạt">Đà Lạt</option>
+      <option value="Mekong">Mekong</option>
+      <option value="Sơn La">Sơn La</option>
+      <option value="Nhập khẩu">Nhập khẩu</option>
+    </select>
+  </div>
+</div>
+
+<!-- Desktop Price Filter -->
+<div class="hidden md:block mb-8">
 <p class="font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-wider">Mức giá tối đa</p>
 <div class="space-y-4">
 <input id="price-range-slider" class="w-full h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary" max="200000" min="0" step="10000" type="range" value="200000"/>
@@ -168,18 +189,8 @@
 </div>
 </div>
 </div>
-<!-- Quick Filters -->
-<div class="mb-8">
-<p class="font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-wider">Lọc nhanh</p>
-<div class="flex flex-wrap gap-2">
-<button class="quick-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all" data-slug="rau-xanh-huu-co">Rau Xanh</button>
-<button class="quick-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all" data-slug="trai-cay-nhiet-doi">Trái Cây</button>
-<button class="quick-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all" data-slug="cu-qua-tuoi-song">Củ Quả</button>
-</div>
-</div>
-
-<!-- Origin Filter -->
-<div class="mb-8">
+<!-- Desktop Origin Filter -->
+<div class="hidden md:block mb-8">
 <p class="font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-wider">Nguồn gốc</p>
 <div class="flex flex-wrap gap-2">
 <button class="origin-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all" data-origin="Đà Lạt">Đà Lạt</button>
@@ -188,13 +199,15 @@
 <button class="origin-filter-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm border border-outline-variant hover:border-primary hover:text-primary transition-all" data-origin="Nhập khẩu">Nhập khẩu</button>
 </div>
 </div>
-</div>
 </aside>
 <!-- Product Grid Area -->
 <div class="flex-1">
-<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-<h2 class="font-headline-md text-headline-md text-primary">Danh Sách Thực Phẩm Sạch</h2>
-<div class="flex items-center gap-2 self-end">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+<div>
+  <h2 class="font-headline-md text-headline-md text-primary mb-1">Danh Sách Thực Phẩm Sạch</h2>
+  <p class="text-body-sm text-on-surface-variant">Tươi ngon mỗi ngày từ nông trại organic.</p>
+</div>
+<div class="hidden md:flex items-center gap-2 self-end">
 <span class="text-body-sm font-body-sm text-on-surface-variant">Sắp xếp:</span>
 <select id="sort-select" class="border-none bg-transparent font-label-md text-label-md text-primary focus:ring-0 cursor-pointer">
 <option value="newest">Mới nhất</option>
@@ -210,7 +223,7 @@
 </div>
 
 <!-- Pagination -->
-<div id="pagination-container" class="flex justify-center mt-16 gap-2">
+<div id="pagination-container" class="flex justify-center mt-12 gap-2">
   <!-- Dynamic Pagination Buttons will be injected here -->
 </div>
 </div>

@@ -87,16 +87,20 @@ async function loadCategories() {
 
   const categories = res.data;
   let html = `
-    <label class="flex items-center gap-3 cursor-pointer group">
-      <input type="radio" name="category-radio" value="" class="rounded-full border-outline-variant text-primary focus:ring-primary h-5 w-5" ${!state.category ? 'checked' : ''}/>
-      <span class="text-body-md font-body-md group-hover:text-primary transition-colors ${!state.category ? 'text-primary font-bold' : ''}">Tất cả sản phẩm</span>
+    <label class="cursor-pointer shrink-0">
+      <input type="radio" name="category-radio" value="" class="hidden" ${!state.category ? 'checked' : ''}/>
+      <div class="px-4 py-2 rounded-full font-label-md transition-all ${!state.category ? 'bg-primary text-on-primary font-bold' : 'bg-surface-container-low border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary'}">
+        Tất cả sản phẩm
+      </div>
     </label>
   `;
 
   html += categories.map(cat => `
-    <label class="flex items-center gap-3 cursor-pointer group">
-      <input type="radio" name="category-radio" value="${window.escapeHTML(cat.slug)}" class="rounded-full border-outline-variant text-primary focus:ring-primary h-5 w-5" ${state.category === cat.slug ? 'checked' : ''}/>
-      <span class="text-body-md font-body-md group-hover:text-primary transition-colors ${state.category === cat.slug ? 'text-primary font-bold' : ''}">${window.escapeHTML(cat.name)}</span>
+    <label class="cursor-pointer shrink-0">
+      <input type="radio" name="category-radio" value="${window.escapeHTML(cat.slug)}" class="hidden" ${state.category === cat.slug ? 'checked' : ''}/>
+      <div class="px-4 py-2 rounded-full font-label-md transition-all ${state.category === cat.slug ? 'bg-primary text-on-primary font-bold' : 'bg-surface-container-low border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary'}">
+        ${window.escapeHTML(cat.name)}
+      </div>
     </label>
   `).join('');
 
@@ -106,8 +110,14 @@ async function loadCategories() {
     radio.addEventListener('change', (e) => {
       state.category = e.target.value || null;
       state.page = 1;
-      container.querySelectorAll('span').forEach(span => span.classList.remove('text-primary', 'font-bold'));
-      e.target.nextElementSibling.classList.add('text-primary', 'font-bold');
+      
+      // Reset all pills
+      container.querySelectorAll('div.rounded-full').forEach(div => {
+         div.className = 'px-4 py-2 rounded-full font-label-md transition-all bg-surface-container-low border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary';
+      });
+      // Set active pill
+      e.target.nextElementSibling.className = 'px-4 py-2 rounded-full font-label-md transition-all bg-primary text-on-primary font-bold';
+      
       updateURL();
       loadProducts();
     });
@@ -269,11 +279,32 @@ function changePage(newPage) {
 // Các filter (sort, price, quick, origin, search) – giữ nguyên
 function setupFilters() {
   const sortSelect = document.getElementById('sort-select');
+  const mobileSortSelect = document.getElementById('mobile-sort-select');
+  
+  const handleSortChange = (e) => {
+    state.sortBy = e.target.value;
+    state.page = 1;
+    if (sortSelect) sortSelect.value = state.sortBy;
+    if (mobileSortSelect) mobileSortSelect.value = state.sortBy;
+    loadProducts();
+  };
+
   if (sortSelect) {
     sortSelect.value = state.sortBy;
-    sortSelect.addEventListener('change', (e) => {
-      state.sortBy = e.target.value;
+    sortSelect.addEventListener('change', handleSortChange);
+  }
+  if (mobileSortSelect) {
+    mobileSortSelect.value = state.sortBy;
+    mobileSortSelect.addEventListener('change', handleSortChange);
+  }
+  
+  const mobileOriginSelect = document.getElementById('mobile-origin-select');
+  if (mobileOriginSelect) {
+    mobileOriginSelect.value = state.search || '';
+    mobileOriginSelect.addEventListener('change', (e) => {
+      state.search = e.target.value || null;
       state.page = 1;
+      updateURL();
       loadProducts();
     });
   }
@@ -387,6 +418,12 @@ function resetAllFilters() {
 
   const sortSelect = document.getElementById('sort-select');
   if (sortSelect) sortSelect.value = 'newest';
+  
+  const mobileSortSelect = document.getElementById('mobile-sort-select');
+  if (mobileSortSelect) mobileSortSelect.value = 'newest';
+  
+  const mobileOriginSelect = document.getElementById('mobile-origin-select');
+  if (mobileOriginSelect) mobileOriginSelect.value = '';
 
   const quickBtns = document.querySelectorAll('.quick-filter-btn');
   quickBtns.forEach(b => {
