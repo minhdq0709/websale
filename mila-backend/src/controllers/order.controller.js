@@ -71,18 +71,14 @@ const OrderController = {
       const bankOwner = process.env.BANK_OWNER || 'CONG TY TNHH PURE VITALITY MARKET';
       const bankCode = process.env.BANK_CODE || 'VCB';
 
-      // Mã hóa các thông tin nhạy cảm
-      const encryptedAccount = paymentCrypto.encrypt(bankAccount);
-      const encryptedCode = paymentCrypto.encrypt(bankCode);
-
       return res.status(200).json({
         success: true,
         message: 'Lấy thông tin thanh toán thành công.',
         data: {
           bankName,
-          bankAccount: encryptedAccount,
+          bankAccount: bankAccount,
           bankOwner,
-          bankCode: encryptedCode
+          bankCode: bankCode
         }
       });
     } catch (error) {

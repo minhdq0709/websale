@@ -88,7 +88,6 @@ let currentPaymentMethod = 'cod';
 let checkoutSubtotal = 0;
 let bankInfo = null; // Store decrypted bank details
 let transactionOrderCode = ''; // Stable order code message across tab switches
-const PAYMENT_SECRET_KEY = 'MilaMarketSecretKey2026';
 
 // OTP active state variables
 let otpCountdownInterval = null;
@@ -98,24 +97,7 @@ let cachedOrderPayload = null;
 let isFetchingBankInfo = false;
 
 /**
- * Decrypt a hex string encrypted with XOR Cipher from the backend
- */
-function decryptBankData(hex) {
-  if (!hex) return '';
-  let result = '';
-  const hexStr = String(hex);
-  for (let i = 0; i < hexStr.length; i += 2) {
-    const hexPart = hexStr.substring(i, i + 2);
-    const charCode = parseInt(hexPart, 16);
-    const keyChar = PAYMENT_SECRET_KEY.charCodeAt((i / 2) % PAYMENT_SECRET_KEY.length);
-    const originalChar = charCode ^ keyChar;
-    result += String.fromCharCode(originalChar);
-  }
-  return result;
-}
-
-/**
- * Fetch bank payment details from backend and decrypt them
+ * Fetch bank payment details from backend
  */
 async function loadPaymentInfo() {
   if (isFetchingBankInfo) return;
@@ -130,20 +112,33 @@ async function loadPaymentInfo() {
   if (res.success) {
     bankInfo = {
       bankName: res.data.bankName,
-      bankAccount: decryptBankData(res.data.bankAccount),
+      bankAccount: res.data.bankAccount,
       bankOwner: res.data.bankOwner,
-      bankCode: decryptBankData(res.data.bankCode)
+      bankCode: res.data.bankCode
     };
 
-    // Auto-map bank code to NAPAS standard names for VietQR API
-    let mappedCode = (bankInfo.bankCode || '').toLowerCase().trim();
-    if (mappedCode === 'vtb' || mappedCode === 'vietinbank' || mappedCode === 'icb') {
-      bankInfo.bankCodeForQr = 'ICB';
-    } else if (mappedCode === 'vietcombank' || mappedCode === 'vcb') {
-      bankInfo.bankCodeForQr = 'VCB';
-    } else {
-      bankInfo.bankCodeForQr = bankInfo.bankCode.toUpperCase().trim();
-    }
+    // Map to official NAPAS BIN codes for VietQR API — dùng BIN số để đảm bảo QR đúng ngân hàng
+    const BIN_MAP = {
+      'icb': '970415',       // VietinBank
+      'vtb': '970415',       // VietinBank (alias)
+      'vietinbank': '970415',// VietinBank (full name)
+      'vcb': '970436',       // Vietcombank
+      'vietcombank': '970436',
+      'mb': '970422',        // MB Bank
+      'mbbank': '970422',
+      'acb': '970416',       // ACB
+      'techcombank': '970407',
+      'tcb': '970407',
+      'bidv': '970418',
+      'agribank': '970405',
+      'vpbank': '970432',
+      'tpbank': '970423',
+      'sacombank': '970403',
+      'hdbank': '970437',
+      'ocb': '970448',
+    };
+    const mappedCode = (bankInfo.bankCode || '').toLowerCase().trim();
+    bankInfo.bankCodeForQr = BIN_MAP[mappedCode] || bankInfo.bankCode.toUpperCase().trim();
 
     // Update dynamic text in DOM
     const bankNameEl = document.getElementById('bank-name-text');
@@ -250,10 +245,21 @@ function refreshPaymentDisplay() {
   if (currentPaymentMethod === 'qr' && qrDisplay) {
     qrDisplay.classList.remove('hidden');
     if (bankInfo) {
-      // Dynamic scanable QR code with VietQR containing real amount, bank details, and unique description
-      const qrUrl = `https://img.vietqr.io/image/${bankInfo.bankCodeForQr}-${bankInfo.bankAccount}-compact.png?amount=${totalAmount}&addInfo=${encodeURIComponent(transactionOrderCode)}&accountName=${encodeURIComponent(bankInfo.bankOwner)}`;
+      // Dùng BIN NAPAS chuẩn + cache-buster timestamp để tránh browser cache ảnh QR cũ
+      const qrUrl = `https://img.vietqr.io/image/${bankInfo.bankCodeForQr}-${bankInfo.bankAccount}-compact.png?amount=${totalAmount}&addInfo=${encodeURIComponent(transactionOrderCode)}&accountName=${encodeURIComponent(bankInfo.bankOwner)}&t=${Date.now()}`;
       const qrImg = document.getElementById('qr-code-img');
-      if (qrImg) qrImg.src = qrUrl;
+      if (qrImg) {
+        qrImg.src = ''; // Clear old cached src first
+        qrImg.src = qrUrl;
+        console.log('[QR] Generating QR with URL:', qrUrl);
+      }
+      // Update text info in QR section
+      const qrBankNameEl = document.getElementById('qr-bank-name-text');
+      const qrBankAccountEl = document.getElementById('qr-bank-account-text');
+      const qrBankOwnerEl = document.getElementById('qr-bank-owner-text');
+      if (qrBankNameEl) qrBankNameEl.innerText = bankInfo.bankName;
+      if (qrBankAccountEl) qrBankAccountEl.innerText = bankInfo.bankAccount;
+      if (qrBankOwnerEl) qrBankOwnerEl.innerText = bankInfo.bankOwner;
     }
   } else if (currentPaymentMethod === 'bank' && bankDisplay) {
     bankDisplay.classList.remove('hidden');
