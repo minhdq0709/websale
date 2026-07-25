@@ -1,6 +1,9 @@
 const pool = require('../config/db');
 const crypto = require('crypto');
 
+// [M6 FIX] Số phiên đăng nhập tối đa cho mỗi user
+const MAX_SESSIONS_PER_USER = 5;
+
 const TokenModel = {
   /**
    * Bam token bang SHA256 de bao ve trong database khoi cac cuoc tan cong doc trom DB
@@ -11,6 +14,7 @@ const TokenModel = {
 
   /**
    * Luu Refresh Token vao database
+   * [M6 FIX] Tự động thu hồi token cũ nhất nếu vượt quá MAX_SESSIONS_PER_USER
    */
   async create({ userId, token, ipAddress, expiresAt }) {
     const tokenHash = this.hashToken(token);
@@ -23,6 +27,24 @@ const TokenModel = {
       );
     } catch (e) {
       console.warn('Lỗi dọn dẹp refresh token cũ:', e.message);
+    }
+
+    // [M6 FIX] Giới hạn số phiên: nếu vượt MAX_SESSIONS_PER_USER → revoke token cũ nhất
+    const [activeSessions] = await pool.query(
+      `SELECT id FROM refresh_tokens 
+       WHERE user_id = ? AND expires_at > NOW() AND revoked_at IS NULL 
+       ORDER BY created_at ASC`,
+      [userId]
+    );
+
+    if (activeSessions.length >= MAX_SESSIONS_PER_USER) {
+      // Thu hồi (n - MAX_SESSIONS_PER_USER + 1) token cũ nhất để nhường chỗ cho token mới
+      const toRevoke = activeSessions.slice(0, activeSessions.length - MAX_SESSIONS_PER_USER + 1);
+      const idsToRevoke = toRevoke.map(s => s.id);
+      await pool.query(
+        `UPDATE refresh_tokens SET revoked_at = CURRENT_TIMESTAMP WHERE id IN (?)`,
+        [idsToRevoke]
+      );
     }
 
     const [result] = await pool.query(

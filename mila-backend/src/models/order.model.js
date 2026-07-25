@@ -1,10 +1,11 @@
 const pool = require('../config/db');
+const cache = require('../config/cache');
 
 const OrderModel = {
   /**
    * TAO DON HANG (Su dung Transaction de dam bao toan ven du lieu)
    */
-  async createOrder(userId, { shipping_address, note = '' }) {
+  async createOrder(userId, { shipping_address, note = '' }, ipAddress = null, userAgent = null) {
     const conn = await pool.getConnection();
     try {
       await conn.beginTransaction();
@@ -34,16 +35,11 @@ const OrderModel = {
           throw new Error(`INSUFFICIENT_STOCK:${item.name}`);
         }
 
-        // Tinh gia cuoi (neu co sale_price thi dung sale_price)
         const activePrice = item.sale_price !== null ? item.sale_price : item.price;
         const subtotal = activePrice * item.quantity;
         totalAmount += subtotal;
 
-        orderItemsToInsert.push({
-          product_id: item.product_id,
-          quantity: item.quantity,
-          unit_price: activePrice
-        });
+        orderItemsToInsert.push([null, item.product_id, item.quantity, activePrice]); // null placeholder for orderId later
       }
 
       // 3. Tao don hang
@@ -56,33 +52,31 @@ const OrderModel = {
       
       const orderId = orderResult.insertId;
 
-      // 4. Tao cac order items & Cap nhat stock tung san pham
-      for (const item of orderItemsToInsert) {
-        // Them vao order_items
-        await conn.query(
-          `INSERT INTO order_items (order_id, product_id, quantity, unit_price) 
-           VALUES (?, ?, ?, ?)`,
-          [orderId, item.product_id, item.quantity, item.unit_price]
-        );
+      // [B1 FIX] Batch INSERT order items
+      orderItemsToInsert.forEach(item => item[0] = orderId); // Populate orderId
+      await conn.query(
+        `INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES ?`,
+        [orderItemsToInsert]
+      );
 
-        // Giam stock trong products
-        await conn.query(
-          `UPDATE products 
-           SET stock = stock - ?, updated_at = CURRENT_TIMESTAMP 
-           WHERE id = ?`,
-          [item.quantity, item.product_id]
-        );
-      }
+      // [B1 FIX] Batch UPDATE products stock using CASE-WHEN
+      const caseWhen = cartItems.map(i => `WHEN id = ${i.product_id} THEN stock - ${i.quantity}`).join(' ');
+      const ids = cartItems.map(i => i.product_id).join(',');
+      await conn.query(`UPDATE products SET stock = CASE ${caseWhen} END, updated_at = CURRENT_TIMESTAMP WHERE id IN (${ids})`);
 
       // 5. Xoa sach gio hang cua user sau khi thanh toan thanh cong
       await conn.query('DELETE FROM cart_items WHERE user_id = ?', [userId]);
 
       // 6. Luu log hanh dong vao audit_logs
+      // [L6 FIX] Ghi IP và User-Agent vào log
       await conn.query(
-        `INSERT INTO audit_logs (user_id, action, resource_type, resource_id, payload) 
-         VALUES (?, 'create_order', 'order', ?, ?)`,
-        [userId, orderId, JSON.stringify({ total_amount: totalAmount, items_count: orderItemsToInsert.length })]
+        `INSERT INTO audit_logs (user_id, action, resource_type, resource_id, ip_address, user_agent, payload) 
+         VALUES (?, 'create_order', 'order', ?, ?, ?, ?)`,
+        [userId, orderId, ipAddress, userAgent, JSON.stringify({ total_amount: totalAmount, items_count: orderItemsToInsert.length })]
       );
+
+      // [B3 FIX] Invalidate dashboard cache sau khi có giao dịch mới
+      await cache.del('dashboard_stats');
 
       await conn.commit();
       return orderId;
@@ -156,7 +150,7 @@ const OrderModel = {
    * Cap nhat trang thai don hang
    * dac biet: Neu don chuyen sang 'cancelled' (bi huy), tra lai stock cho san pham!
    */
-  async updateStatus(orderId, status, updatedByUserId = null) {
+  async updateStatus(orderId, status, updatedByUserId = null, ipAddress = null, userAgent = null) {
     const conn = await pool.getConnection();
     try {
       await conn.beginTransaction();
@@ -169,20 +163,28 @@ const OrderModel = {
 
       const currentStatus = orders[0].status;
 
-      // Neu trang thai cu da la cancelled hoac delivered thi khong duoc phep thay doi nua
-      if (currentStatus === 'cancelled' || currentStatus === 'delivered') {
-        throw new Error('ORDER_FINALIZED');
+      // [M4 FIX] Order Status State Machine — validate các bước chuyển đổi hợp lệ
+      const VALID_TRANSITIONS = {
+        pending:    ['confirmed', 'processing', 'cancelled'],
+        confirmed:  ['processing', 'cancelled'],
+        processing: ['shipping', 'cancelled'],
+        shipping:   ['delivered'],
+        delivered:  [],
+        cancelled:  []
+      };
+
+      if (!VALID_TRANSITIONS[currentStatus] || !VALID_TRANSITIONS[currentStatus].includes(status)) {
+        throw new Error('ORDER_FINALIZED'); // Hoặc trạng thái chuyển đổi không hợp lệ
       }
 
       // 2. Neu status moi la 'cancelled', thuc hien khoi phuc stock san pham
-      if (status === 'cancelled' && currentStatus !== 'cancelled') {
-        // Lay thong tin cac san pham trong don
+      if (status === 'cancelled') {
+        // [B2 FIX] Batch UPDATE stock khi cancel order
         const [items] = await conn.query('SELECT product_id, quantity FROM order_items WHERE order_id = ?', [orderId]);
-        for (const item of items) {
-          await conn.query(
-            'UPDATE products SET stock = stock + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-            [item.quantity, item.product_id]
-          );
+        if (items.length > 0) {
+          const caseWhen = items.map(i => `WHEN id = ${i.product_id} THEN stock + ${i.quantity}`).join(' ');
+          const ids = items.map(i => i.product_id).join(',');
+          await conn.query(`UPDATE products SET stock = CASE ${caseWhen} END, updated_at = CURRENT_TIMESTAMP WHERE id IN (${ids})`);
         }
       }
 
@@ -193,11 +195,15 @@ const OrderModel = {
       );
 
       // 4. Ghi audit log
+      // [L6 FIX] Thêm IP và User-Agent vào log
       await conn.query(
-        `INSERT INTO audit_logs (user_id, action, resource_type, resource_id, payload) 
-         VALUES (?, 'update_order_status', 'order', ?, ?)`,
-        [updatedByUserId || orders[0].user_id, orderId, JSON.stringify({ from: currentStatus, to: status })]
+        `INSERT INTO audit_logs (user_id, action, resource_type, resource_id, ip_address, user_agent, payload) 
+         VALUES (?, 'update_order_status', 'order', ?, ?, ?, ?)`,
+        [updatedByUserId || orders[0].user_id, orderId, ipAddress, userAgent, JSON.stringify({ from: currentStatus, to: status })]
       );
+
+      // [B3 FIX] Invalidate dashboard cache
+      await cache.del('dashboard_stats');
 
       await conn.commit();
       return true;
@@ -261,6 +267,10 @@ const OrderModel = {
    * [ADMIN] Lay bao cao doanh thu, tong don hang phuc vu dashboard
    */
   async getDashboardStats() {
+    // [B3 FIX] Thêm layer Cache 5 phút để tránh nặng DB
+    const cachedStats = await cache.get('dashboard_stats');
+    if (cachedStats) return cachedStats;
+
     // 1. Tong doanh thu (chi tinh don hang da thanh toan hoac giao thanh cong)
     const [[{ revenue }]] = await pool.query(
       `SELECT SUM(total_amount) as revenue FROM orders WHERE status = 'delivered'`
@@ -285,12 +295,16 @@ const OrderModel = {
        ORDER BY month ASC`
     );
 
-    return {
+    const result = {
       totalRevenue: revenue || 0,
       totalCustomers: totalUsers || 0,
       statusBreakdown: statusStats,
       monthlyRevenue
     };
+
+    // Cache kết quả trong 5 phút (300 giây)
+    await cache.set('dashboard_stats', result, 300);
+    return result;
   }
 };
 

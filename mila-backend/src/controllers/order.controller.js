@@ -2,11 +2,9 @@ const OrderModel = require('../models/order.model');
 const pool = require('../config/db');
 const crypto = require('crypto');
 const paymentCrypto = require('../utils/payment-crypto.util');
+const { URL } = require('url');
 
 const OrderController = {
-  /**
-   * YÊU CẦU GỬI MÃ OTP THANH TOÁN (Giả lập gửi qua SMS)
-   */
   /**
    * YÊU CẦU GỬI MÃ OTP THANH TOÁN (Mã hóa bất đối xứng thuần toán học - Không ghi DB)
    */
@@ -32,8 +30,9 @@ const OrderController = {
         await pool.query('UPDATE users SET otp_secret = ? WHERE id = ?', [otpSecret, userId]);
       }
 
-      // 3. Sinh mã OTP 6 chữ số thuần toán học dựa trên Private Key của người dùng và chu kỳ thời gian 5 phút
-      const OTP_TIME_STEP = 5 * 60 * 1000; // 5 phút
+      // 3. Sinh mã OTP 6 chữ số thuần toán học dựa trên Private Key của người dùng và chu kỳ thời gian 3 phút
+      // [C5 FIX] Giảm thời gian sống OTP từ 5 phút xuống 3 phút
+      const OTP_TIME_STEP = 3 * 60 * 1000;
       const timeBlock = Math.floor(Date.now() / OTP_TIME_STEP);
 
       const hmac = crypto.createHmac('sha256', otpSecret);
@@ -42,15 +41,15 @@ const OrderController = {
       const otpCode = (parseInt(hash.substring(0, 8), 16) % 1000000).toString().padStart(6, '0');
 
       // 4. Ghi log giả lập gửi tin nhắn SMS tới số điện thoại khách hàng (Không lưu DB!)
-      console.log(`\n📬 [SMS Simulator to ${user.phone || 'customer'}] (TOTP Không Lưu DB) Mã OTP thanh toán của bạn là: ${otpCode}. Mã có hiệu lực trong 5 phút.\n`);
+      // [C4 FIX] Không trả về OTP cho client ở bất kỳ môi trường nào
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`\n📬 [SMS Simulator to ${user.phone || 'customer'}] (TOTP) Mã OTP thanh toán của bạn là: ${otpCode}. Mã có hiệu lực trong 3 phút.\n`);
+      }
 
       return res.status(200).json({
         success: true,
-        message: 'Mã xác thực OTP đã được gửi thành công.',
-        data: {
-          // Trả về kèm theo mã OTP ở chế độ phát triển để Frontend hiển thị giả lập tin nhắn SMS cho người dùng
-          demoOtp: process.env.NODE_ENV === 'production' ? undefined : otpCode
-        }
+        message: 'Mã xác thực OTP đã được gửi thành công.'
+        // [C4 FIX] Đã xóa `demoOtp` khỏi response payload
       });
     } catch (error) {
       console.error('Lỗi yêu cầu OTP:', error);
@@ -102,12 +101,23 @@ const OrderController = {
   async downloadQR(req, res) {
     try {
       const { url, code } = req.query;
-      if (!url || !url.startsWith('https://img.vietqr.io/')) {
-        return res.status(400).json({
-          success: false,
-          message: 'URL tải ảnh không hợp lệ.'
-        });
+      
+      // [M1 FIX] Validate URL chặt chẽ hơn để chống SSRF
+      if (!url) {
+        return res.status(400).json({ success: false, message: 'URL tải ảnh không hợp lệ.' });
       }
+
+      try {
+        const parsedUrl = new URL(url);
+        if (parsedUrl.hostname !== 'img.vietqr.io') {
+          return res.status(403).json({ success: false, message: 'Chỉ hỗ trợ tải ảnh từ img.vietqr.io' });
+        }
+      } catch (e) {
+        return res.status(400).json({ success: false, message: 'URL định dạng không hợp lệ.' });
+      }
+
+      // [M1 FIX] Sanitize code parameter
+      const safeCode = (code || 'order').replace(/[^a-zA-Z0-9-]/g, '');
 
       const response = await fetch(url);
       if (!response.ok) {
@@ -117,7 +127,7 @@ const OrderController = {
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
-      const filename = `MilaMarket-QR-ThanhToan-${code || 'order'}.png`;
+      const filename = `MilaMarket-QR-ThanhToan-${safeCode}.png`;
       res.setHeader('Content-Type', 'image/png');
       res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
       return res.send(buffer);
@@ -131,7 +141,7 @@ const OrderController = {
   },
 
   /**
-   * DAT HANG (TAO DON HANG TU GIO HANG - XÁC THỰC OTP THUẦN TOÁN HỌC KHÔNG LƯU DB)
+   * DAT HANG (TAO DON HANG TU GIO HANG - XÁC THỰC OTP THUẦN TOÁN HỌC)
    */
   async createOrder(req, res) {
     try {
@@ -157,8 +167,9 @@ const OrderController = {
         });
       }
 
-      // 2. Tái tính toán mã OTP hợp lệ thuần toán học theo chu kỳ hiện tại và chu kỳ liền trước (sai lệch múi giờ/độ trễ)
-      const OTP_TIME_STEP = 5 * 60 * 1000; // Chu kỳ 5 phút
+      // 2. Tái tính toán mã OTP hợp lệ thuần toán học theo chu kỳ hiện tại và chu kỳ liền trước
+      // [C5 FIX] Giảm thời gian sống OTP từ 5 phút xuống 3 phút
+      const OTP_TIME_STEP = 3 * 60 * 1000;
       const timeBlock = Math.floor(Date.now() / OTP_TIME_STEP);
 
       // Tính mã OTP của khối thời gian hiện tại
@@ -167,7 +178,7 @@ const OrderController = {
       const hashCurrent = hmacCurrent.digest('hex');
       const otpCurrent = (parseInt(hashCurrent.substring(0, 8), 16) % 1000000).toString().padStart(6, '0');
 
-      // Tính mã OTP của khối thời gian liền trước (sai số lệch múi giờ tối đa 5 phút)
+      // Tính mã OTP của khối thời gian liền trước (sai số lệch múi giờ tối đa 3 phút)
       const hmacPrev = crypto.createHmac('sha256', user.otp_secret);
       hmacPrev.update((timeBlock - 1).toString());
       const hashPrev = hmacPrev.digest('hex');
@@ -182,8 +193,15 @@ const OrderController = {
         });
       }
 
+      // [C5 FIX] Đổi otp_secret ngay lập tức để chống Replay Attack (OTP không thể dùng lại)
+      const newOtpSecret = crypto.randomBytes(32).toString('hex');
+      await pool.query('UPDATE users SET otp_secret = ? WHERE id = ?', [newOtpSecret, userId]);
+
       // 4. Tiến hành tạo đơn hàng và trừ kho hàng trong Database
-      const orderId = await OrderModel.createOrder(userId, { shipping_address, note });
+      // [L6 FIX] Truyền IP và User-Agent để ghi Audit Log
+      const ipAddress = req.ip || req.socket.remoteAddress;
+      const userAgent = req.headers['user-agent'] || 'Unknown';
+      const orderId = await OrderModel.createOrder(userId, { shipping_address, note }, ipAddress, userAgent);
 
       return res.status(201).json({
         success: true,
@@ -197,7 +215,6 @@ const OrderController = {
     } catch (error) {
       console.error('Lỗi đặt hàng:', error);
 
-      // Tra ve loi than thien tuy thuoc vao message nem ra tu model
       if (error.message === 'CART_EMPTY') {
         return res.status(400).json({
           success: false,
@@ -272,8 +289,6 @@ const OrderController = {
         });
       }
 
-      // Bao mat quyen truy cap:
-      // Chi cho phep chu don hang HOAC Admin HOAC Staff xem thong tin chi tiet
       if (order.user_id !== userId && userRole !== 'admin' && userRole !== 'staff') {
         return res.status(403).json({
           success: false,
@@ -305,7 +320,6 @@ const OrderController = {
       const userId = req.user.id;
       const { id } = req.params;
 
-      // 1. Kiem tra xem don hang co ton tai va thuoc ve user do khong
       const order = await OrderModel.findById(parseInt(id));
       if (!order) {
         return res.status(404).json({
@@ -323,7 +337,6 @@ const OrderController = {
         });
       }
 
-      // Chi cho phep huy neu dang pending hoac processing
       if (order.status !== 'pending' && order.status !== 'processing') {
         return res.status(400).json({
           success: false,
@@ -332,8 +345,11 @@ const OrderController = {
         });
       }
 
-      // 2. Cap nhat trang thai thanh cancelled va tra lai ton kho
-      await OrderModel.updateStatus(parseInt(id), 'cancelled', userId);
+      // [L6 FIX] Truyền IP và User-Agent để ghi Audit Log
+      const ipAddress = req.ip || req.socket.remoteAddress;
+      const userAgent = req.headers['user-agent'] || 'Unknown';
+      
+      await OrderModel.updateStatus(parseInt(id), 'cancelled', userId, ipAddress, userAgent);
 
       return res.status(200).json({
         success: true,

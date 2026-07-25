@@ -13,10 +13,7 @@ const authMiddleware = async (req, res, next) => {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       token = authHeader.split(' ')[1];
     } 
-    // 2. Fallback lay tu cookie neu co
-    else if (req.cookies && req.cookies.accessToken) {
-      token = req.cookies.accessToken;
-    }
+    // [M2 FIX] Không lấy accessToken từ cookie nữa để tránh CSRF
 
     if (!token) {
       return res.status(401).json({

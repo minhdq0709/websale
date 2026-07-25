@@ -2,11 +2,17 @@ const UserModel = require('../models/user.model');
 const TokenModel = require('../models/token.model');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'mila_secret_jwt_key_2026';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'mila_secret_refresh_key_2026';
+// [M3 FIX] Throw ngay khi khởi động nếu thiếu secrets — không dùng fallback yếu
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+
+if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
+  throw new Error('[FATAL] JWT_SECRET và JWT_REFRESH_SECRET là bắt buộc. Kiểm tra file .env!');
+}
 
 // Cac thoi gian het han cua token
-const ACCESS_TOKEN_EXPIRY = '1h'; // 1 tieng
+// [C3 FIX] Access token ngắn hơn (15 phút thay vì 1 giờ) — giảm cửa sổ tấn công
+const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY_DAYS = 7; // 7 ngay
 
 /**
@@ -30,7 +36,8 @@ const AuthController = {
    */
   async register(req, res) {
     try {
-      const { name, email, phone, password, role } = req.body;
+      // [C3 FIX] Không destructure 'role' từ req.body — client không được chọn role
+      const { name, email, phone, password } = req.body;
 
       // 1. Kiem tra email da ton tai chua
       const existingUser = await UserModel.findByEmail(email);
@@ -52,13 +59,13 @@ const AuthController = {
         });
       }
 
-      // 2. Tao user moi
+      // 2. Tao user moi — [C3 FIX] role luôn là 'customer', không nhận từ client
       const userId = await UserModel.create({
         name,
         email,
         phone,
         password,
-        role: role || 'customer'
+        role: 'customer'
       });
 
       // 3. Lay lai thong tin user vua tao
@@ -121,9 +128,12 @@ const AuthController = {
       const { accessToken, refreshToken } = generateTokens(user);
 
       // 5. Luu Refresh Token vao Database
+      // [M6 FIX] TokenModel.create tự động giới hạn MAX_SESSIONS_PER_USER = 5
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + REFRESH_TOKEN_EXPIRY_DAYS);
-      const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+      // [L4 FIX] Lấy IP an toàn hơn — ưu tiên header chuẩn nếu đã tin tưởng proxy
+      const ipAddress = req.ip || req.socket.remoteAddress;
 
       await TokenModel.create({
         userId: user.id,
@@ -173,8 +183,8 @@ const AuthController = {
    */
   async refresh(req, res) {
     try {
-      // Lay refresh token tu cookie hoac tu body
-      const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+      // [M2 FIX] Chỉ lấy refresh token từ HttpOnly cookie, không chấp nhận từ body
+      const refreshToken = req.cookies.refreshToken;
 
       if (!refreshToken) {
         return res.status(401).json({
@@ -253,7 +263,8 @@ const AuthController = {
    */
   async logout(req, res) {
     try {
-      const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+      // [M2 FIX] Chỉ lấy refresh token từ HttpOnly cookie
+      const refreshToken = req.cookies.refreshToken;
 
       // Thu hoi refresh token trong DB neu co truyen vao
       if (refreshToken) {

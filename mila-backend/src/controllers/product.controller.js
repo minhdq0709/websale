@@ -8,6 +8,7 @@ const ProductController = {
     try {
       const { category, search, minPrice, maxPrice, sortBy, page, limit } = req.query;
 
+      const parsedLimit = limit ? parseInt(limit) : 12;
       const filter = {
         categorySlug: category || null,
         search: search || null,
@@ -15,7 +16,7 @@ const ProductController = {
         maxPrice: maxPrice !== undefined ? parseFloat(maxPrice) : undefined,
         sortBy: sortBy || 'newest',
         page: page ? parseInt(page) : 1,
-        limit: limit ? parseInt(limit) : 12,
+        limit: parsedLimit > 100 ? 100 : parsedLimit,
         isActive: true // Chỉ lấy sản phẩm đang kinh doanh ở public API
       };
 

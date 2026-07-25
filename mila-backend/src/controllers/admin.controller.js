@@ -191,10 +191,11 @@ const AdminController = {
   async getAllOrders(req, res) {
     try {
       const { status, page, limit } = req.query;
+      const parsedLimit = limit ? parseInt(limit) : 10;
       const result = await OrderModel.findAll({
         status: status || null,
         page: page ? parseInt(page) : 1,
-        limit: limit ? parseInt(limit) : 10
+        limit: parsedLimit > 100 ? 100 : parsedLimit
       });
 
       return res.status(200).json({
@@ -257,10 +258,11 @@ const AdminController = {
   async getAllUsers(req, res) {
     try {
       const { role, page, limit } = req.query;
+      const parsedLimit = limit ? parseInt(limit) : 10;
       const result = await UserModel.findAll({
         role: role || null,
         page: page ? parseInt(page) : 1,
-        limit: limit ? parseInt(limit) : 10
+        limit: parsedLimit > 100 ? 100 : parsedLimit
       });
 
       return res.status(200).json({
