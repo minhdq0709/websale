@@ -26,6 +26,10 @@ const AdminController = {
 
       const newProduct = await ProductModel.findById(productId);
 
+      // Invalidate cache: san pham moi co the xuat hien trong featured hoac category
+      await cache.delPattern('featured:products:');
+      await cache.del('categories:all'); // category_id co the anh huong count
+
       return res.status(201).json({
         success: true,
         message: 'Thêm sản phẩm mới thành công.',
@@ -56,6 +60,10 @@ const AdminController = {
 
       const updatedProduct = await ProductModel.findById(parseInt(id));
 
+      // Invalidate cache cua san pham nay va featured (co the thay doi is_active hoac gia)
+      await cache.del(`product:${id}`);
+      await cache.delPattern('featured:products:');
+
       return res.status(200).json({
         success: true,
         message: 'Cập nhật sản phẩm thành công.',
@@ -84,6 +92,10 @@ const AdminController = {
         });
       }
 
+      // Invalidate cache cua san pham bi xoa
+      await cache.del(`product:${id}`);
+      await cache.delPattern('featured:products:');
+
       return res.status(200).json({
         success: true,
         message: 'Xóa sản phẩm thành công.'
@@ -107,7 +119,8 @@ const AdminController = {
       const { name, parent_id } = req.body;
       const categoryId = await ProductModel.createCategory({ name, parent_id });
 
-      const [categories] = await ProductModel.findCategories();
+      // Invalidate cache danh muc vi co danh muc moi
+      await cache.del('categories:all');
       
       return res.status(201).json({
         success: true,
@@ -143,6 +156,9 @@ const AdminController = {
         });
       }
 
+      // Invalidate cache danh muc
+      await cache.del('categories:all');
+
       return res.status(200).json({
         success: true,
         message: 'Cập nhật danh mục thành công.'
@@ -169,6 +185,9 @@ const AdminController = {
           code: 'CATEGORY_NOT_FOUND'
         });
       }
+
+      // Invalidate cache danh muc
+      await cache.del('categories:all');
 
       return res.status(200).json({
         success: true,

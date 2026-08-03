@@ -1,8 +1,10 @@
 const ProductModel = require('../models/product.model');
+const cache = require('../config/cache');
 
 const ProductController = {
   /**
    * LAY DANH SACH SAN PHAM CO LOC & PHAN TRANG
+   * Khong cache vi co qua nhieu to hop filter/sort/page
    */
   async getAllProducts(req, res) {
     try {
@@ -39,11 +41,21 @@ const ProductController = {
 
   /**
    * LAY CHI TIET SAN PHAM THEO ID
+   * Cache 10 phut — san pham cu the khong thay doi thuong xuyen
    */
   async getProductById(req, res) {
     try {
       const { id } = req.params;
-      const product = await ProductModel.findById(parseInt(id));
+      const cacheKey = `product:${id}`;
+
+      let product = await cache.get(cacheKey);
+      if (!product) {
+        product = await ProductModel.findById(parseInt(id));
+        // Chi cache san pham dang hoat dong
+        if (product && product.is_active) {
+          await cache.set(cacheKey, product, 600); // 10 phut
+        }
+      }
 
       if (!product) {
         return res.status(404).json({
@@ -53,12 +65,13 @@ const ProductController = {
         });
       }
 
-      // Kiểm tra xem sản phẩm có hoạt động không
+      // [FIX] Tra ve 404 thay vi 403: voi nguoi dung thuong, san pham an = "khong ton tai"
+      // 403 (Forbidden) chi dung cho loi phan quyen, khong phu hop o day
       if (!product.is_active) {
-        return res.status(403).json({
+        return res.status(404).json({
           success: false,
-          message: 'Sản phẩm này đã ngừng kinh doanh.',
-          code: 'PRODUCT_INACTIVE'
+          message: 'Không tìm thấy sản phẩm yêu cầu.',
+          code: 'PRODUCT_NOT_FOUND'
         });
       }
 
@@ -79,11 +92,18 @@ const ProductController = {
 
   /**
    * LAY DANH SACH SAN PHAM NOI BAT
+   * Cache 1 gio — san pham noi bat rat it thay doi
    */
   async getFeaturedProducts(req, res) {
     try {
-      const limit = req.query.limit ? parseInt(req.query.limit) : 8;
-      const products = await ProductModel.findFeatured(limit);
+      const limit = Math.min(20, Math.max(1, parseInt(req.query.limit) || 8));
+      const cacheKey = `featured:products:${limit}`;
+
+      let products = await cache.get(cacheKey);
+      if (!products) {
+        products = await ProductModel.findFeatured(limit);
+        await cache.set(cacheKey, products, 3600); // 1 gio
+      }
 
       return res.status(200).json({
         success: true,
@@ -102,10 +122,17 @@ const ProductController = {
 
   /**
    * LAY TOAN BO DANH MUC SAN PHAM
+   * Cache 1 gio — danh muc rat it thay doi
    */
   async getAllCategories(req, res) {
     try {
-      const categories = await ProductModel.findCategories();
+      const cacheKey = 'categories:all';
+
+      let categories = await cache.get(cacheKey);
+      if (!categories) {
+        categories = await ProductModel.findCategories();
+        await cache.set(cacheKey, categories, 3600); // 1 gio
+      }
 
       return res.status(200).json({
         success: true,
@@ -124,3 +151,4 @@ const ProductController = {
 };
 
 module.exports = ProductController;
+

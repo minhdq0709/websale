@@ -13,6 +13,11 @@ const apiRouter = require('./routes');
 
 const app = express();
 
+// Cau hinh trust proxy: doc IP that cua client tu X-Forwarded-For khi chay sau Nginx / Load Balancer
+// Thieu dong nay, req.ip se la IP cua Nginx thay vi client -> Rate limiter va Audit Log sai
+// Dat '1' neu chi co 1 lop proxy, dat 'true' neu khong biet so luong proxy
+app.set('trust proxy', 1);
+
 // ==========================================
 // MIDDLEWARES NỀN TẢNG (SECURITY & PARSING)
 // ==========================================

@@ -10,12 +10,14 @@ const OrderModel = {
     try {
       await conn.beginTransaction();
 
-      // 1. Lay danh sach item tu gio hang kem thong tin san pham de tinh tien va check stock
+      // 1. Lay danh sach item tu gio hang va LOCK product rows de tranh overselling
+      // FOR UPDATE: khoa cac rows san pham lien quan, 2 request dong thoi se bi block o day
       const [cartItems] = await conn.query(
         `SELECT ci.product_id, ci.quantity, p.name, p.price, p.sale_price, p.stock, p.is_active
          FROM cart_items ci
          INNER JOIN products p ON ci.product_id = p.id
-         WHERE ci.user_id = ?`,
+         WHERE ci.user_id = ?
+         FOR UPDATE`,
         [userId]
       );
 
@@ -26,7 +28,7 @@ const OrderModel = {
       let totalAmount = 0;
       const orderItemsToInsert = [];
 
-      // 2. Kiem tra kho, trang thai va tinh gia
+      // 2. Kiem tra kho, trang thai va tinh gia (sau khi da lock rows)
       for (const item of cartItems) {
         if (!item.is_active) {
           throw new Error(`PRODUCT_INACTIVE:${item.name}`);
@@ -59,10 +61,14 @@ const OrderModel = {
         [orderItemsToInsert]
       );
 
-      // [B1 FIX] Batch UPDATE products stock using CASE-WHEN
-      const caseWhen = cartItems.map(i => `WHEN id = ${i.product_id} THEN stock - ${i.quantity}`).join(' ');
-      const ids = cartItems.map(i => i.product_id).join(',');
-      await conn.query(`UPDATE products SET stock = CASE ${caseWhen} END, updated_at = CURRENT_TIMESTAMP WHERE id IN (${ids})`);
+      // Tru ton kho tung san pham — dung parameterized query trong loop (an toan hon string interpolation)
+      // Them AND stock >= ? de lam double-check o tang DB (bao ve them mot lop)
+      for (const item of cartItems) {
+        await conn.query(
+          'UPDATE products SET stock = stock - ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND stock >= ?',
+          [item.quantity, item.product_id, item.quantity]
+        );
+      }
 
       // 5. Xoa sach gio hang cua user sau khi thanh toan thanh cong
       await conn.query('DELETE FROM cart_items WHERE user_id = ?', [userId]);
@@ -89,20 +95,35 @@ const OrderModel = {
   },
 
   /**
-   * Lay danh sach don hang cua 1 user (Customer)
+   * Lay danh sach don hang cua 1 user (Customer) — co phan trang
    */
-  async findByUserId(userId) {
+  async findByUserId(userId, { page = 1, limit = 10 } = {}) {
+    const offset = (page - 1) * limit;
+
     const [rows] = await pool.query(
-      'SELECT id, status, total_amount, shipping_address, note, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC',
+      'SELECT id, status, total_amount, shipping_address, note, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
+      [userId, parseInt(limit), parseInt(offset)]
+    );
+
+    const [[{ total }]] = await pool.query(
+      'SELECT COUNT(*) as total FROM orders WHERE user_id = ?',
       [userId]
     );
 
-    return rows.map(r => {
+    const orders = rows.map(r => {
       if (typeof r.shipping_address === 'string') {
         try { r.shipping_address = JSON.parse(r.shipping_address); } catch (_) {}
       }
       return r;
     });
+
+    return {
+      orders,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    };
   },
 
   /**
@@ -179,12 +200,13 @@ const OrderModel = {
 
       // 2. Neu status moi la 'cancelled', thuc hien khoi phuc stock san pham
       if (status === 'cancelled') {
-        // [B2 FIX] Batch UPDATE stock khi cancel order
+        // Hoan tra ton kho khi huy don — dung parameterized query trong loop
         const [items] = await conn.query('SELECT product_id, quantity FROM order_items WHERE order_id = ?', [orderId]);
-        if (items.length > 0) {
-          const caseWhen = items.map(i => `WHEN id = ${i.product_id} THEN stock + ${i.quantity}`).join(' ');
-          const ids = items.map(i => i.product_id).join(',');
-          await conn.query(`UPDATE products SET stock = CASE ${caseWhen} END, updated_at = CURRENT_TIMESTAMP WHERE id IN (${ids})`);
+        for (const item of items) {
+          await conn.query(
+            'UPDATE products SET stock = stock + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+            [item.quantity, item.product_id]
+          );
         }
       }
 

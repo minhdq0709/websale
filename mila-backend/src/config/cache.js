@@ -14,6 +14,13 @@ const cache = {
   },
   async del(key) { store.delete(key); },
   async exists(key) { return (await this.get(key)) !== null; },
+  // Xoa tat ca cache keys co prefix cho truoc (dung de invalidate nhom keys lien quan)
+  async delPattern(prefix) {
+    for (const key of store.keys()) {
+      if (key.startsWith(prefix)) store.delete(key);
+    }
+  },
 };
+
 
 module.exports = cache;

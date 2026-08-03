@@ -47,6 +47,28 @@ const UserModel = {
   },
 
   /**
+   * Tim kiem user bang ID, lay kem otp_secret (chi dung noi bo cho OTP flow)
+   */
+  async findByIdWithOtp(id) {
+    const [rows] = await pool.query(
+      'SELECT id, email, phone, otp_secret FROM users WHERE id = ?',
+      [id]
+    );
+    return rows[0] || null;
+  },
+
+  /**
+   * Cap nhat otp_secret cua user (dung sau khi tao hoac sau khi xac thuc OTP thanh cong)
+   */
+  async updateOtpSecret(id, otpSecret) {
+    const [result] = await pool.query(
+      'UPDATE users SET otp_secret = ? WHERE id = ?',
+      [otpSecret, id]
+    );
+    return result.affectedRows > 0;
+  },
+
+  /**
    * Tao tai khoan moi (tu dong bam mat khau)
    */
   async create({ name, email, phone, password, role = 'customer' }) {

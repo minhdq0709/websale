@@ -9,6 +9,10 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
   throw new Error('[FATAL] JWT_SECRET và JWT_REFRESH_SECRET là bắt buộc. Kiểm tra file .env!');
 }
+// Bao ve chong brute-force JWT: secret qua ngan de bi crack
+if (JWT_SECRET.length < 32 || JWT_REFRESH_SECRET.length < 32) {
+  throw new Error('[FATAL] JWT_SECRET và JWT_REFRESH_SECRET phải có ít nhất 32 ký tự để đảm bảo bảo mật!');
+}
 
 // Cac thoi gian het han cua token
 // [C3 FIX] Access token ngắn hơn (15 phút thay vì 1 giờ) — giảm cửa sổ tấn công

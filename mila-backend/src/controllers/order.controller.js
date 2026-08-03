@@ -1,5 +1,5 @@
 const OrderModel = require('../models/order.model');
-const pool = require('../config/db');
+const UserModel = require('../models/user.model');
 const crypto = require('crypto');
 const paymentCrypto = require('../utils/payment-crypto.util');
 const { URL } = require('url');
@@ -12,9 +12,8 @@ const OrderController = {
     try {
       const userId = req.user.id;
 
-      // 1. Lấy thông tin user để tìm hoặc tạo khóa bí mật riêng (Private Key)
-      const [users] = await pool.query('SELECT id, email, phone, otp_secret FROM users WHERE id = ?', [userId]);
-      const user = users[0];
+      // 1. Lay thong tin user de tim hoac tao Private Key (otp_secret)
+      const user = await UserModel.findByIdWithOtp(userId);
       
       if (!user) {
         return res.status(404).json({
@@ -23,15 +22,15 @@ const OrderController = {
         });
       }
 
-      // 2. Tạo khóa bí mật riêng biệt (Private Key) nếu chưa có
+      // 2. Tao khoa bi mat rieng biet (Private Key) neu chua co
       let otpSecret = user.otp_secret;
       if (!otpSecret) {
         otpSecret = crypto.randomBytes(32).toString('hex');
-        await pool.query('UPDATE users SET otp_secret = ? WHERE id = ?', [otpSecret, userId]);
+        await UserModel.updateOtpSecret(userId, otpSecret);
       }
 
-      // 3. Sinh mã OTP 6 chữ số thuần toán học dựa trên Private Key của người dùng và chu kỳ thời gian 3 phút
-      // [C5 FIX] Giảm thời gian sống OTP từ 5 phút xuống 3 phút
+      // 3. Sinh ma OTP 6 chu so thuan toan hoc dua tren Private Key va chu ky thoi gian 3 phut
+      // [C5 FIX] Giam thoi gian song OTP tu 5 phut xuong 3 phut
       const OTP_TIME_STEP = 3 * 60 * 1000;
       const timeBlock = Math.floor(Date.now() / OTP_TIME_STEP);
 
@@ -40,8 +39,8 @@ const OrderController = {
       const hash = hmac.digest('hex');
       const otpCode = (parseInt(hash.substring(0, 8), 16) % 1000000).toString().padStart(6, '0');
 
-      // 4. Ghi log giả lập gửi tin nhắn SMS tới số điện thoại khách hàng (Không lưu DB!)
-      // [C4 FIX] Không trả về OTP cho client ở bất kỳ môi trường nào
+      // 4. Ghi log gia lap gui tin nhan SMS toi so dien thoai khach hang (Khong luu DB!)
+      // [C4 FIX] Khong tra ve OTP cho client o bat ky moi truong nao
       if (process.env.NODE_ENV !== 'production') {
         console.log(`\n📬 [SMS Simulator to ${user.phone || 'customer'}] (TOTP) Mã OTP thanh toán của bạn là: ${otpCode}. Mã có hiệu lực trong 3 phút.\n`);
       }
@@ -49,7 +48,7 @@ const OrderController = {
       return res.status(200).json({
         success: true,
         message: 'Mã xác thực OTP đã được gửi thành công.'
-        // [C4 FIX] Đã xóa `demoOtp` khỏi response payload
+        // [C4 FIX] Da xoa `demoOtp` khoi response payload
       });
     } catch (error) {
       console.error('Lỗi yêu cầu OTP:', error);
@@ -105,8 +104,10 @@ const OrderController = {
 
       try {
         const parsedUrl = new URL(url);
-        if (parsedUrl.hostname !== 'img.vietqr.io') {
-          return res.status(403).json({ success: false, message: 'Chỉ hỗ trợ tải ảnh từ img.vietqr.io' });
+        // Kiem tra ca hostname va protocol: chi cho phep HTTPS tu img.vietqr.io
+        // Chong HTTP downgrade va SSRF bypass qua userinfo (http://img.vietqr.io@evil.com)
+        if (parsedUrl.hostname !== 'img.vietqr.io' || parsedUrl.protocol !== 'https:') {
+          return res.status(403).json({ success: false, message: 'Chỉ hỗ trợ tải ảnh HTTPS từ img.vietqr.io' });
         }
       } catch (e) {
         return res.status(400).json({ success: false, message: 'URL định dạng không hợp lệ.' });
@@ -152,9 +153,8 @@ const OrderController = {
         });
       }
 
-      // 1. Lấy thông tin email, số điện thoại, và Private Key (otp_secret) của người dùng
-      const [users] = await pool.query('SELECT email, phone, otp_secret FROM users WHERE id = ?', [req.user.id]);
-      const user = users[0];
+      // 1. Lay thong tin email, so dien thoai, va Private Key (otp_secret) cua nguoi dung
+      const user = await UserModel.findByIdWithOtp(req.user.id);
       if (!user || !user.otp_secret) {
         return res.status(400).json({
           success: false,
@@ -189,9 +189,9 @@ const OrderController = {
         });
       }
 
-      // [C5 FIX] Đổi otp_secret ngay lập tức để chống Replay Attack (OTP không thể dùng lại)
+      // [C5 FIX] Doi otp_secret ngay lap tuc de chong Replay Attack (OTP khong the dung lai)
       const newOtpSecret = crypto.randomBytes(32).toString('hex');
-      await pool.query('UPDATE users SET otp_secret = ? WHERE id = ?', [newOtpSecret, userId]);
+      await UserModel.updateOtpSecret(userId, newOtpSecret);
 
       // 4. Tiến hành tạo đơn hàng và trừ kho hàng trong Database
       // [L6 FIX] Truyền IP và User-Agent để ghi Audit Log
@@ -249,12 +249,16 @@ const OrderController = {
   async getMyOrders(req, res) {
     try {
       const userId = req.user.id;
-      const orders = await OrderModel.findByUserId(userId);
+      // Pagination: mac dinh 10 don/trang, toi da 50 de tranh response qua lon
+      const page = Math.max(1, parseInt(req.query.page) || 1);
+      const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 10));
+
+      const result = await OrderModel.findByUserId(userId, { page, limit });
 
       return res.status(200).json({
         success: true,
         message: 'Lấy danh sách đơn hàng thành công.',
-        data: orders
+        data: result
       });
     } catch (error) {
       console.error('Lỗi lấy đơn hàng cá nhân:', error);
